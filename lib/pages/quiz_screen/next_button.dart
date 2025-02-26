@@ -20,7 +20,23 @@ class NextButton extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 3),
         child: TextButton(
-          onPressed: () => onPressed(questionIndex),
+          onPressed: () {
+            // Retrieve and print the question info from QuestionBloc
+            final questionBloc = context.read<QuestionBloc>();
+            final questionInfo = questionBloc.question?.explaination;
+            debugPrint("Next Button Pressed");
+            debugPrint("Question Info: ${questionInfo != null ? questionInfo.toString() : 'No question available'}");
+            debugPrint("Drag Target Text: ${questionBloc.dragTargetText}");
+
+
+            onPressed(questionIndex);},
+
+
+
+
+
+
+
           style: TextButton.styleFrom(
             backgroundColor: Theme.of(context).primaryColor,
           ),

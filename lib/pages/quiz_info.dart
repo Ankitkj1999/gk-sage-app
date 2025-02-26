@@ -37,185 +37,187 @@ class _QuizInfoState extends State<QuizInfo> {
   }
 
   // Old code:
-//   Future _checkEligibility() async {
-//     debugPrint(" Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
-//     if (context.read<UserBloc>().userData!.points! <
-//         widget.quiz.pointsRequired!) {
-//       openAnimationDialog(
-//           context,
-//           Config.emptyBoxAnimation,
-//           'not-enough-points'.tr(),
-//           'minimum-points-count'
-//               .tr(args: [widget.quiz.pointsRequired.toString()]));
-//     } else {
-//       setState(() => _isLoading = true);
-//       debugPrint(" Point: Getting the questions ${DateTime.now().toIso8601String()}");
-//       await FirebaseService()
-//           .getQuestions(widget.quiz.id!)
-//           .then((List<Question> qList) async {
-//         if (qList.isNotEmpty) {
-//           debugPrint(
-//               "Point: The list of questions is not empty ${DateTime.now().toIso8601String()}");
-//           //get Questions by order
-//           if (widget.quiz.questionOrder == Constants.questionOrders[0]) {
-//             qList.shuffle();
-//           } else if (widget.quiz.questionOrder == Constants.questionOrders[1]) {
-//             qList.sort(
-//               (a, b) => b.createdAt!.compareTo(a.createdAt!),
-//             );
-//           } else {
-//             qList.sort(
-//               (a, b) => a.createdAt!.compareTo(b.createdAt!),
-//             );
-//           }
-//           debugPrint("Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
-//           // await FirebaseService()
-//           //     .updateUserPointsByTransection(
-//           //         context.read<UserBloc>().userData!.uid!,
-//           //         false,
-//           //         widget.quiz.pointsRequired!)
-//           //     .then(
-//           //         (value) => _updatePointsHistory(widget.quiz.pointsRequired!))
-//           //     .then((_) => context.read<UserBloc>().getUserData())
-//           //     .then((_) async {
-//           //   debugPrint(
-//           //       "Point: Updating the user points ${DateTime.now().toIso8601String()}");
-//           //   await context
-//           //       .read<TempBloc>()
-//           //       .intializeTempData(context.read<UserBloc>().userData!.points!);
-//           //   setState(() => _isLoading = false);
-//           //   // ignore: use_build_context_synchronously
-//           //   NextScreen().nextScreenReplace(
-//           //       context,
-//           //       QuizScreen(
-//           //         qList: qList,
-//           //         hasTimer: widget.quiz.timer!,
-//           //         quizTime: widget.quiz.quizTime!,
-//           //         selfChallengeMode: false,
-//           //       ));
-// // After verifying questions are not empty and shuffling/sorting them...
-//           await FirebaseService().updateUserPointsByTransection(
-//             context.read<UserBloc>().userData!.uid!,
-//             false,
-//             widget.quiz.pointsRequired!,
-//           );
-//           debugPrint(
-//               "Point: Updating the user points ${DateTime.now().toIso8601String()}");
-//
-// // Now, run updating history and refreshing user data concurrently:
-//           await Future.wait<void>([
-//             _updatePointsHistory(widget.quiz.pointsRequired!),
-//             context.read<UserBloc>().getUserData(),
-//           ]);
-//
-//           debugPrint(
-//               "Point: Updating the user points ${DateTime.now().toIso8601String()}");
-//
-// // Continue with initializing temp data and navigating
-//           await context.read<TempBloc>().intializeTempData(
-//             context.read<UserBloc>().userData!.points!,
-//           );
-//           setState(() => _isLoading = false);
-//           NextScreen().nextScreenReplace(
-//             context,
-//             QuizScreen(
-//               qList: qList,
-//               hasTimer: widget.quiz.timer!,
-//               quizTime: widget.quiz.quizTime!,
-//               selfChallengeMode: false,
-//             ),
-//           );
-//
-//
-//
-//           debugPrint(
-//               "Point: Navigating to the quiz screen ${DateTime.now().toIso8601String()}");
-//         } else {
-//           setState(() => _isLoading = false);
-//           openAnimationDialog(
-//               context,
-//               Config.emptyBoxAnimation,
-//               'not-enough-questions-title'.tr(),
-//               'not-enough-questions-subtitle'.tr());
-//         }
-//       });
-//     }
-//   }
+  Future _checkEligibility() async {
+    debugPrint(" Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
+    if (context.read<UserBloc>().userData!.points! <
+        widget.quiz.pointsRequired!) {
+      openAnimationDialog(
+          context,
+          Config.emptyBoxAnimation,
+          'not-enough-points'.tr(),
+          'minimum-points-count'
+              .tr(args: [widget.quiz.pointsRequired.toString()]));
+    } else {
+      setState(() => _isLoading = true);
+      debugPrint(" Point: Getting the questions ${DateTime.now().toIso8601String()}");
+      await FirebaseService()
+          .getQuestions(widget.quiz.id!)
+          .then((List<Question> qList) async {
+        if (qList.isNotEmpty) {
+          debugPrint(
+              "Point: The list of questions is not empty ${DateTime.now().toIso8601String()}");
+          //get Questions by order
+          if (widget.quiz.questionOrder == Constants.questionOrders[0]) {
+            qList.shuffle();
+          } else if (widget.quiz.questionOrder == Constants.questionOrders[1]) {
+            qList.sort(
+              (a, b) => b.createdAt!.compareTo(a.createdAt!),
+            );
+          } else {
+            qList.sort(
+              (a, b) => a.createdAt!.compareTo(b.createdAt!),
+            );
+          }
+          debugPrint("Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
+          // await FirebaseService()
+          //     .updateUserPointsByTransection(
+          //         context.read<UserBloc>().userData!.uid!,
+          //         false,
+          //         widget.quiz.pointsRequired!)
+          //     .then(
+          //         (value) => _updatePointsHistory(widget.quiz.pointsRequired!))
+          //     .then((_) => context.read<UserBloc>().getUserData())
+          //     .then((_) async {
+          //   debugPrint(
+          //       "Point: Updating the user points ${DateTime.now().toIso8601String()}");
+          //   await context
+          //       .read<TempBloc>()
+          //       .intializeTempData(context.read<UserBloc>().userData!.points!);
+          //   setState(() => _isLoading = false);
+          //   // ignore: use_build_context_synchronously
+          //   NextScreen().nextScreenReplace(
+          //       context,
+          //       QuizScreen(
+          //         qList: qList,
+          //         hasTimer: widget.quiz.timer!,
+          //         quizTime: widget.quiz.quizTime!,
+          //         selfChallengeMode: false,
+          //       ));
+// After verifying questions are not empty and shuffling/sorting them...
+          await FirebaseService().updateUserPointsByTransection(
+            context.read<UserBloc>().userData!.uid!,
+            false,
+            widget.quiz.pointsRequired!,
+          );
+          debugPrint(
+              "Point: Updating the user points ${DateTime.now().toIso8601String()}");
+
+// Now, run updating history and refreshing user data concurrently:
+          await Future.wait<void>([
+            _updatePointsHistory(widget.quiz.pointsRequired!),
+            context.read<UserBloc>().getUserData(),
+          ]);
+
+          debugPrint(
+              "Point: Updating the user points ${DateTime.now().toIso8601String()}");
+
+// Continue with initializing temp data and navigating
+          await context.read<TempBloc>().intializeTempData(
+            context.read<UserBloc>().userData!.points!,
+          );
+          setState(() => _isLoading = false);
+          NextScreen().nextScreenReplace(
+            context,
+            QuizScreen(
+              qList: qList,
+              hasTimer: widget.quiz.timer!,
+              quizTime: widget.quiz.quizTime!,
+              selfChallengeMode: false,
+            ),
+          );
+
+
+
+          debugPrint(
+              "Point: Navigating to the quiz screen ${DateTime.now().toIso8601String()}");
+        } else {
+          setState(() => _isLoading = false);
+          openAnimationDialog(
+              context,
+              Config.emptyBoxAnimation,
+              'not-enough-questions-title'.tr(),
+              'not-enough-questions-subtitle'.tr());
+        }
+      });
+    }
+  }
 
 
   // New Code: Nevagating Immediately after getting the code
-  Future _checkEligibility() async {
-    debugPrint("Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
-    if (context.read<UserBloc>().userData!.points! < widget.quiz.pointsRequired!) {
-      openAnimationDialog(
-        context,
-        Config.emptyBoxAnimation,
-        'not-enough-points'.tr(),
-        'minimum-points-count'.tr(args: [widget.quiz.pointsRequired.toString()]),
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    debugPrint("Point: Getting the questions ${DateTime.now().toIso8601String()}");
-
-    final List<Question> qList = await FirebaseService().getQuestions(widget.quiz.id!);
-    if (qList.isEmpty) {
-      setState(() => _isLoading = false);
-      openAnimationDialog(
-        context,
-        Config.emptyBoxAnimation,
-        'not-enough-questions-title'.tr(),
-        'not-enough-questions-subtitle'.tr(),
-      );
-      return;
-    }
-    debugPrint("Point: The list of questions is not empty ${DateTime.now().toIso8601String()}");
-
-    // Sort/shuffle questions
-    if (widget.quiz.questionOrder == Constants.questionOrders[0]) {
-      qList.shuffle();
-    } else if (widget.quiz.questionOrder == Constants.questionOrders[1]) {
-      qList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-    } else {
-      qList.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
-    }
-    debugPrint("Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
-
-    // Immediately navigate to the quiz screen with the prepared questions
-    NextScreen().nextScreenReplace(
-      context,
-      QuizScreen(
-        qList: qList,
-        hasTimer: widget.quiz.timer!,
-        quizTime: widget.quiz.quizTime!,
-        selfChallengeMode: false,
-      ),
-    );
-    debugPrint("Point: Navigating to the quiz screen ${DateTime.now().toIso8601String()}");
-
-    // Now, update the user points and then run history update & user data refresh concurrently.
-    FirebaseService().updateUserPointsByTransection(
-      context.read<UserBloc>().userData!.uid!,
-      false,
-      widget.quiz.pointsRequired!,
-    ).then((_) {
-      debugPrint("Point: Updating the user points ${DateTime.now().toIso8601String()}");
-      // Run history update and user data refresh concurrently.
-      Future.wait<void>([
-        _updatePointsHistory(widget.quiz.pointsRequired!),
-        context.read<UserBloc>().getUserData(),
-      ]);
-    }).then((_) async {
-      // Finally, initialize temp data in the background.
-      await context.read<TempBloc>().intializeTempData(
-        context.read<UserBloc>().userData!.points!,
-      );
-    });
-
-    // Optionally, you might remove the loading state now since we've navigated.
-    // setState(() => _isLoading = false);
-  }
+  // Future _checkEligibility() async {
+  //   debugPrint("Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
+  //   if (context.read<UserBloc>().userData!.points! < widget.quiz.pointsRequired!) {
+  //     openAnimationDialog(
+  //       context,
+  //       Config.emptyBoxAnimation,
+  //       'not-enough-points'.tr(),
+  //       'minimum-points-count'.tr(args: [widget.quiz.pointsRequired.toString()]),
+  //     );
+  //     return;
+  //   }
+  //
+  //   setState(() => _isLoading = true);
+  //   debugPrint("Point: Getting the questions ${DateTime.now().toIso8601String()}");
+  //
+  //   final List<Question> qList = await FirebaseService().getQuestions(widget.quiz.id!);
+  //   if (qList.isEmpty) {
+  //     setState(() => _isLoading = false);
+  //     openAnimationDialog(
+  //       context,
+  //       Config.emptyBoxAnimation,
+  //       'not-enough-questions-title'.tr(),
+  //       'not-enough-questions-subtitle'.tr(),
+  //     );
+  //     return;
+  //   }
+  //   debugPrint("Point: The list of questions is not empty ${DateTime.now().toIso8601String()}");
+  //
+  //   // Sort/shuffle questions
+  //   if (widget.quiz.questionOrder == Constants.questionOrders[0]) {
+  //     qList.shuffle();
+  //   } else if (widget.quiz.questionOrder == Constants.questionOrders[1]) {
+  //     qList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+  //   } else {
+  //     qList.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+  //   }
+  //   debugPrint("Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
+  //
+  //   debugPrint("Point: List of questions ${qList.toString()}");
+  //
+  //   // Immediately navigate to the quiz screen with the prepared questions
+  //   NextScreen().nextScreenReplace(
+  //     context,
+  //     QuizScreen(
+  //       qList: qList,
+  //       hasTimer: widget.quiz.timer!,
+  //       quizTime: widget.quiz.quizTime!,
+  //       selfChallengeMode: false,
+  //     ),
+  //   );
+  //   debugPrint("Point: Navigating to the quiz screen ${DateTime.now().toIso8601String()}");
+  //
+  //   // Now, update the user points and then run history update & user data refresh concurrently.
+  //   FirebaseService().updateUserPointsByTransection(
+  //     context.read<UserBloc>().userData!.uid!,
+  //     false,
+  //     widget.quiz.pointsRequired!,
+  //   ).then((_) {
+  //     debugPrint("Point: Updating the user points ${DateTime.now().toIso8601String()}");
+  //     // Run history update and user data refresh concurrently.
+  //     Future.wait<void>([
+  //       _updatePointsHistory(widget.quiz.pointsRequired!),
+  //       context.read<UserBloc>().getUserData(),
+  //     ]);
+  //   }).then((_) async {
+  //     // Finally, initialize temp data in the background.
+  //     await context.read<TempBloc>().intializeTempData(
+  //       context.read<UserBloc>().userData!.points!,
+  //     );
+  //   });
+  //
+  //   // Optionally, you might remove the loading state now since we've navigated.
+  //   // setState(() => _isLoading = false);
+  // }
 
 
 

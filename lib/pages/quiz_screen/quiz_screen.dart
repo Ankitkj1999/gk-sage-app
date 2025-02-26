@@ -143,6 +143,16 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _onOptionPressed(int optionIndex) async {
+    final questionBloc = context.read<QuestionBloc>();
+    final currentQuestion = questionBloc.question;
+
+    final String? explanation = currentQuestion?.explaination;
+    final String? correctAnswer = currentQuestion?.options?[currentQuestion.correctAnswerIndex!];
+
+    debugPrint("Option selected: $optionIndex and the correct answer is $correctAnswer");
+    debugPrint("Explanation: ${explanation ?? 'No explanation available and the correct answer is $correctAnswer'}");
+
+
     setState(() => _selectedOptionIndex = optionIndex);
     if (context.read<SoundControllerBloc>().audioEnabled) {
       context.read<SoundControllerBloc>().playSound(context.read<SoundControllerBloc>().clickSoundId);
@@ -213,6 +223,8 @@ class _QuizScreenState extends State<QuizScreen> {
                     question: question,
                     selectedOptionIndex: _selectedOptionIndex,
                     onOptionPressed: (int optionIndex) => _onOptionPressed(optionIndex),
+                    showExplanation: _selectedOptionIndex != null,
+                    correctAnswerIndex: question.correctAnswerIndex ?? 0,
                   ),
                 ],
               ),
