@@ -157,11 +157,20 @@ class _QuizScreenState extends State<QuizScreen> {
     if (context.read<SoundControllerBloc>().audioEnabled) {
       context.read<SoundControllerBloc>().playSound(context.read<SoundControllerBloc>().clickSoundId);
     }
+
     if (context.read<SoundControllerBloc>().vibrationEnabled) {
-      if (Platform.isAndroid) {
-        HapticFeedback.vibrate();
-      } else if (Platform.isIOS) {
-        HapticFeedback.mediumImpact();
+      if (optionIndex == currentQuestion?.correctAnswerIndex) {
+        if (Platform.isAndroid) {
+          HapticFeedback.mediumImpact();
+        } else if (Platform.isIOS) {
+          HapticFeedback.mediumImpact();
+        }
+      } else {
+        if (Platform.isAndroid) {
+          HapticFeedback.heavyImpact();
+        } else if (Platform.isIOS) {
+          HapticFeedback.heavyImpact();
+        }
       }
     }
   }
