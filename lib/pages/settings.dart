@@ -229,18 +229,18 @@ class SettingsPage extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
                         child: Column(
                           children: [
-                            ListTile(
-                                leading: const Icon(IconUtils.info),
-                                title: Text(
-                                  'about-us',
-                                  style: titleTextStyle,
-                                ).tr(),
-                                subtitle: const Text(Config.yourWebsiteUrl),
-                                trailing: const Icon(Icons.arrow_right),
-                                onTap: () => AppService().openLinkWithCustomTab(context, Config.yourWebsiteUrl)),
-                            const Divider(
-                              thickness: 0.7,
-                            ),
+                            // ListTile(
+                            //     leading: const Icon(IconUtils.info),
+                            //     title: Text(
+                            //       'about-us',
+                            //       style: titleTextStyle,
+                            //     ).tr(),
+                            //     subtitle: const Text(Config.yourWebsiteUrl),
+                            //     trailing: const Icon(Icons.arrow_right),
+                            //     onTap: () => AppService().openLinkWithCustomTab(context, Config.yourWebsiteUrl)),
+                            // const Divider(
+                            //   thickness: 0.7,
+                            // ),
                             ListTile(
                               leading: const Icon(IconUtils.email, size: 22),
                               title: Text(
@@ -251,25 +251,25 @@ class SettingsPage extends StatelessWidget {
                               trailing: const Icon(Icons.arrow_right),
                               onTap: () => AppService().openEmailSupport(context),
                             ),
-                            const Divider(thickness: 0.7),
-                            ListTile(
-                              leading: const Icon(IconUtils.lock),
-                              title: Text('privacy-policy', style: titleTextStyle).tr(),
-                              subtitle: const Text('terms').tr(),
-                              trailing: const Icon(Icons.arrow_right),
-                              onTap: () => AppService().openLinkWithCustomTab(context, Config.privacyPolicyUrl),
-                            ),
-                            const Divider(thickness: 0.7),
-                            ListTile(
-                              leading: const Icon(IconUtils.star),
-                              title: Text('rate-app', style: titleTextStyle).tr(),
-                              subtitle: const Text('rate-app-subtitle').tr(),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.arrow_right),
-                                onPressed: () => AppService().launchAppReview(context),
-                              ),
-                              onTap: () => AppService().launchAppReview(context),
-                            ),
+                            // const Divider(thickness: 0.7),
+                            // ListTile(
+                            //   leading: const Icon(IconUtils.lock),
+                            //   title: Text('privacy-policy', style: titleTextStyle).tr(),
+                            //   subtitle: const Text('terms').tr(),
+                            //   trailing: const Icon(Icons.arrow_right),
+                            //   onTap: () => AppService().openLinkWithCustomTab(context, Config.privacyPolicyUrl),
+                            // ),
+                            // const Divider(thickness: 0.7),
+                            // ListTile(
+                            //   leading: const Icon(IconUtils.star),
+                            //   title: Text('rate-app', style: titleTextStyle).tr(),
+                            //   subtitle: const Text('rate-app-subtitle').tr(),
+                            //   trailing: IconButton(
+                            //     icon: const Icon(Icons.arrow_right),
+                            //     onPressed: () => AppService().launchAppReview(context),
+                            //   ),
+                            //   onTap: () => AppService().launchAppReview(context),
+                            // ),
                           ],
                         ),
                       )),

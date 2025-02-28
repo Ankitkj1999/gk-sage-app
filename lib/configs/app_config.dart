@@ -4,9 +4,9 @@ class Config{
 
 
   //App Name
-  static const String appName = "QuizHour";
+  static const String appName = "GK Sage";
   //Support Email
-  static const String supportEmail = "contact@mrb-lab.com";
+  static const String supportEmail = "appatankit@gmail.com";
   //iOS App Id (Only for iOS)
   static const String iOSAppId = '000000';
   

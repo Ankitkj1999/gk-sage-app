@@ -28,7 +28,7 @@ class HtmlBody extends StatelessWidget {
       style: {
         "body": Style(
           //padding: const EdgeInsets.all(20),
-          padding: HtmlPaddings.only(top: 10, bottom: 60, left: 0, right: 0),
+          padding: HtmlPaddings.only(top: 10, bottom: 60, left: 20, right: 20),
           margin: Margins.zero,
           lineHeight: const LineHeight(1.7),
           whiteSpace: WhiteSpace.normal,
@@ -74,3 +74,5 @@ class HtmlBody extends StatelessWidget {
     );
   }
 }
+
+
