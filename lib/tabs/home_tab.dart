@@ -23,6 +23,7 @@ import 'package:quiz_app/widgets/rewarded_ad_container.dart';
 // import '../IAP/iap_config.dart';
 // import '../IAP/iap_page.dart';
 import '../services/MultipleCubesPainterService.dart';
+import '../services/cubes_backgound_service.dart';
 import '../services/greeting_service.dart';
 import '../widgets/home_categories.dart';
 import '../widgets/featured.dart';
@@ -163,136 +164,6 @@ class _SelfChallengeContainer extends StatelessWidget {
   }
 }
 
-// class _TopBar extends StatelessWidget {
-//   const _TopBar();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final user = context.watch<UserBloc>().userData;
-//     final int rank = context.watch<UserBloc>().userRank;
-//     return Container(
-//       padding: const EdgeInsets.fromLTRB(20, 10, 10, 15),
-//       height: 140,
-//       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-//       child: SafeArea(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Text(
-//                           // 'welcome-back',
-//                           GreetingService.getGreeting(context),
-//                           style: Theme.of(context).primaryTextTheme.bodyMedium,
-//                         ).tr(),
-//                         const SizedBox(
-//                           width: 5,
-//                         ),
-//                         //Image.asset(Config.hiEmoji, width: 25, height: 25,)
-//                         LottieBuilder.asset(
-//                           Config.hiAnimation,
-//                           height: 25,
-//                           width: 25,
-//                         )
-//                       ],
-//                     ),
-//                     const SizedBox(
-//                       height: 5,
-//                     ),
-//                     Text(
-//                       user!.name!,
-//                       style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
-//                     ),
-//                   ],
-//                 ),
-//                 AvatarGlow(
-//                   glowCount: 1,
-//                   animate: true,
-//                   repeat: true,
-//                   glowRadiusFactor: 0.2,
-//                   child: InkWell(
-//                     onTap: () => context.read<TabControllerBloc>().controlTab(2),
-//                     child: AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 60, bgColor: ColorConfig.avatarBg4),
-//                   ),
-//                 )
-//               ],
-//             ),
-//             const Spacer(),
-//             Row(
-//               children: [
-//                 InkWell(
-//                   child: CustomChip1(label: user.points.toString(), icon: IconUtils.starFill, bgColor: ColorConfig.chip1),
-//                   onTap: () => context.read<TabControllerBloc>().controlTab(2),
-//                 ),
-//                 const SizedBox(
-//                   width: 10,
-//                 ),
-//                 InkWell(
-//                   child: CustomChip1(label: '#$rank', icon: IconUtils.leaderboard1, bgColor: ColorConfig.chip2),
-//                   onTap: () => NextScreen.nextScreenNormal(context, const LeaderboardTab()),
-//                 ),
-//                 const SizedBox(
-//                   width: 10,
-//                 ),
-//                 InkWell(
-//                   onTap: () => NextScreen.nextScreenNormal(context, const Notifications()),
-//                   child: CircleAvatar(
-//                     backgroundColor: ColorConfig.iconBg,
-//                     child: const Icon(
-//                       IconUtils.bell,
-//                       size: 22,
-//                       color: Colors.white,
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(
-//                   width: 10,
-//                 ),
-//                 InkWell(
-//                   onTap: () => NextScreen.nextScreenNormal(context, const SettingsPage()),
-//                   child: CircleAvatar(
-//                     backgroundColor: ColorConfig.iconBg,
-//                     child: const Icon(
-//                       IconUtils.settings,
-//                       size: 22,
-//                       color: Colors.white,
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(
-//                   width: 10,
-//                 ),
-//                 // Visibility(
-//                 //   visible: IAPConfig.iAPEnabled,
-//                 //   child: InkWell(
-//                 //     onTap: () => NextScreen.nextScreenNormal(context, const IAPScreen()),
-//                 //     child: CircleAvatar(
-//                 //       backgroundColor: ColorConfig.iconBg,
-//                 //       child: const Icon(
-//                 //         IconUtils.store,
-//                 //         size: 22,
-//                 //         color: Colors.white,
-//                 //       ),
-//                 //     ),
-//                 //   ),
-//                 // ),
-//               ],
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class _TopBar extends StatelessWidget {
   const _TopBar();
 
@@ -321,9 +192,13 @@ class _TopBar extends StatelessWidget {
 
           // 2) Cubes painter
           // Use the same size as your top bar so cubes fill the area
+          // CustomPaint(
+          //   size: const Size(double.infinity, 140),
+          //   painter: MultipleCubesPainterService(),
+          // ),
           CustomPaint(
             size: const Size(double.infinity, 140),
-            painter: MultipleCubesPainterService(),
+            painter: CachedCubesPainter(),
           ),
 
           // 3) Foreground UI (your existing _TopBar content)

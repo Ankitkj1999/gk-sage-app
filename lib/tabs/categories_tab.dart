@@ -10,6 +10,7 @@ import 'package:quiz_app/widgets/loading_widget.dart';
 import '../configs/app_config.dart';
 import '../models/category.dart';
 import '../services/MultipleCubesPainterService.dart';
+import '../services/cubes_backgound_service.dart';
 
 class CategoriesTab extends StatefulWidget {
   const CategoriesTab({super.key});
@@ -44,23 +45,6 @@ class _CategoriesTabState extends State<CategoriesTab>
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: <Widget>[
-            // SliverAppBar.medium(
-            //   backgroundColor: ColorConfig.appThemeColor,
-            //   stretch: true,
-            //   elevation: 0,
-            //   expandedHeight: 120,
-            //   toolbarHeight: kToolbarHeight,
-            //   title: const Text(
-            //     'all-categories',
-            //     style: TextStyle(
-            //       color: Colors.white,
-            //     ),
-            //   ).tr(),
-            //   titleSpacing: 0,
-            //   automaticallyImplyLeading: false,
-            //   centerTitle: true,
-            // ),
-
 
             SliverAppBar.medium(
               backgroundColor: ColorConfig.appThemeColor,
@@ -68,32 +52,28 @@ class _CategoriesTabState extends State<CategoriesTab>
               elevation: 0,
               expandedHeight: 120,
               toolbarHeight: kToolbarHeight,
-              flexibleSpace: Stack(
-                children: [
-                  // 1) Background cubes
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: MultipleCubesPainterService(), // Your cubes painter
-                      child: Container(),
-                    ),
+              // Remove the title from here
+              // title: const Text(...),
+
+              flexibleSpace: FlexibleSpaceBar(
+                // Add the title here instead - it will show in both collapsed and expanded states
+                title: Text(
+                  'all-categories',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  // 2) Centered text overlay
-                  Center(
-                    child: Text(
-                      'all-categories',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20, // adjust as needed
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ).tr(), // if using easy_localization for translation
+                ).tr(),
+                centerTitle: true, // Center the title
+                background: CustomPaint(
+                  size: const Size(double.infinity, 120),
+                  painter: CachedCubesPainter(
+                    backgroundColor: ColorConfig.appThemeColor,
                   ),
-                ],
+                ),
               ),
               automaticallyImplyLeading: false,
-              // Optionally remove the title property since we’re adding the text manually
-            )
-,
+            ),
             SliverToBoxAdapter(
               child: FutureBuilder(
                 future: _future,
