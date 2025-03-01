@@ -60,33 +60,7 @@ class _CategoriesTabState extends State<CategoriesTab>
             //   automaticallyImplyLeading: false,
             //   centerTitle: true,
             // ),
-            // SliverAppBar.medium(
-            //   backgroundColor: ColorConfig.appThemeColor,
-            //   stretch: true,
-            //   elevation: 0,
-            //   expandedHeight: 120,
-            //   toolbarHeight: kToolbarHeight,
-            //   flexibleSpace: Stack(
-            //     children: [
-            //       // Fills the entire flexible space with cubes.
-            //       Positioned.fill(
-            //         child: CustomPaint(
-            //           painter: MultipleCubesPainterService(), // Your cubes painter
-            //           child: Container(),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            //   title: const Text(
-            //     'all-categories',
-            //     style: TextStyle(
-            //       color: Colors.white,
-            //     ),
-            //   ).tr(),
-            //   titleSpacing: 0,
-            //   automaticallyImplyLeading: false,
-            //   centerTitle: true,
-            // )
+
 
             SliverAppBar.medium(
               backgroundColor: ColorConfig.appThemeColor,

@@ -394,7 +394,7 @@ class _TopBar extends StatelessWidget {
                       InkWell(
                         child: CustomChip1(
                           label: user.points.toString(),
-                          icon: IconUtils.starFill,
+                          icon: IconUtils.coins,
                           bgColor: ColorConfig.chip1,
                         ),
                         onTap: () =>

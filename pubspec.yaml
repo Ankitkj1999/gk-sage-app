@@ -67,6 +67,7 @@ dependencies:
   quiver: ^3.2.2
   auto_size_text: ^3.0.0
   rounded_loading_button_plus: ^3.0.1
+  icons_plus: ^5.0.0
   
   
 
@@ -96,6 +97,7 @@ flutter:
     - assets/translations/
     - assets/sounds/
     - assets/images/new_avatars/
+    - assets/icons/
 
 
   fonts:

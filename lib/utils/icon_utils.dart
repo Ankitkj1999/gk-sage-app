@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -11,11 +12,11 @@ class IconUtils {
   static IconData categories = CupertinoIcons.grid;
   static IconData leaderboard = CupertinoIcons.chart_bar_square;
   static IconData profile = LineIcons.user;
-
+  static const IconData coins = FontAwesome.coins_solid;
   static const IconData starFill = LineIcons.starAlt;
   static const IconData star = LineIcons.star;
-  static const IconData leaderboard1 = CupertinoIcons.chart_bar;
-  static const IconData bell = Ionicons.notifications;
+  static const IconData leaderboard1 = FontAwesome.trophy_solid;
+ static const IconData bell = Ionicons.notifications;
   static const IconData bell1 = LineIcons.bell;
   static const IconData settings = Ionicons.settings;
   static const IconData editProfile = LineIcons.userEdit;
