@@ -17,7 +17,8 @@ class BuyNowWIdget extends StatelessWidget {
         ),
         Card(
             elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
               child: Column(
@@ -26,10 +27,14 @@ class BuyNowWIdget extends StatelessWidget {
                     leading: const Icon(
                       IconUtils.buy,
                     ),
-                    title: Text('buy-app', style: textStyle,).tr(),
+                    title: Text(
+                      'buy-app',
+                      style: textStyle,
+                    ).tr(),
                     subtitle: const Text('buy-app-subtitle').tr(),
                     trailing: const Icon(Icons.arrow_right),
-                    onTap: ()=> AppService().openLinkWithCustomTab(context, 'https://1.envato.market/quizhour'),
+                    onTap: () => AppService().openLinkWithCustomTab(
+                        context, 'https://1.envato.market/quizhour'),
                   ),
                 ],
               ),

@@ -14,7 +14,8 @@ void openQuizCloseDialog({required BuildContext context}) async {
     titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     msgAlign: TextAlign.center,
     msgStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-    dialogShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    dialogShape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     lottieBuilder: LottieBuilder.asset(
       Config.quitAnimation,
       fit: BoxFit.contain,
@@ -29,7 +30,8 @@ void openQuizCloseDialog({required BuildContext context}) async {
         IconsOutlineButton(
           text: 'yes'.tr(),
           color: Colors.red,
-          textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           onPressed: () {
             Navigator.pop(context);
             Navigator.pop(context);

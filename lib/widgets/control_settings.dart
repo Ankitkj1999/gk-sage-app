@@ -13,15 +13,21 @@ class ControllSettings extends StatelessWidget {
       children: [
         SwitchListTile.adaptive(
           activeColor: Theme.of(context).primaryColor,
-          title: Text('sound', style: Theme.of(context).textTheme.titleLarge).tr(),
+          title:
+              Text('sound', style: Theme.of(context).textTheme.titleLarge).tr(),
           value: context.watch<SoundControllerBloc>().audioEnabled,
-          onChanged: (value)=> context.read<SoundControllerBloc>().controlSoundSettings(value),
+          onChanged: (value) =>
+              context.read<SoundControllerBloc>().controlSoundSettings(value),
         ),
         SwitchListTile.adaptive(
           activeColor: Theme.of(context).primaryColor,
-          title: Text('vibration', style: Theme.of(context).textTheme.titleLarge).tr(),
+          title:
+              Text('vibration', style: Theme.of(context).textTheme.titleLarge)
+                  .tr(),
           value: context.watch<SoundControllerBloc>().vibrationEnabled,
-          onChanged: (value) => context.read<SoundControllerBloc>().controlVibrationSettings(value),
+          onChanged: (value) => context
+              .read<SoundControllerBloc>()
+              .controlVibrationSettings(value),
         )
       ],
     );

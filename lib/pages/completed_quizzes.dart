@@ -31,7 +31,9 @@ class _CompletedQuizzesState extends State<CompletedQuizzes> {
     final chunks = partition(itemIds, 10);
     List<Quiz> qList = [];
     final querySnapshots = await Future.wait(chunks.map((chunk) {
-      Query itemsQuery = FirebaseFirestore.instance.collection('quizes').where("id", whereIn: chunk);
+      Query itemsQuery = FirebaseFirestore.instance
+          .collection('quizes')
+          .where("id", whereIn: chunk);
       return itemsQuery.get();
     }).toList());
     for (var element in querySnapshots) {
@@ -40,8 +42,7 @@ class _CompletedQuizzesState extends State<CompletedQuizzes> {
     return qList;
   }
 
-
-  List _getQuizIds (){
+  List _getQuizIds() {
     List ids = context.read<UserBloc>().userData!.completedQuizzes ?? [];
     return ids;
   }
@@ -74,16 +75,20 @@ class _CompletedQuizzesState extends State<CompletedQuizzes> {
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 final Quiz q = snapshot.data[index];
-                return QuizCard(quiz: q, heroTag: 'completed${q.id}', enablePlayAgain: true,);
+                return QuizCard(
+                  quiz: q,
+                  heroTag: 'completed${q.id}',
+                  enablePlayAgain: true,
+                );
               },
             );
           } else {
-            return EmptyAnimation(animationString: Config.emptyAnimation, title: 'no-content'.tr());
+            return EmptyAnimation(
+                animationString: Config.emptyAnimation,
+                title: 'no-content'.tr());
           }
         },
       ),
     );
   }
-
-  
 }

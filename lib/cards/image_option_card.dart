@@ -9,7 +9,7 @@ class ImageOptionCard extends StatelessWidget {
     super.key,
     required bool isSelected,
     required this.optionImage,
-  })  : _isSelected = isSelected;
+  }) : _isSelected = isSelected;
 
   final bool _isSelected;
   final String optionImage;
@@ -38,9 +38,11 @@ class ImageOptionCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: InkWell(
-                    onTap: () => NextScreen().nextScreenPopup(context, FullImagePreview(imageUrl: optionImage)),
+                    onTap: () => NextScreen().nextScreenPopup(
+                        context, FullImagePreview(imageUrl: optionImage)),
                     child: CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(0.5),
                       child: Icon(
                         Icons.fullscreen,
                         color: Colors.grey.shade300,

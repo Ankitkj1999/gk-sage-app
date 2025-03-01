@@ -30,7 +30,8 @@ class Notifications extends StatelessWidget {
               IconsOutlineButton(
                 text: 'cancel'.tr(),
                 iconData: Icons.close,
-                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                textStyle:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 onPressed: () => Navigator.pop(context),
               ),
               IconsOutlineButton(
@@ -38,7 +39,10 @@ class Notifications extends StatelessWidget {
                 color: Colors.red,
                 iconData: Icons.delete,
                 iconColor: Colors.white,
-                textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
                 onPressed: () async {
                   Navigator.pop(context);
                   await NotificationService().deleteAllNotificationData();
@@ -67,8 +71,10 @@ class Notifications extends StatelessWidget {
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(right: 15, left: 15),
                 ),
-                child:
-                    Text('clear-all', style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)).tr(),
+                child: Text('clear-all',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.bold))
+                    .tr(),
               ),
             ],
           ),
@@ -78,16 +84,20 @@ class Notifications extends StatelessWidget {
                 children: [
                   ValueListenableBuilder(
                       valueListenable: notificationList.listenable(),
-                      builder: (BuildContext context, dynamic value, Widget? child) {
+                      builder:
+                          (BuildContext context, dynamic value, Widget? child) {
                         List items = notificationList.values.toList();
                         items.sort((a, b) => b['date'].compareTo(a['date']));
                         if (items.isEmpty) {
                           return Column(
                             children: [
                               SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.12,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.12,
                               ),
-                              EmptyAnimation(animationString: Config.notificationAnimation, title: 'no-content'.tr()),
+                              EmptyAnimation(
+                                  animationString: Config.notificationAnimation,
+                                  title: 'no-content'.tr()),
                             ],
                           );
                         }

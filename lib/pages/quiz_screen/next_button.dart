@@ -6,7 +6,8 @@ import 'package:quiz_app/configs/color_config.dart';
 import '../../widgets/loading_widget.dart';
 
 class NextButton extends StatelessWidget {
-  const NextButton({super.key, required this.isLoading, required this.onPressed});
+  const NextButton(
+      {super.key, required this.isLoading, required this.onPressed});
 
   final bool isLoading;
   final Function onPressed;
@@ -25,18 +26,12 @@ class NextButton extends StatelessWidget {
             final questionBloc = context.read<QuestionBloc>();
             final questionInfo = questionBloc.question?.explaination;
             debugPrint("Next Button Pressed");
-            debugPrint("Question Info: ${questionInfo != null ? questionInfo.toString() : 'No question available'}");
+            debugPrint(
+                "Question Info: ${questionInfo != null ? questionInfo.toString() : 'No question available'}");
             debugPrint("Drag Target Text: ${questionBloc.dragTargetText}");
 
-
-            onPressed(questionIndex);},
-
-
-
-
-
-
-
+            onPressed(questionIndex);
+          },
           style: TextButton.styleFrom(
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -46,7 +41,10 @@ class NextButton extends StatelessWidget {
                 )
               : Text(
                   'next',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold),
                 ).tr(),
         ),
       ),

@@ -15,7 +15,10 @@ class CustomNotificationDeatils extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('notification-details', style: TextStyle(color: Colors.white),).tr(),
+        title: const Text(
+          'notification-details',
+          style: TextStyle(color: Colors.white),
+        ).tr(),
         elevation: 0,
         centerTitle: false,
       ),
@@ -31,10 +34,10 @@ class CustomNotificationDeatils extends StatelessWidget {
                   Text(
                     AppService.getNormalText(notificationModel.title!),
                     style: const TextStyle(
-                        wordSpacing: 1,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      ),
+                      wordSpacing: 1,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -51,9 +54,10 @@ class CustomNotificationDeatils extends StatelessWidget {
                         Text(
                           _getDate(context, notificationModel),
                           style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blueGrey,),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blueGrey,
+                          ),
                         ),
                       ],
                     ),
@@ -72,9 +76,10 @@ class CustomNotificationDeatils extends StatelessWidget {
     );
   }
 
-
-  static String _getDate (BuildContext context, NotificationModel notificationModel){
-    final String date = DateFormat('MMMM dd, yyyy hh:mm a').format(notificationModel.date!);
+  static String _getDate(
+      BuildContext context, NotificationModel notificationModel) {
+    final String date =
+        DateFormat('MMMM dd, yyyy hh:mm a').format(notificationModel.date!);
     return date;
   }
 }

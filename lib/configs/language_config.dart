@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LanguageConfig {
-  
   //Initial Language
   static const String startLocale = 'en';
 

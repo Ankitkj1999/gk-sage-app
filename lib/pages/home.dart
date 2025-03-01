@@ -27,13 +27,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   _initNotifications() async {
-    await NotificationService().initFirebasePushNotification(context).then((value) => context.read<NotificationBloc>().checkPermission());
+    await NotificationService()
+        .initFirebasePushNotification(context)
+        .then((value) => context.read<NotificationBloc>().checkPermission());
   }
 
   void _checkUserAccess() async {
-    final bool isDisabled = context.read<UserBloc>().userData?.disabled ?? false;
+    final bool isDisabled =
+        context.read<UserBloc>().userData?.disabled ?? false;
     if (isDisabled) {
-      await Future.delayed(const Duration(seconds: 3)).then((value) => openDisableUserDialog(context));
+      await Future.delayed(const Duration(seconds: 3))
+          .then((value) => openDisableUserDialog(context));
     }
   }
 
@@ -58,7 +62,8 @@ class _HomePageState extends State<HomePage> {
     if (context.read<TabControllerBloc>().currentIndex != 0) {
       context.read<TabControllerBloc>().controlTab(0);
     } else {
-      await SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop', true);
+      await SystemChannels.platform
+          .invokeMethod<void>('SystemNavigator.pop', true);
     }
   }
 

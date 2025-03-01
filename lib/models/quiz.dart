@@ -14,19 +14,18 @@ class Quiz {
   String? questionOrder;
   int? index;
 
-  Quiz({
-    required this.name,
-    required this.id,
-    required this.thumbnailUrl,
-    required this.parentId,
-    required this.timer,
-    this.quizTime,
-    required this.description,
-    this.questionCount,
-    this.pointsRequired,
-    this.questionOrder,
-    this.index
-  });
+  Quiz(
+      {required this.name,
+      required this.id,
+      required this.thumbnailUrl,
+      required this.parentId,
+      required this.timer,
+      this.quizTime,
+      required this.description,
+      this.questionCount,
+      this.pointsRequired,
+      this.questionOrder,
+      this.index});
 
   factory Quiz.fromFirestore(DocumentSnapshot snap) {
     Map d = snap.data() as Map<dynamic, dynamic>;
@@ -41,8 +40,7 @@ class Quiz {
         questionCount: d['question_count'],
         pointsRequired: d['points_required'],
         questionOrder: AppService.getQuestionOrder(d['question_order']),
-        index: d['index'] ?? 0
-    );
+        index: d['index'] ?? 0);
   }
 
   static Map<String, dynamic> getMap(Quiz d) {

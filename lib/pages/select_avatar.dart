@@ -35,32 +35,33 @@ class _SelectAvatarState extends State<SelectAvatar> {
     if (_selectedAssetString != null) {
       setState(() => _updateStarted = true);
       await FirebaseService()
-            .updateUserDataAfterAvatarSeclection(widget.userId, _selectedAssetString!)
-            .then((_) async {
-          await _getRequiredData();
-          setState(() {
-            _updateStarted = false;
-          });
-          Future.delayed(const Duration(milliseconds: 300))
-              .then((value) => _afterUpdte());
+          .updateUserDataAfterAvatarSeclection(
+              widget.userId, _selectedAssetString!)
+          .then((_) async {
+        await _getRequiredData();
+        setState(() {
+          _updateStarted = false;
         });
-    }else{
+        Future.delayed(const Duration(milliseconds: 300))
+            .then((value) => _afterUpdte());
+      });
+    } else {
       openSnackbar(context, 'Select your avatar');
     }
   }
 
   _afterUpdte() {
-    NextScreen().nextScreenCloseOthers(
-        context,
-        const HomePage(
-        ));
+    NextScreen().nextScreenCloseOthers(context, const HomePage());
   }
 
   Future _getRequiredData() async {
-    await context.read<UserBloc>().getUserData()
-    .then((value) => context.read<SettingsBloc>().getSettingsData()
-    .then((value) => context.read<SettingsBloc>().getSpecialCategories()
-    .then((value) => context.read<AdsBloc>().checkAds())));
+    await context.read<UserBloc>().getUserData().then((value) => context
+        .read<SettingsBloc>()
+        .getSettingsData()
+        .then((value) => context
+            .read<SettingsBloc>()
+            .getSpecialCategories()
+            .then((value) => context.read<AdsBloc>().checkAds())));
 
     debugPrint('Data getting done');
   }
@@ -72,7 +73,10 @@ class _SelectAvatarState extends State<SelectAvatar> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text('select-avatar', style: TextStyle(color: Colors.white),).tr(),
+        title: const Text(
+          'select-avatar',
+          style: TextStyle(color: Colors.white),
+        ).tr(),
       ),
       bottomNavigationBar: _bottomWidget(context),
       body: ListView.separated(

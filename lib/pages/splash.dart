@@ -28,18 +28,25 @@ class _SplashPageState extends State<SplashPage> {
     if (user != null) {
       await context.read<UserBloc>().getUserData().then((value) async {
         if (context.read<UserBloc>().userData != null) {
-          await context.read<SettingsBloc>().getSettingsData().then((value) async => await context.read<AdsBloc>().checkAds()).then((value) async {
+          await context
+              .read<SettingsBloc>()
+              .getSettingsData()
+              .then((value) async => await context.read<AdsBloc>().checkAds())
+              .then((value) async {
             await context.read<SettingsBloc>().getSpecialCategories();
             if (!mounted) return;
             NextScreen().nextScreenReplaceAnimation(context, const HomePage());
           });
         } else {
           await AuthService().userLogOut();
-          await Future.delayed(const Duration(seconds: 1)).then((_) => NextScreen().nextScreenReplaceAnimation(context, const IntroPage()));
+          await Future.delayed(const Duration(seconds: 1)).then((_) =>
+              NextScreen()
+                  .nextScreenReplaceAnimation(context, const IntroPage()));
         }
       });
     } else {
-      await Future.delayed(const Duration(seconds: 1)).then((_) => NextScreen().nextScreenReplaceAnimation(context, const IntroPage()));
+      await Future.delayed(const Duration(seconds: 1)).then((_) =>
+          NextScreen().nextScreenReplaceAnimation(context, const IntroPage()));
     }
   }
 

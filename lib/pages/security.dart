@@ -34,14 +34,16 @@ class _SecurityPageState extends State<SecurityPage> {
             text: 'cancel'.tr(),
             iconData: Icons.close,
             onPressed: () => Navigator.pop(context),
-            textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            textStyle:
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           IconsOutlineButton(
             text: 'account-delete-confirm'.tr(),
             color: Colors.red,
             iconData: Icons.delete_forever,
             iconColor: Colors.white,
-            textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+            textStyle: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
             onPressed: () async {
               Navigator.pop(context);
               await _handleDeleteAccount();
@@ -62,7 +64,8 @@ class _SecurityPageState extends State<SecurityPage> {
     if (!mounted) return;
     await context.read<UserBloc>().clearUserData();
     setState(() => _isLoading = false);
-    Future.delayed(const Duration(seconds: 1)).then((value) => NextScreen().nextScreenCloseOthers(context, const SplashPage()));
+    Future.delayed(const Duration(seconds: 1)).then((value) =>
+        NextScreen().nextScreenCloseOthers(context, const SplashPage()));
   }
 
   @override
@@ -84,7 +87,8 @@ class _SecurityPageState extends State<SecurityPage> {
                 padding: const EdgeInsets.all(15),
                 child: Card(
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       child: Column(
@@ -97,7 +101,10 @@ class _SecurityPageState extends State<SecurityPage> {
                             ),
                             title: Text(
                               'delete-user',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontSize: 16),
                             ).tr(),
                             trailing: const Icon(Icons.arrow_right),
                             onTap: () => _openDeleteDialog(),
@@ -109,7 +116,9 @@ class _SecurityPageState extends State<SecurityPage> {
             ],
           ),
           Align(
-            child: _isLoading == true ? const CircularProgressIndicator() : Container(),
+            child: _isLoading == true
+                ? const CircularProgressIndicator()
+                : Container(),
           )
         ],
       ),

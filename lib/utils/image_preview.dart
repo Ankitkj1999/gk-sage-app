@@ -14,8 +14,10 @@ class FullImagePreview extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: InteractiveViewer(
-            child: CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.contain,)
-          ),
+              child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.contain,
+          )),
         ),
         SafeArea(
           child: Padding(
@@ -26,7 +28,10 @@ class FullImagePreview extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 20,
                   backgroundColor: Theme.of(context).primaryColor,
-                  child: const Icon(Icons.close, color: Colors.white,),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
                 ),
                 onTap: () => Navigator.pop(context),
               ),

@@ -33,7 +33,19 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
   bool _isLoading = false;
 
   static const List<int> _quizAmoutList = [2, 10, 20, 30, 40, 50, 60];
-  static const List<int> _timeListInMinutes = [1, 2, 3, 5, 6, 7, 8, 9, 10, 15, 20];
+  static const List<int> _timeListInMinutes = [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    15,
+    20
+  ];
 
   @override
   void initState() {
@@ -45,21 +57,38 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       final SettingsBloc sb = context.read<SettingsBloc>();
-      if (context.read<UserBloc>().userData!.points! < sb.requiredPointsPlaySelfChallengeMode) {
-        openAnimationDialog(context, Config.emptyBoxAnimation, 'not-enough-points'.tr(),
-            'minimum-points-count'.tr(args: [sb.requiredPointsPlaySelfChallengeMode.toString()]));
+      if (context.read<UserBloc>().userData!.points! <
+          sb.requiredPointsPlaySelfChallengeMode) {
+        openAnimationDialog(
+            context,
+            Config.emptyBoxAnimation,
+            'not-enough-points'.tr(),
+            'minimum-points-count'
+                .tr(args: [sb.requiredPointsPlaySelfChallengeMode.toString()]));
       } else {
         setState(() => _isLoading = true);
-        await FirebaseService().getQuestionForSelfChallengeMode(_selectedQuizId!, _selectedQuestionAmount!).then((List<Question> qList) async {
+        await FirebaseService()
+            .getQuestionForSelfChallengeMode(
+                _selectedQuizId!, _selectedQuestionAmount!)
+            .then((List<Question> qList) async {
           if (qList.isEmpty || qList.length < _selectedQuestionAmount!) {
             setState(() => _isLoading = false);
-            openAnimationDialog(context, Config.emptyBoxAnimation, 'not-enough-questions-title'.tr(), 'not-enough-questions-subtitle'.tr());
+            openAnimationDialog(
+                context,
+                Config.emptyBoxAnimation,
+                'not-enough-questions-title'.tr(),
+                'not-enough-questions-subtitle'.tr());
           } else {
             await FirebaseService()
-                .updateUserPointsByTransection(context.read<UserBloc>().userData!.uid!, false, sb.requiredPointsPlaySelfChallengeMode)
-                .then((int newPoints) => context.read<UserBloc>().updateUserPointsToBloc(newPoints))
+                .updateUserPointsByTransection(
+                    context.read<UserBloc>().userData!.uid!,
+                    false,
+                    sb.requiredPointsPlaySelfChallengeMode)
+                .then((int newPoints) =>
+                    context.read<UserBloc>().updateUserPointsToBloc(newPoints))
                 .then((_) async {
-              context.read<TempBloc>().intializeTempData(context.read<UserBloc>().userData!.points!);
+              context.read<TempBloc>().intializeTempData(
+                  context.read<UserBloc>().userData!.points!);
               setState(() => _isLoading = false);
               NextScreen().nextScreenReplace(
                   context,
@@ -93,7 +122,8 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
                 )
               : Text(
                   'start-quiz',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.w600),
                 ).tr(),
         ),
       ),
@@ -106,10 +136,14 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
             stretch: true,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsetsDirectional.only(bottom: 16, start: 50, end: 20),
+              titlePadding: const EdgeInsetsDirectional.only(
+                  bottom: 16, start: 50, end: 20),
               title: Text(
                 'self-challenge-mode',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: Colors.white, fontSize: 20),
               ).tr(),
               centerTitle: false,
               background: Container(
@@ -133,9 +167,18 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
                       runSpacing: 10,
                       children: [
                         CustomChip(
-                            label: 'points-required-count'.tr(args: [sb.requiredPointsPlaySelfChallengeMode.toString()]), bgColor: Colors.pink),
-                        CustomChip(label: 'reward/question-count'.tr(args: [0.toString()]), bgColor: Colors.orange),
-                        CustomChip(label: 'penalty/question-count'.tr(args: [0.toString()]), bgColor: Colors.red),
+                            label: 'points-required-count'.tr(args: [
+                              sb.requiredPointsPlaySelfChallengeMode.toString()
+                            ]),
+                            bgColor: Colors.pink),
+                        CustomChip(
+                            label: 'reward/question-count'
+                                .tr(args: [0.toString()]),
+                            bgColor: Colors.orange),
+                        CustomChip(
+                            label: 'penalty/question-count'
+                                .tr(args: [0.toString()]),
+                            bgColor: Colors.red),
                       ],
                     ),
                     const SizedBox(
@@ -176,7 +219,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
       children: [
         Text(
           'quiz',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ).tr(),
         const SizedBox(
           height: 5,
@@ -184,7 +230,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
         Container(
             height: 50,
             padding: const EdgeInsets.only(left: 15, right: 15),
-            decoration: BoxDecoration(color: Colors.grey[200], border: Border.all(color: Colors.grey[300]!), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(5)),
             child: DropdownButtonFormField(
                 itemHeight: 50,
                 decoration: const InputDecoration(border: InputBorder.none),
@@ -212,7 +261,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
       children: [
         Text(
           'question-amount',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ).tr(),
         const SizedBox(
           height: 5,
@@ -220,7 +272,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
         Container(
             height: 50,
             padding: const EdgeInsets.only(left: 15, right: 15),
-            decoration: BoxDecoration(color: Colors.grey[200], border: Border.all(color: Colors.grey[300]!), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(5)),
             child: DropdownButtonFormField(
                 itemHeight: 50,
                 decoration: const InputDecoration(border: InputBorder.none),
@@ -249,7 +304,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
       children: [
         Text(
           'duration',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ).tr(),
         const SizedBox(
           height: 5,
@@ -257,7 +315,10 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
         Container(
             height: 50,
             padding: const EdgeInsets.only(left: 15, right: 15),
-            decoration: BoxDecoration(color: Colors.grey[200], border: Border.all(color: Colors.grey[300]!), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(5)),
             child: DropdownButtonFormField(
                 itemHeight: 50,
                 decoration: const InputDecoration(border: InputBorder.none),
@@ -267,7 +328,8 @@ class _SelfChallengePageState extends State<SelfChallengePage> {
                   });
                 },
                 value: _selectedMinutes,
-                validator: (value) => value == null ? 'select-option'.tr() : null,
+                validator: (value) =>
+                    value == null ? 'select-option'.tr() : null,
                 hint: const Text('select-duration').tr(),
                 items: _timeListInMinutes.map((f) {
                   return DropdownMenuItem(

@@ -1,5 +1,11 @@
 class PurchaseModel {
-  final String userId, userName, userEmail, productId, productTitle, price, platform;
+  final String userId,
+      userName,
+      userEmail,
+      productId,
+      productTitle,
+      price,
+      platform;
   final int points;
   final DateTime purchaseAt;
 

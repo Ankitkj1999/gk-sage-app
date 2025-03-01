@@ -19,8 +19,8 @@ class FeatureCard extends StatelessWidget {
     return Stack(
       children: [
         InkWell(
-          onTap: () => NextScreen.nextScreenNormal(
-              context, Quizzes(category: category)),
+          onTap: () =>
+              NextScreen.nextScreenNormal(context, Quizzes(category: category)),
           child: Container(
             width: double.infinity,
             margin: const EdgeInsets.all(15),
@@ -54,20 +54,26 @@ class FeatureCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(category.name!,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.w500)),
-                  const SizedBox(height: 5,),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     children: [
                       Text('quiz-count',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: Colors.grey[300])).tr(args: [category.quizCount.toString()]),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: Colors.grey[300]))
+                          .tr(args: [category.quizCount.toString()]),
                       const SizedBox(
                         width: 10,
                       ),
-                      
                     ],
                   ),
                   // const SizedBox(

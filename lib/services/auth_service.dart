@@ -15,16 +15,19 @@ class AuthService {
   final user = FirebaseAuth.instance.currentUser;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<UserCredential?> loginWithEmailPassword(String email, String password) async {
-    return await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  Future<UserCredential?> loginWithEmailPassword(
+      String email, String password) async {
+    return await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
   }
 
   Future<UserCredential?> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if(googleUser == null){
+    if (googleUser == null) {
       return null;
     }
-    final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
@@ -40,9 +43,11 @@ class AuthService {
   }
 
   String generateNonce([int length = 32]) {
-    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
   }
 
   /// Returns the sha256 hash of [input] in hex notation.
@@ -85,8 +90,10 @@ class AuthService {
     }
   }
 
-  Future<UserCredential?> signUpWithEmailPassword(String email, String password) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<UserCredential?> signUpWithEmailPassword(
+      String email, String password) async {
+    return await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
   }
 
   Future deleteUserAuth() async {

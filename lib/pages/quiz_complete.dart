@@ -10,7 +10,8 @@ import 'package:quiz_app/pages/question_overview.dart';
 import 'package:quiz_app/utils/next_screen.dart';
 
 class QuizComplete extends StatefulWidget {
-  const QuizComplete({super.key, required this.qList, required this.isTimeOver});
+  const QuizComplete(
+      {super.key, required this.qList, required this.isTimeOver});
 
   final List<Question> qList;
   final bool isTimeOver;
@@ -20,13 +21,14 @@ class QuizComplete extends StatefulWidget {
 }
 
 class _QuizCompleteState extends State<QuizComplete> {
-
   @override
   void initState() {
     super.initState();
-    Future.microtask((){
-      if(context.read<SoundControllerBloc>().audioEnabled){
-        context.read<SoundControllerBloc>().playSound(context.read<SoundControllerBloc>().congratsSoundId);
+    Future.microtask(() {
+      if (context.read<SoundControllerBloc>().audioEnabled) {
+        context
+            .read<SoundControllerBloc>()
+            .playSound(context.read<SoundControllerBloc>().congratsSoundId);
       }
     });
   }
@@ -86,15 +88,16 @@ class _QuizCompleteState extends State<QuizComplete> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    widget.isTimeOver ? Container()
-                    : Text(
-                      'quiz-complete',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontSize: 18
-                          ),
-                    ).tr(),
+                    widget.isTimeOver
+                        ? Container()
+                        : Text(
+                            'quiz-complete',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(color: Colors.white, fontSize: 18),
+                          ).tr(),
                     Container(
                       margin: const EdgeInsets.only(top: 20, bottom: 20),
                       child: CircularPercentIndicator(
@@ -131,8 +134,9 @@ class _QuizCompleteState extends State<QuizComplete> {
                               .textTheme
                               .labelMedium
                               ?.copyWith(
-                                fontSize: 16,
-                                color: Colors.white, fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
                         ).tr(),
                       ),
                     ),
@@ -145,14 +149,23 @@ class _QuizCompleteState extends State<QuizComplete> {
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 1.5, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.5,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10),
               children: [
-                _infoCard(context, 'correct-answer'.tr(), context.read<TempBloc>().currentAnsCount.toString()),
-                _infoCard(context, 'incorrect-answer'.tr(), context.read<TempBloc>().incorrectAnsCount.toString()),
-                _infoCard(context, 'not-answered'.tr(), _getSkippedCount(context)),
-                _infoCard(context, 'points-earned'.tr(), '+${context.read<TempBloc>().pointsEarned}'),
-                _infoCard(context, 'points-loss'.tr(), '-${context.read<TempBloc>().pointLoss}'),
-                _infoCard(context, 'completion'.tr(), '${(context.read<TempBloc>().selectedIndexList.length/widget.qList.length * 100).round()}%'),
+                _infoCard(context, 'correct-answer'.tr(),
+                    context.read<TempBloc>().currentAnsCount.toString()),
+                _infoCard(context, 'incorrect-answer'.tr(),
+                    context.read<TempBloc>().incorrectAnsCount.toString()),
+                _infoCard(
+                    context, 'not-answered'.tr(), _getSkippedCount(context)),
+                _infoCard(context, 'points-earned'.tr(),
+                    '+${context.read<TempBloc>().pointsEarned}'),
+                _infoCard(context, 'points-loss'.tr(),
+                    '-${context.read<TempBloc>().pointLoss}'),
+                _infoCard(context, 'completion'.tr(),
+                    '${(context.read<TempBloc>().selectedIndexList.length / widget.qList.length * 100).round()}%'),
               ],
             )
           ],
@@ -162,11 +175,12 @@ class _QuizCompleteState extends State<QuizComplete> {
   }
 
   String _getSkippedCount(BuildContext context) {
-    if (widget.qList.length == context.read<TempBloc>().selectedIndexList.length) {
+    if (widget.qList.length ==
+        context.read<TempBloc>().selectedIndexList.length) {
       return '0';
     } else {
-      int count =
-          widget.qList.length - context.read<TempBloc>().selectedIndexList.length;
+      int count = widget.qList.length -
+          context.read<TempBloc>().selectedIndexList.length;
       return count.toString();
     }
   }
@@ -175,9 +189,7 @@ class _QuizCompleteState extends State<QuizComplete> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: Colors.grey.shade200, borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

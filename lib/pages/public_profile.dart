@@ -6,7 +6,6 @@ import 'package:quiz_app/configs/feature_config.dart';
 import 'package:quiz_app/models/user.dart';
 import 'package:quiz_app/widgets/avatar_circle.dart';
 
-
 class PublicProfile extends StatelessWidget {
   const PublicProfile({super.key, required this.user, required this.rank});
 
@@ -19,7 +18,10 @@ class PublicProfile extends StatelessWidget {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        leading: IconButton(icon: const Icon(Icons.close), onPressed: ()=> Navigator.pop(context),),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -145,11 +147,12 @@ class PublicProfile extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1.6,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1.6,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10),
                         children: [
                           _infoCard(context, 'quiz-completed'.tr(),
                               user.totalQuizPlayed.toString()),
@@ -169,7 +172,9 @@ class PublicProfile extends StatelessWidget {
                             width: double.infinity,
                             child: _StrengthCard(context, user.strength!)),
                       ),
-                      const SizedBox(height: 50,)
+                      const SizedBox(
+                        height: 50,
+                      )
                     ],
                   ),
                 ),
@@ -224,12 +229,12 @@ class PublicProfile extends StatelessWidget {
 
   // ignore: non_constant_identifier_names
   Widget _StrengthCard(BuildContext context, double strength) {
-    final strengthText = '${user.totalCorrectAns}/${user.totalQuestionAnswered}';
+    final strengthText =
+        '${user.totalCorrectAns}/${user.totalQuestionAnswered}';
     return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10)),
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -238,17 +243,17 @@ class PublicProfile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            Text(
-              'strength',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ).tr(),
-            Text(
-              strength.toStringAsFixed(2),
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            )
+                Text(
+                  'strength',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ).tr(),
+                Text(
+                  strength.toStringAsFixed(2),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                )
               ],
             ),
             SizedBox(

@@ -16,13 +16,16 @@ class SpecialCategory1 extends StatefulWidget {
   State<SpecialCategory1> createState() => _SpecialCategory1State();
 }
 
-class _SpecialCategory1State extends State<SpecialCategory1> with AutomaticKeepAliveClientMixin {
+class _SpecialCategory1State extends State<SpecialCategory1>
+    with AutomaticKeepAliveClientMixin {
   late Future _category;
   late Future _quizzes;
 
   Future<List<Quiz>> _getQuizzesByIndex() async {
     List<Quiz> quizzes = [];
-    await FirebaseService().getCategoryBasedQuizesByLimit(widget.catID, 3).then((List<Quiz> value) {
+    await FirebaseService()
+        .getCategoryBasedQuizesByLimit(widget.catID, 3)
+        .then((List<Quiz> value) {
       bool hasIndex = value.isEmpty
           ? false
           : value[0].index != null
@@ -57,7 +60,9 @@ class _SpecialCategory1State extends State<SpecialCategory1> with AutomaticKeepA
             child: FutureBuilder(
               future: _category,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError || !snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.hasError ||
+                    !snapshot.hasData) {
                   return Container();
                 }
                 Category category = snapshot.data;
@@ -66,10 +71,13 @@ class _SpecialCategory1State extends State<SpecialCategory1> with AutomaticKeepA
                   children: [
                     Text(
                       category.name.toString(),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[900], fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.grey[900], fontWeight: FontWeight.w600),
                     ),
                     TextButton(
-                        onPressed: () => NextScreen.nextScreenNormal(context, Quizzes(category: category)), child: const Text('explore-all').tr())
+                        onPressed: () => NextScreen.nextScreenNormal(
+                            context, Quizzes(category: category)),
+                        child: const Text('explore-all').tr())
                   ],
                 );
               },

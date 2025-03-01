@@ -18,7 +18,10 @@ class LanguagePopupState extends State<LanguagePopup> {
       backgroundColor: ColorConfig.bgColor,
       appBar: AppBar(
         elevation: 0,
-        title: const Text('select-language', style: TextStyle(color: Colors.white),).tr(),
+        title: const Text(
+          'select-language',
+          style: TextStyle(color: Colors.white),
+        ).tr(),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(10),
@@ -44,12 +47,16 @@ class LanguagePopupState extends State<LanguagePopup> {
           horizontalTitleGap: 10,
           title: Text(d,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500, color: Colors.grey.shade900, fontSize: 18)),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade900,
+                  fontSize: 18)),
           onTap: () async {
             final languageCode = LanguageConfig.supportedLocals[index];
             final engine = WidgetsFlutterBinding.ensureInitialized();
             await context.setLocale(languageCode);
-            await engine.performReassemble().then((value)=> Navigator.pop(context));
+            await engine
+                .performReassemble()
+                .then((value) => Navigator.pop(context));
           },
         ),
         Divider(

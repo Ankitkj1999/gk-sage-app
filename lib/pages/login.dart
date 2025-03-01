@@ -54,31 +54,43 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _gotoHomeScreen() {
-    Future.delayed(const Duration(seconds: 1)).then((value) => NextScreen().nextScreenReplace(context, const HomePage()));
+    Future.delayed(const Duration(seconds: 1)).then(
+        (value) => NextScreen().nextScreenReplace(context, const HomePage()));
   }
 
   _gotoSelectAvatarScreen(String userId) {
-    Future.delayed(const Duration(seconds: 1)).then((value) => NextScreen().nextScreenReplace(context, SelectAvatar(userId: userId)));
+    Future.delayed(const Duration(seconds: 1)).then((value) =>
+        NextScreen().nextScreenReplace(context, SelectAvatar(userId: userId)));
   }
 
-  _afterSignUpWithSocialAccount(UserCredential userCredential, RoundedLoadingButtonController btnCtlr) async {
+  _afterSignUpWithSocialAccount(UserCredential userCredential,
+      RoundedLoadingButtonController btnCtlr) async {
     final int initialReward = await FirebaseService().getNewUserReward();
-    final String newPointsHistory = 'New User Reward +$initialReward at ${DateTime.now()}';
+    final String newPointsHistory =
+        'New User Reward +$initialReward at ${DateTime.now()}';
     await FirebaseService()
         .saveUserData(
-            userCredential.user!.uid, userCredential.user!.displayName ?? 'No Name', userCredential.user!.email ?? 'Not Given', null, initialReward)
-        .then((value) async => await FirebaseService()
-            .updateUserStats()
-            .then((value) async => await FirebaseService().updateUserPointHistory(userCredential.user!.uid, newPointsHistory)));
+            userCredential.user!.uid,
+            userCredential.user!.displayName ?? 'No Name',
+            userCredential.user!.email ?? 'Not Given',
+            null,
+            initialReward)
+        .then((value) async => await FirebaseService().updateUserStats().then(
+            (value) async => await FirebaseService().updateUserPointHistory(
+                userCredential.user!.uid, newPointsHistory)));
     btnCtlr.success();
     _gotoSelectAvatarScreen(userCredential.user!.uid);
   }
 
   _handleSignInWithGoogle() async {
     _googleController.start();
-    await AuthService().signInWithGoogle().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithGoogle()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _googleController);
           } else {
@@ -95,9 +107,13 @@ class _LoginPageState extends State<LoginPage> {
 
   _handleSignInWithFacebook() async {
     _fbController.start();
-    await AuthService().signInWithFacebook().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithFacebook()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _fbController);
           } else {
@@ -114,9 +130,13 @@ class _LoginPageState extends State<LoginPage> {
 
   _handleSignInWithApple() async {
     _appleController.start();
-    await AuthService().signInWithApple().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithApple()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _appleController);
           } else {
@@ -136,7 +156,9 @@ class _LoginPageState extends State<LoginPage> {
       _formKey.currentState!.save();
       _loginController.start();
       try {
-        await AuthService().loginWithEmailPassword(_emailCtlr.text, _passCtlr.text).then((UserCredential? userCredential) async {
+        await AuthService()
+            .loginWithEmailPassword(_emailCtlr.text, _passCtlr.text)
+            .then((UserCredential? userCredential) async {
           if (userCredential != null) {
             _handleAfterLogin(userCredential, _loginController);
           }
@@ -150,7 +172,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _handleAfterLogin(UserCredential userCredential, RoundedLoadingButtonController controller) async {
+  _handleAfterLogin(UserCredential userCredential,
+      RoundedLoadingButtonController controller) async {
     final userBloc = context.read<UserBloc>();
     final sb = context.read<SettingsBloc>();
     final ab = context.read<AdsBloc>();
@@ -229,8 +252,11 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(15),
                       hintText: 'email'.tr(),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      suffixIcon: IconButton(icon: const Icon(Icons.close), onPressed: () => _emailCtlr.clear())),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      suffixIcon: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => _emailCtlr.clear())),
                 ),
               ),
               const SizedBox(
@@ -248,8 +274,10 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(15),
                       hintText: 'password'.tr(),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      suffixIcon: IconButton(onPressed: _onSuffixIconPressed, icon: lockIcon)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      suffixIcon: IconButton(
+                          onPressed: _onSuffixIconPressed, icon: lockIcon)),
                 ),
               ),
               const SizedBox(
@@ -260,7 +288,8 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     child: const Text('forgot-password').tr(),
-                    onPressed: () => NextScreen.nextScreenNormal(context, const ForgotPasswordPage()),
+                    onPressed: () => NextScreen.nextScreenNormal(
+                        context, const ForgotPasswordPage()),
                   ),
                 ],
               ),
@@ -276,7 +305,10 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     const Text(
                       'login',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     ).tr()
                   ],
                 ),
@@ -298,9 +330,13 @@ class _LoginPageState extends State<LoginPage> {
                     TextButton(
                         child: Text(
                           'signup',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Theme.of(context).colorScheme.primary),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.primary),
                         ).tr(),
-                        onPressed: () => NextScreen().nextScreenReplace(context, const SignUpPage()))
+                        onPressed: () => NextScreen()
+                            .nextScreenReplace(context, const SignUpPage()))
                   ],
                 ),
               ),

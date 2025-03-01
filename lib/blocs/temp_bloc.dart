@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TempBloc extends ChangeNotifier{
-
+class TempBloc extends ChangeNotifier {
   // ignore: prefer_final_fields
   List<int> _selectedIndexList = [];
   List<int> get selectedIndexList => _selectedIndexList;
@@ -30,25 +29,26 @@ class TempBloc extends ChangeNotifier{
   int _pointsLoss = 0;
   int get pointLoss => _pointsLoss;
 
-
-  setParcentage (int qIndex, int totalQ){
+  setParcentage(int qIndex, int totalQ) {
     _currentQuestionIndex = qIndex + 1;
     _totalQuestions = totalQ;
-    _percentage = _currentQuestionIndex/_totalQuestions;
+    _percentage = _currentQuestionIndex / _totalQuestions;
     notifyListeners();
   }
 
-  updateTempData (int selctedIndex, int newPoints, int newPointsEarned, bool isCorrect, int newPointLoss){
+  updateTempData(int selctedIndex, int newPoints, int newPointsEarned,
+      bool isCorrect, int newPointLoss) {
     _selectedIndexList.add(selctedIndex);
     _points = newPoints;
     _correctAnsCount = isCorrect ? _correctAnsCount + 1 : _correctAnsCount;
-    _incorrectAnsCount = !isCorrect ? _incorrectAnsCount + 1 : _incorrectAnsCount;
+    _incorrectAnsCount =
+        !isCorrect ? _incorrectAnsCount + 1 : _incorrectAnsCount;
     _pointsEarned = _pointsEarned + newPointsEarned;
     _pointsLoss = _pointsLoss + newPointLoss;
     notifyListeners();
   }
 
-  intializeTempData (int userPoints){
+  intializeTempData(int userPoints) {
     _selectedIndexList.clear();
     _currentQuestionIndex = 0;
     _totalQuestions = 0;
@@ -60,5 +60,4 @@ class TempBloc extends ChangeNotifier{
     _pointsLoss = 0;
     notifyListeners();
   }
-  
 }

@@ -67,7 +67,8 @@ class _QuizScreenState extends State<QuizScreen> {
   _updatePointsHistory() async {
     final String userId = context.read<UserBloc>().userData!.uid!;
     String newHistory = '';
-    final int rewardAmount = (context.read<TempBloc>().pointsEarned - context.read<TempBloc>().pointLoss);
+    final int rewardAmount = (context.read<TempBloc>().pointsEarned -
+        context.read<TempBloc>().pointLoss);
     if (rewardAmount.isNegative) {
       newHistory = 'Completed A Quiz $rewardAmount at ${DateTime.now()}';
     } else {
@@ -85,24 +86,35 @@ class _QuizScreenState extends State<QuizScreen> {
         setState(() => _isLoading = true);
         if (widget.selfChallengeMode == false) {
           //not for self challenge mode
-          await FirebaseService().updateUserPoints(user.uid!, context.read<TempBloc>().points);
+          await FirebaseService()
+              .updateUserPoints(user.uid!, context.read<TempBloc>().points);
           // ignore: use_build_context_synchronously
-          await context.read<UserBloc>().updateUserPointsToBloc(context.read<TempBloc>().points);
+          await context
+              .read<UserBloc>()
+              .updateUserPointsToBloc(context.read<TempBloc>().points);
           await _updateUserStat();
           await _updatePointsHistory();
-          await FirebaseService().updateCompletedQuizzes(widget.qList[questionIndex].quizId!, user);
+          await FirebaseService().updateCompletedQuizzes(
+              widget.qList[questionIndex].quizId!, user);
           // ignore: use_build_context_synchronously
           await context.read<UserBloc>().getUserData();
         }
         setState(() => _isLoading = false);
         _showAd();
         // ignore: use_build_context_synchronously
-        NextScreen().nextScreenReplace(context, QuizComplete(qList: widget.qList, isTimeOver: false));
+        NextScreen().nextScreenReplace(
+            context, QuizComplete(qList: widget.qList, isTimeOver: false));
       } else {
-        context.read<QuestionBloc>().updateQuestion(widget.qList[questionIndex + 1]);
-        context.read<TempBloc>().setParcentage(questionIndex + 1, widget.qList.length);
+        context
+            .read<QuestionBloc>()
+            .updateQuestion(widget.qList[questionIndex + 1]);
+        context
+            .read<TempBloc>()
+            .setParcentage(questionIndex + 1, widget.qList.length);
         if (context.read<SoundControllerBloc>().audioEnabled) {
-          context.read<SoundControllerBloc>().playSound(context.read<SoundControllerBloc>().optionSoundId);
+          context
+              .read<SoundControllerBloc>()
+              .playSound(context.read<SoundControllerBloc>().optionSoundId);
         }
       }
 
@@ -118,7 +130,8 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _showAd() {
-    if (context.read<AdsBloc>().isInterstitialEnabled && context.read<AdsBloc>().isInterstitialAdLoaded) {
+    if (context.read<AdsBloc>().isInterstitialEnabled &&
+        context.read<AdsBloc>().isInterstitialAdLoaded) {
       context.read<AdsBloc>().showInterstitialAd();
     }
   }
@@ -126,19 +139,27 @@ class _QuizScreenState extends State<QuizScreen> {
   _updateUserStat() async {
     final user = context.read<UserBloc>().userData;
     final tb = context.read<TempBloc>();
-    await FirebaseService().updateUserStatToDatabase(user!.uid!, user.totalQuizPlayed! + 1, user.totalQuestionAnswered! + tb.selectedIndexList.length,
-        user.totalCorrectAns! + tb.currentAnsCount, user.totalIncorrectAns! + tb.incorrectAnsCount);
+    await FirebaseService().updateUserStatToDatabase(
+        user!.uid!,
+        user.totalQuizPlayed! + 1,
+        user.totalQuestionAnswered! + tb.selectedIndexList.length,
+        user.totalCorrectAns! + tb.currentAnsCount,
+        user.totalIncorrectAns! + tb.incorrectAnsCount);
   }
 
   _updateTempData(int questionIndex) {
     TempBloc tb = context.read<TempBloc>();
     SettingsBloc sb = context.read<SettingsBloc>();
-    if (_selectedOptionIndex == widget.qList[questionIndex].correctAnswerIndex) {
+    if (_selectedOptionIndex ==
+        widget.qList[questionIndex].correctAnswerIndex) {
       int newPoints = tb.points + context.read<SettingsBloc>().correctAnsReward;
-      tb.updateTempData(_selectedOptionIndex!, newPoints, widget.selfChallengeMode ? 0 : sb.correctAnsReward, true, 0);
+      tb.updateTempData(_selectedOptionIndex!, newPoints,
+          widget.selfChallengeMode ? 0 : sb.correctAnsReward, true, 0);
     } else {
-      int newPoints = tb.points - context.read<SettingsBloc>().incorrectAnsPenalty;
-      tb.updateTempData(_selectedOptionIndex!, newPoints, 0, false, widget.selfChallengeMode ? 0 : sb.incorrectAnsPenalty);
+      int newPoints =
+          tb.points - context.read<SettingsBloc>().incorrectAnsPenalty;
+      tb.updateTempData(_selectedOptionIndex!, newPoints, 0, false,
+          widget.selfChallengeMode ? 0 : sb.incorrectAnsPenalty);
     }
   }
 
@@ -147,15 +168,19 @@ class _QuizScreenState extends State<QuizScreen> {
     final currentQuestion = questionBloc.question;
 
     final String? explanation = currentQuestion?.explaination;
-    final String? correctAnswer = currentQuestion?.options?[currentQuestion.correctAnswerIndex!];
+    final String? correctAnswer =
+        currentQuestion?.options?[currentQuestion.correctAnswerIndex!];
 
-    debugPrint("Option selected: $optionIndex and the correct answer is $correctAnswer");
-    debugPrint("Explanation: ${explanation ?? 'No explanation available and the correct answer is $correctAnswer'}");
-
+    debugPrint(
+        "Option selected: $optionIndex and the correct answer is $correctAnswer");
+    debugPrint(
+        "Explanation: ${explanation ?? 'No explanation available and the correct answer is $correctAnswer'}");
 
     setState(() => _selectedOptionIndex = optionIndex);
     if (context.read<SoundControllerBloc>().audioEnabled) {
-      context.read<SoundControllerBloc>().playSound(context.read<SoundControllerBloc>().clickSoundId);
+      context
+          .read<SoundControllerBloc>()
+          .playSound(context.read<SoundControllerBloc>().clickSoundId);
     }
 
     if (context.read<SoundControllerBloc>().vibrationEnabled) {
@@ -201,8 +226,13 @@ class _QuizScreenState extends State<QuizScreen> {
         bottomNavigationBar: Wrap(
           alignment: WrapAlignment.center,
           children: [
-            Visibility(visible: context.read<AdsBloc>().isBannerAdEnabled, child: const BannerAdWidget()),
-            NextButton(isLoading: _isLoading, onPressed: (int questionIndex) => _onNextButtonPressed(questionIndex)),
+            Visibility(
+                visible: context.read<AdsBloc>().isBannerAdEnabled,
+                child: const BannerAdWidget()),
+            NextButton(
+                isLoading: _isLoading,
+                onPressed: (int questionIndex) =>
+                    _onNextButtonPressed(questionIndex)),
           ],
         ),
         appBar: progessAppBar(
@@ -231,7 +261,8 @@ class _QuizScreenState extends State<QuizScreen> {
                   QuizOptions(
                     question: question,
                     selectedOptionIndex: _selectedOptionIndex,
-                    onOptionPressed: (int optionIndex) => _onOptionPressed(optionIndex),
+                    onOptionPressed: (int optionIndex) =>
+                        _onOptionPressed(optionIndex),
                     showExplanation: _selectedOptionIndex != null,
                     correctAnswerIndex: question.correctAnswerIndex ?? 0,
                   ),

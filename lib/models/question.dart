@@ -57,11 +57,10 @@ class Question {
         questionAudioUrl: d['question_audio_url'],
         questionVideoUrl: d['question_video_url'],
         explaination: d['explaination'],
-        optionsType: _getOptionsTyoe(d['has_four_options'], d['options_type'])
-    );
+        optionsType: _getOptionsTyoe(d['has_four_options'], d['options_type']));
   }
 
-  static Map<String, dynamic> getMap (Question d){
+  static Map<String, dynamic> getMap(Question d) {
     return {
       'id': d.id,
       'cat_id': d.catId,
@@ -80,7 +79,6 @@ class Question {
       'options_type': d.optionsType
     };
   }
-
 
   static String _getOptionsTyoe(bool? hasFourOptions, String? optionString) {
     if (hasFourOptions == null) {

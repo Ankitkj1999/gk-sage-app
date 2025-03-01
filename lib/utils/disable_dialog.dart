@@ -19,15 +19,20 @@ Future<void> openDisableUserDialog(context) {
               margin: const EdgeInsets.only(top: 20),
               child: IconsButton(
                 onPressed: () {
-                  SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop', true);
+                  SystemChannels.platform
+                      .invokeMethod<void>('SystemNavigator.pop', true);
                 },
                 text: 'Okay',
                 iconData: Icons.check,
                 color: Theme.of(context).primaryColor,
-                textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
                 iconColor: Colors.white,
               ),
             ),
           ],
-      onClose: (_) => SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop', true));
+      onClose: (_) => SystemChannels.platform
+          .invokeMethod<void>('SystemNavigator.pop', true));
 }

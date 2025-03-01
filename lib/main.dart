@@ -10,7 +10,6 @@ import 'app.dart';
 import 'constants/constant.dart';
 import 'firebase_options.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -24,16 +23,12 @@ void main() async {
   Directory directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   await Hive.openBox(Constants.notificationTag);
-  runApp(
-    EasyLocalization(
-      supportedLocales: LanguageConfig.supportedLocals,
-      path: 'assets/translations', 
-      fallbackLocale: const Locale(LanguageConfig.fallbackLocale),
-      startLocale: const Locale(LanguageConfig.startLocale),
-      useOnlyLangCode: true,
-      child: const MyApp(),
-    )
-  );
+  runApp(EasyLocalization(
+    supportedLocales: LanguageConfig.supportedLocals,
+    path: 'assets/translations',
+    fallbackLocale: const Locale(LanguageConfig.fallbackLocale),
+    startLocale: const Locale(LanguageConfig.startLocale),
+    useOnlyLangCode: true,
+    child: const MyApp(),
+  ));
 }
-
-

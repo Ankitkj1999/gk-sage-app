@@ -4,16 +4,16 @@ import 'package:quiz_app/services/sp_service.dart';
 import 'package:quiz_app/utils/notification_permission_dialog.dart';
 
 class NotificationBloc extends ChangeNotifier {
-
   bool _subscribed = false;
   bool get subscribed => _subscribed;
 
-
-  Future checkPermission ()async{
-    await NotificationService().checkingPermisson().then((bool? accepted)async{
-      if(accepted != null && accepted){
+  Future checkPermission() async {
+    await NotificationService()
+        .checkingPermisson()
+        .then((bool? accepted) async {
+      if (accepted != null && accepted) {
         checkSubscription();
-      }else{
+      } else {
         await SPService().setNotificationSubscription(false);
         _subscribed = false;
         notifyListeners();
@@ -21,12 +21,12 @@ class NotificationBloc extends ChangeNotifier {
     });
   }
 
-  Future checkSubscription ()async{
-    await SPService().getNotificationSubscription().then((bool value)async{
-      if(value){
+  Future checkSubscription() async {
+    await SPService().getNotificationSubscription().then((bool value) async {
+      if (value) {
         await NotificationService().subscribe();
         _subscribed = true;
-      }else{
+      } else {
         await NotificationService().unsubscribe();
         _subscribed = false;
       }
@@ -34,25 +34,25 @@ class NotificationBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  handleSubscription (context, bool newValue) async{
-    if(newValue){
-      await NotificationService().checkingPermisson().then((bool? accepted)async{
-        if(accepted != null && accepted){
+  handleSubscription(context, bool newValue) async {
+    if (newValue) {
+      await NotificationService()
+          .checkingPermisson()
+          .then((bool? accepted) async {
+        if (accepted != null && accepted) {
           _subscribed = true;
           notifyListeners();
           await NotificationService().subscribe();
           await SPService().setNotificationSubscription(newValue);
-        }else{
+        } else {
           openNotificationPermissionDialog(context);
         }
       });
-    }else{
+    } else {
       _subscribed = newValue;
       notifyListeners();
       await NotificationService().unsubscribe();
       await SPService().setNotificationSubscription(newValue);
     }
   }
-
-  
 }

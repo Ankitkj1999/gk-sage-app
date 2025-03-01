@@ -50,7 +50,8 @@ class _EditProfileState extends State<EditProfile> {
     _selectedImageFile = null;
     _selectedAssetString = widget.userData.avatarString;
     _imageUrl = widget.userData.imageUrl;
-    Future.delayed(const Duration(milliseconds: 500)).then((value) => _scrollToIndex());
+    Future.delayed(const Duration(milliseconds: 500))
+        .then((value) => _scrollToIndex());
   }
 
   void _scrollToIndex() {
@@ -64,27 +65,29 @@ class _EditProfileState extends State<EditProfile> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       _btnCtlr.start();
-      if(_selectedImageFile != null){
+      if (_selectedImageFile != null) {
         //with image
-        await _uploadToHosting().then((String? imageUrl)async{
-          if(imageUrl != null){
-            await FirebaseService().updateUserProfileOnEditScreen(widget.userData.uid!, _nameCtlr.text, null, imageUrl);
+        await _uploadToHosting().then((String? imageUrl) async {
+          if (imageUrl != null) {
+            await FirebaseService().updateUserProfileOnEditScreen(
+                widget.userData.uid!, _nameCtlr.text, null, imageUrl);
             _btnCtlr.reset();
             // ignore: use_build_context_synchronously
             openSnackbar(context, 'Updated Successfully!');
-          }else{
+          } else {
             _btnCtlr.reset();
             openSnackbar(context, 'Error on uploading image. Please try again');
           }
         });
-      }else{
+      } else {
         //with avatar
-        if(_selectedAssetString != null){
-          await FirebaseService().updateUserProfileOnEditScreen(widget.userData.uid!, _nameCtlr.text, _selectedAssetString, null);
+        if (_selectedAssetString != null) {
+          await FirebaseService().updateUserProfileOnEditScreen(
+              widget.userData.uid!, _nameCtlr.text, _selectedAssetString, null);
           _btnCtlr.reset();
           // ignore: use_build_context_synchronously
           openSnackbar(context, 'Updated Successfully!');
-        }else{
+        } else {
           _btnCtlr.reset();
           openSnackbar(context, "Please Select an Avatar");
         }
@@ -96,7 +99,8 @@ class _EditProfileState extends State<EditProfile> {
 
   Future _pickImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
+    final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
     if (image != null) {
       setState(() {
         _selectedImageFile = File(image.path);
@@ -109,21 +113,23 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<String?> _uploadToHosting() async {
     String? imageUrl;
-    final Reference storageReference = FirebaseStorage.instance.ref().child('user_pictures/$_fileName');
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child('user_pictures/$_fileName');
     final UploadTask uploadTask = storageReference.putFile(_selectedImageFile!);
-    await uploadTask.whenComplete(()async{
-      imageUrl = await storageReference.getDownloadURL();  
+    await uploadTask.whenComplete(() async {
+      imageUrl = await storageReference.getDownloadURL();
     });
     return imageUrl;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('edit-profile', style: TextStyle(color: Colors.white),).tr(),
+        title: const Text(
+          'edit-profile',
+          style: TextStyle(color: Colors.white),
+        ).tr(),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -135,19 +141,25 @@ class _EditProfileState extends State<EditProfile> {
                 child: Column(
                   children: [
                     const Text('image-upload').tr(),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         InkWell(
-                          onTap: ()=> _pickImage(),
+                          onTap: () => _pickImage(),
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             height: 140,
                             width: 140,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
-                                image: getUserImageforEditProfile(context, _imageUrl, _selectedImageFile, _selectedAssetString),
+                                image: getUserImageforEditProfile(
+                                    context,
+                                    _imageUrl,
+                                    _selectedImageFile,
+                                    _selectedAssetString),
                                 shape: BoxShape.circle,
                                 color: Colors.green[100]),
                           ),
@@ -164,12 +176,16 @@ class _EditProfileState extends State<EditProfile> {
                         )
                       ],
                     ),
-                    const SizedBox(height: 10,),
-                    Text('----OR----', style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: ColorConfig.bodyTextColor
-                    ),),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '----OR----',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: ColorConfig.bodyTextColor),
+                    ),
                   ],
                 )),
             Padding(

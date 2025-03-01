@@ -41,7 +41,8 @@ class AppService {
     final Uri uri = Uri(
       scheme: 'mailto',
       path: Config.supportEmail,
-      query: 'subject=About ${Config.appName}&body=', //add subject and body here
+      query:
+          'subject=About ${Config.appName}&body=', //add subject and body here
     );
 
     if (await canLaunchUrl(uri)) {
@@ -80,7 +81,8 @@ class AppService {
     //     androidAppId: sb.packageName, iOSAppId: Config.iOSAppId, writeReview: false);
     if (Platform.isIOS) {
       if (Config.iOSAppId == '000000') {
-        openToast1(context, 'The iOS version is not available on the AppStore yet');
+        openToast1(
+            context, 'The iOS version is not available on the AppStore yet');
       }
     }
   }
@@ -90,7 +92,8 @@ class AppService {
   }
 
   static String getQuestionOrder(String? questionOrderString) {
-    if (questionOrderString == null || questionOrderString == Constants.questionOrders[1]) {
+    if (questionOrderString == null ||
+        questionOrderString == Constants.questionOrders[1]) {
       return 'ascending';
     } else if (questionOrderString == Constants.questionOrders[2]) {
       return 'descending';
@@ -110,7 +113,8 @@ class AppService {
   }
 
   static bool isHTML(String str) {
-    final RegExp htmlRegExp = RegExp('<[^>]*>', multiLine: true, caseSensitive: false);
+    final RegExp htmlRegExp =
+        RegExp('<[^>]*>', multiLine: true, caseSensitive: false);
     return htmlRegExp.hasMatch(str);
   }
 

@@ -8,10 +8,9 @@ class IconUtils {
 
   //tabs
   static IconData home = CupertinoIcons.home;
-  static IconData categories= CupertinoIcons.grid;
+  static IconData categories = CupertinoIcons.grid;
   static IconData leaderboard = CupertinoIcons.chart_bar_square;
   static IconData profile = LineIcons.user;
-
 
   static const IconData starFill = LineIcons.starAlt;
   static const IconData star = LineIcons.star;
@@ -33,20 +32,23 @@ class IconUtils {
   static const IconData sound = Ionicons.volume_high_outline;
   static const IconData vibration = Icons.vibration;
 
-
   static const IconData email = Ionicons.mail_open_outline;
   static const IconData info = LineIcons.info;
   static const IconData lock = LineIcons.lock;
   static const IconData buy = LineIcons.shoppingCart;
 
-
   static const IconData disbbleOption = Icons.radio_button_unchecked_outlined;
   static const IconData rightAnswerOption = Icons.check_circle;
   static const IconData wrongAnswerOption = Icons.close;
 
-
-  static const Icon lockPassword = Icon(CupertinoIcons.eye_slash_fill, size: 20,);
-  static const Icon openPassword = Icon(CupertinoIcons.eye_fill, size: 20,);
+  static const Icon lockPassword = Icon(
+    CupertinoIcons.eye_slash_fill,
+    size: 20,
+  );
+  static const Icon openPassword = Icon(
+    CupertinoIcons.eye_fill,
+    size: 20,
+  );
 
   static const IconData timer = Ionicons.time_outline;
   static const IconData addBookmark = Icons.bookmark_add_outlined;
@@ -56,6 +58,4 @@ class IconUtils {
   static const IconData navigate = Icons.keyboard_arrow_right;
   static const IconData done = Icons.done_all;
   static const IconData store = Ionicons.cart;
-
-
 }

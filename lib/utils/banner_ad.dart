@@ -37,7 +37,8 @@ class BannerAdState extends State<BannerAdWidget> {
         onAdImpression: (Ad ad) => debugPrint('Ad impression.'),
       ),
     );
-    Future<void>.delayed(const Duration(milliseconds: 500), () => _bannerAd.load());
+    Future<void>.delayed(
+        const Duration(milliseconds: 500), () => _bannerAd.load());
   }
 
   @override

@@ -8,7 +8,14 @@ import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 import '../configs/color_config.dart';
 
 class SocialLogins extends StatelessWidget {
-  const SocialLogins({super.key, required this.onGooglePressed, required this.onFbPressed, required this.onApplePressed, required this.googleBtnCtlr, required this.fbBtnCtlr, required this.appleBtnCtlr});
+  const SocialLogins(
+      {super.key,
+      required this.onGooglePressed,
+      required this.onFbPressed,
+      required this.onApplePressed,
+      required this.googleBtnCtlr,
+      required this.fbBtnCtlr,
+      required this.appleBtnCtlr});
 
   final VoidCallback onGooglePressed;
   final VoidCallback onFbPressed;
@@ -18,17 +25,21 @@ class SocialLogins extends StatelessWidget {
   final RoundedLoadingButtonController fbBtnCtlr;
   final RoundedLoadingButtonController appleBtnCtlr;
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 5,),
-        Text('login-social', style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: ColorConfig.bodyTextColor
-        ),).tr(),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          'login-social',
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: ColorConfig.bodyTextColor),
+        ).tr(),
         const SizedBox(
           height: 20,
         ),
@@ -42,18 +53,18 @@ class SocialLogins extends StatelessWidget {
           elevation: 0,
           child: Wrap(
             children: [
-              const Icon(Ionicons.logo_google, color: Colors.white,),
+              const Icon(
+                Ionicons.logo_google,
+                color: Colors.white,
+              ),
               const SizedBox(
                 width: 20,
               ),
-              Text(
-                'Sign In with Google',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 17
-                )
-              )
+              Text('Sign In with Google',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 17))
             ],
           ),
         ),
@@ -68,22 +79,22 @@ class SocialLogins extends StatelessWidget {
             controller: fbBtnCtlr,
             onPressed: onFbPressed,
             width: MediaQuery.of(context).size.width * 1.0,
-            color: Colors.indigo ,
+            color: Colors.indigo,
             elevation: 0,
             child: Wrap(
               children: [
-                const Icon(Ionicons.logo_facebook, color: Colors.white,),
+                const Icon(
+                  Ionicons.logo_facebook,
+                  color: Colors.white,
+                ),
                 const SizedBox(
                   width: 20,
                 ),
-                Text(
-                  'Sign In with Facebook',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 17
-                  )
-                )
+                Text('Sign In with Facebook',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                        fontSize: 17))
               ],
             ),
           ),
@@ -103,18 +114,18 @@ class SocialLogins extends StatelessWidget {
             elevation: 0,
             child: Wrap(
               children: [
-                const Icon(Ionicons.logo_apple, color: Colors.white,),
+                const Icon(
+                  Ionicons.logo_apple,
+                  color: Colors.white,
+                ),
                 const SizedBox(
                   width: 20,
                 ),
-                Text(
-                  'Sign In with Apple',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 17
-                  )
-                )
+                Text('Sign In with Apple',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                        fontSize: 17))
               ],
             ),
           ),

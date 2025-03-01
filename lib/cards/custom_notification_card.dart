@@ -17,7 +17,8 @@ class CustomNotificationCard extends StatelessWidget {
     return InkWell(
         child: Container(
           padding: const EdgeInsets.fromLTRB(15, 20, 20, 20),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -27,15 +28,20 @@ class CustomNotificationCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    VerticalDivider(thickness: 2.0, color: Colors.blueGrey.shade100),
+                    VerticalDivider(
+                        thickness: 2.0, color: Colors.blueGrey.shade100),
                     Expanded(
-                        child: Text(AppService.getNormalText(notificationModel.title!),
+                        child: Text(
+                            AppService.getNormalText(notificationModel.title!),
                             maxLines: 5,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
-                                ?.copyWith(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.blueGrey.shade900))),
+                                ?.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blueGrey.shade900))),
                     IconButton(
                         constraints: const BoxConstraints(minHeight: 40),
                         alignment: Alignment.centerRight,
@@ -44,7 +50,8 @@ class CustomNotificationCard extends StatelessWidget {
                           Icons.close,
                           size: 20,
                         ),
-                        onPressed: () => NotificationService().deleteNotificationData(notificationModel.id))
+                        onPressed: () => NotificationService()
+                            .deleteNotificationData(notificationModel.id))
                   ],
                 ),
               ),
@@ -62,7 +69,8 @@ class CustomNotificationCard extends StatelessWidget {
                   ),
                   Text(
                     _getDate(context, notificationModel),
-                    style: const TextStyle(fontSize: 13, color: Colors.blueGrey),
+                    style:
+                        const TextStyle(fontSize: 13, color: Colors.blueGrey),
                   ),
                 ],
               ),
@@ -70,12 +78,15 @@ class CustomNotificationCard extends StatelessWidget {
           ),
         ),
         onTap: () {
-          NextScreen.nextScreenNormal(context, CustomNotificationDeatils(notificationModel: notificationModel));
+          NextScreen.nextScreenNormal(context,
+              CustomNotificationDeatils(notificationModel: notificationModel));
         });
   }
 
-  static String _getDate(BuildContext context, NotificationModel notificationModel) {
-    final String date = DateFormat('MMMM dd, yyyy').format(notificationModel.date!);
+  static String _getDate(
+      BuildContext context, NotificationModel notificationModel) {
+    final String date =
+        DateFormat('MMMM dd, yyyy').format(notificationModel.date!);
     return date;
   }
 }

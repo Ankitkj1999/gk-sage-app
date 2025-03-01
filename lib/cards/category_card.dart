@@ -18,12 +18,12 @@ class CategoryCard extends StatelessWidget {
     return Stack(
       children: [
         InkWell(
-          onTap: ()=> NextScreen.nextScreenNormal(context, Quizzes(category: d)),
+          onTap: () =>
+              NextScreen.nextScreenNormal(context, Quizzes(category: d)),
           child: Container(
             margin: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5)),
+                color: Colors.white, borderRadius: BorderRadius.circular(5)),
             child: CustomCacheImageWithDarkFilterFull(
                 imageUrl: d.thumbnailUrl!, radius: 5),
           ),
@@ -39,14 +39,14 @@ class CategoryCard extends StatelessWidget {
                   children: [
                     Text(
                       d.name.toString(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
-                    const SizedBox(height: 3,),
+                    const SizedBox(
+                      height: 3,
+                    ),
                     Text(
                       'quiz-count',
                       style: Theme.of(context)

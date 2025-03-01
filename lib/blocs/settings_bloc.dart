@@ -4,8 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quiz_app/models/sp_category.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 
-class SettingsBloc extends ChangeNotifier{
-
+class SettingsBloc extends ChangeNotifier {
   int _correctAnsReward = 0;
   int get correctAnsReward => _correctAnsReward;
 
@@ -13,7 +12,8 @@ class SettingsBloc extends ChangeNotifier{
   int get incorrectAnsPenalty => _incorrectAnsPenalty;
 
   int _requiredPointsPlaySelfChallengeMode = 0;
-  int get requiredPointsPlaySelfChallengeMode => _requiredPointsPlaySelfChallengeMode;
+  int get requiredPointsPlaySelfChallengeMode =>
+      _requiredPointsPlaySelfChallengeMode;
 
   int _initalRewardToNewUser = 0;
   int get initialRewardToNewUser => _initalRewardToNewUser;
@@ -24,23 +24,25 @@ class SettingsBloc extends ChangeNotifier{
   late SpecialCategory _specialCategory;
   SpecialCategory get specialCategory => _specialCategory;
 
-  Future getSpecialCategories ()async{
+  Future getSpecialCategories() async {
     _specialCategory = await FirebaseService().getSpecialCategories();
-    debugPrint('sepcial categories enabled: ${_specialCategory.enabled.toString()}');
+    debugPrint(
+        'sepcial categories enabled: ${_specialCategory.enabled.toString()}');
     notifyListeners();
   }
 
-  Future getSettingsData ()async{
+  Future getSettingsData() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentSnapshot snap = await firestore.collection('settings').doc('points').get();
-    if(snap.exists){
+    DocumentSnapshot snap =
+        await firestore.collection('settings').doc('points').get();
+    if (snap.exists) {
       _correctAnsReward = snap.get('correct_ans_reward') ?? 0;
       _incorrectAnsPenalty = snap.get('incorrect_ans_penalty') ?? 0;
-      _requiredPointsPlaySelfChallengeMode = snap.get('points_req_self_chl_mode') ?? 0;
+      _requiredPointsPlaySelfChallengeMode =
+          snap.get('points_req_self_chl_mode') ?? 0;
       _initalRewardToNewUser = snap.get('new_user_reward') ?? 0;
       _selfChallengeModeEnabled = snap.get('self_challenge_mode') ?? true;
-
-    }else{
+    } else {
       _correctAnsReward = 0;
       _incorrectAnsPenalty = 0;
       _requiredPointsPlaySelfChallengeMode = 0;
@@ -51,24 +53,19 @@ class SettingsBloc extends ChangeNotifier{
     notifyListeners();
   }
 
-
   String _appVersion = '0.0';
   String _appBuildNumber = '0';
   String get appVersion => _appVersion;
   String get appBuildNumber => _appBuildNumber;
 
-
   String _packageName = '';
   String get packageName => _packageName;
 
-  void initPackageInfo () async{
+  void initPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     _appVersion = packageInfo.version;
     _appBuildNumber = packageInfo.buildNumber;
     _packageName = packageInfo.packageName;
     notifyListeners();
-    
   }
-
-
 }

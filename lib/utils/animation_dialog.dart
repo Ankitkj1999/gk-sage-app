@@ -13,18 +13,17 @@ import 'package:quiz_app/widgets/loading_widget.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 import '../configs/ad_config.dart';
 
-
-Future<void> openAnimationDialog(context, String animationString, String title, String subtitle) {
+Future<void> openAnimationDialog(
+    context, String animationString, String title, String subtitle) {
   return Dialogs.materialDialog(
     actionsBuilder: (context) => [
       _buildRewardedAdButton(context),
     ],
     context: context,
-     customView: Stack(
+    customView: Stack(
       alignment: Alignment.topRight,
-       children: [
+      children: [
         Container(
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -33,7 +32,8 @@ Future<void> openAnimationDialog(context, String animationString, String title, 
                 padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
                 child: Text(
                   title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -41,7 +41,8 @@ Future<void> openAnimationDialog(context, String animationString, String title, 
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   subtitle,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -52,7 +53,6 @@ Future<void> openAnimationDialog(context, String animationString, String title, 
                   fit: BoxFit.contain,
                 ),
               ),
-
             ],
           ),
         ),
@@ -76,7 +76,7 @@ Future<void> openAnimationDialog(context, String animationString, String title, 
           ),
         ),
       ],
-         ),
+    ),
   );
 }
 
@@ -85,65 +85,70 @@ Widget _buildRewardedAdButton(BuildContext context) {
   RewardedAd? _rewardedAd;
 
   // Create a stateful builder to manage the loading state
-  return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        // Create rewarded video ad function
-        void _createRewardedVideoAd() async {
-          setState(() => _isLoading = true);
-          await RewardedAd.load(
-              adUnitId: AdConfig.getRewardedVideoAdUnitId(),
-              request: const AdRequest(),
-              rewardedAdLoadCallback: RewardedAdLoadCallback(
-                onAdLoaded: (RewardedAd ad) {
-                  debugPrint('$ad loaded');
-                  _rewardedAd = ad;
-                  _showRewardedVideoAd(context, ad, setState);
-                  setState(() => _isLoading = false);
-                },
-                onAdFailedToLoad: (LoadAdError error) {
-                  debugPrint('Rewarded Ad failed to load: $error.');
-                  _rewardedAd = null;
-                  setState(() => _isLoading = false);
-                },
-              ));
-        }
+  return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+    // Create rewarded video ad function
+    void _createRewardedVideoAd() async {
+      setState(() => _isLoading = true);
+      await RewardedAd.load(
+          adUnitId: AdConfig.getRewardedVideoAdUnitId(),
+          request: const AdRequest(),
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (RewardedAd ad) {
+              debugPrint('$ad loaded');
+              _rewardedAd = ad;
+              _showRewardedVideoAd(context, ad, setState);
+              setState(() => _isLoading = false);
+            },
+            onAdFailedToLoad: (LoadAdError error) {
+              debugPrint('Rewarded Ad failed to load: $error.');
+              _rewardedAd = null;
+              setState(() => _isLoading = false);
+            },
+          ));
+    }
 
-        // Return the actual button widget
-        return InkWell(
-          onTap: () {
-            _createRewardedVideoAd();
-          },
-          child: Container(
-            alignment: Alignment.center,
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(5)),
-            child: _isLoading
-                ? const LoadingIndicatorWidget(
-              color: Colors.white,
-            )
-                : Wrap(
-              children: [
-                const Icon(
-                  IconUtils.video,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text('earn-points',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white))
-                    .tr(args: [context.read<AdsBloc>().rewardedAdPoints.toString()]),
-              ],
-            ),
-          ),
-        );
-      }
-  );
+    // Return the actual button widget
+    return InkWell(
+      onTap: () {
+        _createRewardedVideoAd();
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(5)),
+        child: _isLoading
+            ? const LoadingIndicatorWidget(
+                color: Colors.white,
+              )
+            : Wrap(
+                children: [
+                  const Icon(
+                    IconUtils.video,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text('earn-points',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: Colors.white))
+                      .tr(args: [
+                    context.read<AdsBloc>().rewardedAdPoints.toString()
+                  ]),
+                ],
+              ),
+      ),
+    );
+  });
 }
 
-
-void _showRewardedVideoAd(BuildContext context, RewardedAd ad, StateSetter setState) {
+void _showRewardedVideoAd(
+    BuildContext context, RewardedAd ad, StateSetter setState) {
   // Store all the necessary data and references
   final UserBloc userBloc = context.read<UserBloc>();
   final String userId = userBloc.userData!.uid!;
@@ -152,7 +157,8 @@ void _showRewardedVideoAd(BuildContext context, RewardedAd ad, StateSetter setSt
   final NavigatorState navigator = Navigator.of(context);
 
   ad.fullScreenContentCallback = FullScreenContentCallback(
-    onAdShowedFullScreenContent: (RewardedAd ad) => debugPrint('ad onAdShowedFullScreenContent.'),
+    onAdShowedFullScreenContent: (RewardedAd ad) =>
+        debugPrint('ad onAdShowedFullScreenContent.'),
     onAdDismissedFullScreenContent: (RewardedAd ad) {
       debugPrint('$ad onAdDismissedFullScreenContent.');
       ad.dispose();
@@ -173,12 +179,15 @@ void _showRewardedVideoAd(BuildContext context, RewardedAd ad, StateSetter setSt
 }
 
 // Create a separate function that doesn't rely on BuildContext for Provider access
-Future<void> _handleReward(NavigatorState navigator, String userId, int rewardAmount, UserBloc userBloc) async {
+Future<void> _handleReward(NavigatorState navigator, String userId,
+    int rewardAmount, UserBloc userBloc) async {
   // Update user points with stored data
-  await FirebaseService().updateUserPointsByTransection(userId, true, rewardAmount);
+  await FirebaseService()
+      .updateUserPointsByTransection(userId, true, rewardAmount);
 
   // Update history with stored data
-  final newHistory = "Watched A Rewarded Video Ad +$rewardAmount at ${DateTime.now()}";
+  final newHistory =
+      "Watched A Rewarded Video Ad +$rewardAmount at ${DateTime.now()}";
   await FirebaseService().updateUserPointHistory(userId, newHistory);
 
   // Refresh user data using the stored bloc
@@ -189,7 +198,8 @@ Future<void> _handleReward(NavigatorState navigator, String userId, int rewardAm
 }
 
 // Show the reward dialog using navigator's context
-Future<void> _showRewardDialogWithNavigator(NavigatorState navigator, int rewardAmount) {
+Future<void> _showRewardDialogWithNavigator(
+    NavigatorState navigator, int rewardAmount) {
   return Dialogs.materialDialog(
     context: navigator.context, // Use navigator's context which is always valid
     title: 'points-reward-title'.tr(),
@@ -210,14 +220,14 @@ Future<void> _showRewardDialogWithNavigator(NavigatorState navigator, int reward
           text: 'claim'.tr(),
           iconData: Icons.done,
           color: Theme.of(context).primaryColor,
-          textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           iconColor: Colors.white,
         ),
       ),
     ],
   );
 }
-
 
 Future<void> _onRewardComplete(BuildContext context) async {
   final String userId = context.read<UserBloc>().userData!.uid!;
@@ -231,7 +241,8 @@ Future<void> _onRewardComplete(BuildContext context) async {
 
 Future<void> _updatePointsHistory(BuildContext context, int rewardPoint) async {
   final String userId = context.read<UserBloc>().userData!.uid!;
-  final newHistory = "Watched A Rewarded Video Ad +$rewardPoint at ${DateTime.now()}";
+  final newHistory =
+      "Watched A Rewarded Video Ad +$rewardPoint at ${DateTime.now()}";
   await FirebaseService().updateUserPointHistory(userId, newHistory);
 }
 
@@ -256,7 +267,8 @@ Future<void> _openRewardDialog(BuildContext context, int rewardAmount) {
           text: 'claim'.tr(),
           iconData: Icons.done,
           color: Theme.of(context).primaryColor,
-          textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           iconColor: Colors.white,
         ),
       ),

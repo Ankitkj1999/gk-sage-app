@@ -24,7 +24,9 @@ class _QuizzesState extends State<Quizzes> {
 
   Future<List<Quiz>> _getQuizzesByIndex() async {
     List<Quiz> quizzes = [];
-    await FirebaseService().getCategoryBasedQuizes(widget.category.id!).then((List<Quiz> value) {
+    await FirebaseService()
+        .getCategoryBasedQuizes(widget.category.id!)
+        .then((List<Quiz> value) {
       bool hasIndex = value.isEmpty
           ? false
           : value[0].index != null
@@ -80,7 +82,10 @@ class _QuizzesState extends State<Quizzes> {
                         duration: const Duration(milliseconds: 375),
                         child: SlideAnimation(
                           child: FadeInAnimation(
-                            child: QuizCard(quiz: quiz, heroTag: quiz.id.toString(),),
+                            child: QuizCard(
+                              quiz: quiz,
+                              heroTag: quiz.id.toString(),
+                            ),
                           ),
                         ),
                       );
@@ -88,7 +93,9 @@ class _QuizzesState extends State<Quizzes> {
                   ),
                 );
               } else {
-                return EmptyAnimation(animationString: Config.emptyAnimation, title: 'no-content'.tr());
+                return EmptyAnimation(
+                    animationString: Config.emptyAnimation,
+                    title: 'no-content'.tr());
               }
             },
           ),

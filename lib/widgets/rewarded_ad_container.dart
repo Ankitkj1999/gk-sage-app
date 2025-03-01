@@ -49,7 +49,8 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
   void _showRewardedVideoAd() {
     if (_rewardedAd != null) {
       _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (RewardedAd ad) => debugPrint('ad onAdShowedFullScreenContent.'),
+        onAdShowedFullScreenContent: (RewardedAd ad) =>
+            debugPrint('ad onAdShowedFullScreenContent.'),
         onAdDismissedFullScreenContent: (RewardedAd ad) {
           debugPrint('$ad onAdDismissedFullScreenContent.');
           ad.dispose();
@@ -86,7 +87,8 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
 
   _updatePointsHistory(int rewardPoint) async {
     final String userId = context.read<UserBloc>().userData!.uid!;
-    final newHistory = "Watched A Rewarded Video Ad +$rewardPoint at ${DateTime.now()}";
+    final newHistory =
+        "Watched A Rewarded Video Ad +$rewardPoint at ${DateTime.now()}";
     await FirebaseService().updateUserPointHistory(userId, newHistory);
   }
 
@@ -111,7 +113,8 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
             text: 'claim'.tr(),
             iconData: Icons.done,
             color: Theme.of(context).primaryColor,
-            textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+            textStyle: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
             iconColor: Colors.white,
           ),
         ),
@@ -127,7 +130,9 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
         alignment: Alignment.center,
         height: 60,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor,),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+        ),
         child: _isLoading
             ? const LoadingIndicatorWidget(
                 color: Colors.white,
@@ -141,8 +146,14 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
                   const SizedBox(
                     width: 8,
                   ),
-                  Text('watch-video-count', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white))
-                      .tr(args: [context.read<AdsBloc>().rewardedAdPoints.toString()]),
+                  Text('watch-video-count',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: Colors.white))
+                      .tr(args: [
+                    context.read<AdsBloc>().rewardedAdPoints.toString()
+                  ]),
                 ],
               ),
       ),

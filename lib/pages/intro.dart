@@ -50,9 +50,18 @@ class _IntroPageState extends State<IntroPage> {
                 child: PageView(
                   controller: _pageController,
                   children: [
-                    IntroView(color: Config.intros[1]![0], imageDir: Config.intros[1]![1], title: 'intro-title1'),
-                    IntroView(color: Config.intros[2]![0], imageDir: Config.intros[2]![1], title: 'intro-title2'),
-                    IntroView(color: Config.intros[3]![0], imageDir: Config.intros[3]![1], title: 'intro-title3'),
+                    IntroView(
+                        color: Config.intros[1]![0],
+                        imageDir: Config.intros[1]![1],
+                        title: 'intro-title1'),
+                    IntroView(
+                        color: Config.intros[2]![0],
+                        imageDir: Config.intros[2]![1],
+                        title: 'intro-title2'),
+                    IntroView(
+                        color: Config.intros[3]![0],
+                        imageDir: Config.intros[3]![1],
+                        title: 'intro-title3'),
                   ],
                 ),
               ),
@@ -67,7 +76,8 @@ class _IntroPageState extends State<IntroPage> {
                         LineIcons.language,
                         color: Colors.white,
                       ),
-                      onPressed: () => NextScreen().nextScreenPopup(context, const LanguagePopup()),
+                      onPressed: () => NextScreen()
+                          .nextScreenPopup(context, const LanguagePopup()),
                     ),
                   ),
                 ),
@@ -79,7 +89,9 @@ class _IntroPageState extends State<IntroPage> {
             child: SmoothPageIndicator(
               controller: _pageController,
               count: Config.intros.length,
-              effect: WormEffect(activeDotColor: Theme.of(context).primaryColor, dotColor: Colors.grey.shade300),
+              effect: WormEffect(
+                  activeDotColor: Theme.of(context).primaryColor,
+                  dotColor: Colors.grey.shade300),
             ),
           ),
         ],
@@ -101,28 +113,40 @@ class _IntroPageState extends State<IntroPage> {
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    minimumSize: Size(MediaQuery.of(context).size.width * 0.42, 40),
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width * 0.42, 40),
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.only(left: 30, right: 30, top: 12, bottom: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 12, bottom: 12),
                   ),
                   onPressed: _onLogin,
                   child: Text(
                     'login',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor),
                   ).tr(),
                 ),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    minimumSize: Size(MediaQuery.of(context).size.width * 0.42, 40),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.only(left: 30, right: 30, top: 12, bottom: 12),
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width * 0.42, 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 12, bottom: 12),
                   ),
                   onPressed: _onSignUp,
                   child: const Text(
                     'signup',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ).tr(),
                 ),
               ],
@@ -135,7 +159,11 @@ class _IntroPageState extends State<IntroPage> {
 }
 
 class IntroView extends StatelessWidget {
-  const IntroView({super.key, required this.color, required this.imageDir, required this.title});
+  const IntroView(
+      {super.key,
+      required this.color,
+      required this.imageDir,
+      required this.title});
 
   final Color color;
   final String imageDir;
@@ -167,7 +195,9 @@ class IntroView extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 93, 64, 64)),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 93, 64, 64)),
           ),
         )
       ],

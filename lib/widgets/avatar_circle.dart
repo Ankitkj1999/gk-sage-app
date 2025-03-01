@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/utils/user_image.dart';
 
 class AvatarCircle extends StatelessWidget {
-  const AvatarCircle({super.key, required this.assetString, required this.size, required this.bgColor, this.imageUrl});
+  const AvatarCircle(
+      {super.key,
+      required this.assetString,
+      required this.size,
+      required this.bgColor,
+      this.imageUrl});
 
   final String? assetString;
   final String? imageUrl;
@@ -15,7 +20,6 @@ class AvatarCircle extends StatelessWidget {
       child: Container(
         height: size,
         width: size,
-        
         decoration: BoxDecoration(
             // shape: BoxShape.circle,
             color: bgColor,

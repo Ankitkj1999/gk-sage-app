@@ -43,14 +43,18 @@ class SettingsPage extends StatelessWidget {
               text: 'cancel'.tr(),
               iconData: Icons.close,
               onPressed: () => Navigator.pop(context),
-              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              textStyle:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             IconsOutlineButton(
               text: 'logout'.tr(),
               color: Colors.red,
               iconData: IconUtils.logout,
               iconColor: Colors.white,
-              textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
               onPressed: () async {
                 await AuthService().googleLogout();
                 await AuthService().userLogOut();
@@ -85,13 +89,18 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   Card(
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
                       child: Column(
                         children: [
                           ListTile(
-                            leading: AvatarCircle(assetString: user!.avatarString, imageUrl: user.imageUrl, size: 35, bgColor: Colors.blue),
+                            leading: AvatarCircle(
+                                assetString: user!.avatarString,
+                                imageUrl: user.imageUrl,
+                                size: 35,
+                                bgColor: Colors.blue),
                             title: Text(user.name!, style: titleTextStyle),
                             subtitle: Text(user.email!),
                             trailing: IconButton(
@@ -113,7 +122,8 @@ class SettingsPage extends StatelessWidget {
                             ).tr(),
                             subtitle: const Text('security-subtitle').tr(),
                             trailing: const Icon(Icons.arrow_right),
-                            onTap: () => NextScreen.nextScreenNormal(context, const SecurityPage()),
+                            onTap: () => NextScreen.nextScreenNormal(
+                                context, const SecurityPage()),
                           ),
                         ],
                       ),
@@ -122,21 +132,30 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 15),
                   Card(
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
                         child: Column(
                           children: [
                             ListTile(
                               leading: const Icon(IconUtils.bell1),
-                              title: Text('notifications', style: titleTextStyle).tr(),
+                              title:
+                                  Text('notifications', style: titleTextStyle)
+                                      .tr(),
                               subtitle: Text(
-                                context.watch<NotificationBloc>().subscribed ? 'enabled' : 'disabled',
+                                context.watch<NotificationBloc>().subscribed
+                                    ? 'enabled'
+                                    : 'disabled',
                               ).tr(),
                               trailing: Switch.adaptive(
                                 activeColor: Theme.of(context).primaryColor,
-                                value: context.watch<NotificationBloc>().subscribed,
-                                onChanged: (value) => context.read<NotificationBloc>().handleSubscription(context, value),
+                                value: context
+                                    .watch<NotificationBloc>()
+                                    .subscribed,
+                                onChanged: (value) => context
+                                    .read<NotificationBloc>()
+                                    .handleSubscription(context, value),
                               ),
                             ),
                             const Divider(
@@ -145,11 +164,20 @@ class SettingsPage extends StatelessWidget {
                             ListTile(
                               leading: const Icon(IconUtils.sound),
                               title: Text('sound', style: titleTextStyle).tr(),
-                              subtitle: Text(context.watch<SoundControllerBloc>().audioEnabled ? 'enabled' : 'disabled').tr(),
+                              subtitle: Text(context
+                                          .watch<SoundControllerBloc>()
+                                          .audioEnabled
+                                      ? 'enabled'
+                                      : 'disabled')
+                                  .tr(),
                               trailing: Switch.adaptive(
                                 activeColor: Theme.of(context).primaryColor,
-                                value: context.watch<SoundControllerBloc>().audioEnabled,
-                                onChanged: (value) => context.read<SoundControllerBloc>().controlSoundSettings(value),
+                                value: context
+                                    .watch<SoundControllerBloc>()
+                                    .audioEnabled,
+                                onChanged: (value) => context
+                                    .read<SoundControllerBloc>()
+                                    .controlSoundSettings(value),
                               ),
                             ),
                             const Divider(
@@ -161,11 +189,20 @@ class SettingsPage extends StatelessWidget {
                                 'vibration',
                                 style: titleTextStyle,
                               ).tr(),
-                              subtitle: Text(context.watch<SoundControllerBloc>().vibrationEnabled ? 'enabled' : 'disabled').tr(),
+                              subtitle: Text(context
+                                          .watch<SoundControllerBloc>()
+                                          .vibrationEnabled
+                                      ? 'enabled'
+                                      : 'disabled')
+                                  .tr(),
                               trailing: Switch.adaptive(
                                 activeColor: Theme.of(context).primaryColor,
-                                value: context.watch<SoundControllerBloc>().vibrationEnabled,
-                                onChanged: (value) => context.read<SoundControllerBloc>().controlVibrationSettings(value),
+                                value: context
+                                    .watch<SoundControllerBloc>()
+                                    .vibrationEnabled,
+                                onChanged: (value) => context
+                                    .read<SoundControllerBloc>()
+                                    .controlVibrationSettings(value),
                               ),
                             ),
                             Visibility(
@@ -179,9 +216,11 @@ class SettingsPage extends StatelessWidget {
                                       'language',
                                       style: titleTextStyle,
                                     ).tr(),
-                                    subtitle: const Text('select-language').tr(),
+                                    subtitle:
+                                        const Text('select-language').tr(),
                                     trailing: const Icon(Icons.arrow_right),
-                                    onTap: () => NextScreen().nextScreenPopup(context, const LanguagePopup()),
+                                    onTap: () => NextScreen().nextScreenPopup(
+                                        context, const LanguagePopup()),
                                   ),
                                 ],
                               ),
@@ -192,7 +231,8 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 15),
                   Card(
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
                         child: Column(
@@ -205,7 +245,8 @@ class SettingsPage extends StatelessWidget {
                               ).tr(),
                               subtitle: const Text('facebook-subtitle').tr(),
                               trailing: const Icon(Icons.arrow_right),
-                              onTap: () => AppService().openLink(context, Config.fbPageUrl),
+                              onTap: () => AppService()
+                                  .openLink(context, Config.fbPageUrl),
                             ),
                             const Divider(thickness: 0.7),
                             ListTile(
@@ -216,7 +257,8 @@ class SettingsPage extends StatelessWidget {
                               ).tr(),
                               subtitle: const Text('youtube-subtitle').tr(),
                               trailing: const Icon(Icons.arrow_right),
-                              onTap: () => AppService().openLink(context, Config.youtubeChannelUrl),
+                              onTap: () => AppService()
+                                  .openLink(context, Config.youtubeChannelUrl),
                             ),
                           ],
                         ),
@@ -224,7 +266,8 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 15),
                   Card(
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
                         child: Column(
@@ -249,7 +292,8 @@ class SettingsPage extends StatelessWidget {
                               ).tr(),
                               subtitle: const Text(Config.supportEmail),
                               trailing: const Icon(Icons.arrow_right),
-                              onTap: () => AppService().openEmailSupport(context),
+                              onTap: () =>
+                                  AppService().openEmailSupport(context),
                             ),
                             // const Divider(thickness: 0.7),
                             // ListTile(
@@ -285,4 +329,5 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-TextStyle get titleTextStyle => TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.grey.shade800);
+TextStyle get titleTextStyle => TextStyle(
+    fontSize: 17, fontWeight: FontWeight.w600, color: Colors.grey.shade800);

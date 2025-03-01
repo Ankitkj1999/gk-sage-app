@@ -20,7 +20,7 @@ class ChartModel {
     );
   }
 
-  static Map<String, dynamic> getMap (ChartModel d){
+  static Map<String, dynamic> getMap(ChartModel d) {
     return {
       'timestamp': d.timestamp,
       'count': d.count,

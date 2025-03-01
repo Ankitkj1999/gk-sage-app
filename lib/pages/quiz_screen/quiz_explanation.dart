@@ -15,7 +15,8 @@ class ExplanationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (explanation == null && correctAnswer == null) return const SizedBox.shrink();
+    if (explanation == null && correctAnswer == null)
+      return const SizedBox.shrink();
 
     return AnimatedOpacity(
       opacity: 1.0,
@@ -46,9 +47,11 @@ class ExplanationWidget extends StatelessWidget {
                 Text(
                   isCorrect ? 'correct'.tr() : 'incorrect'.tr(),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: isCorrect ? Colors.green.shade800 : Colors.red.shade800,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: isCorrect
+                            ? Colors.green.shade800
+                            : Colors.red.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
@@ -57,9 +60,9 @@ class ExplanationWidget extends StatelessWidget {
               Text(
                 '${'correct-answer'.tr()}: $correctAnswer',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.green.shade800,
-                  fontWeight: FontWeight.w500,
-                ),
+                      color: Colors.green.shade800,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ],
             if (explanation != null && explanation!.isNotEmpty) ...[
@@ -67,16 +70,16 @@ class ExplanationWidget extends StatelessWidget {
               Text(
                 'explanation'.tr(),
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Colors.grey.shade800,
-                  fontWeight: FontWeight.bold,
-                ),
+                      color: Colors.grey.shade800,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 4),
               Text(
                 explanation!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade800,
-                ),
+                      color: Colors.grey.shade800,
+                    ),
               ),
             ],
           ],

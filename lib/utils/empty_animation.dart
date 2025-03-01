@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class EmptyAnimation extends StatelessWidget {
-
   final String animationString;
   final String title;
-  const EmptyAnimation({super.key, required this.animationString, required this.title});
+  const EmptyAnimation(
+      {super.key, required this.animationString, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,13 @@ class EmptyAnimation extends StatelessWidget {
               height: 250,
               width: 250,
             ),
-            Text(title, style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Colors.blueGrey,
-              fontWeight: FontWeight.w400,
-              fontSize: 18
-            ),)
+            Text(
+              title,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18),
+            )
           ],
         ),
       ),

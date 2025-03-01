@@ -26,7 +26,8 @@ class DraggableOptionCard extends StatelessWidget {
         child: Center(
           child: Text(
             optionTitle,
-            style: const TextStyle(decoration: TextDecoration.none, fontSize: 16),
+            style:
+                const TextStyle(decoration: TextDecoration.none, fontSize: 16),
           ),
         ),
       ),
@@ -54,7 +55,10 @@ class DraggableOptionCard extends StatelessWidget {
                 child: Text(
               optionTitle,
               textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blueGrey.shade600),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.blueGrey.shade600),
             )),
             const SizedBox(
               width: 5,

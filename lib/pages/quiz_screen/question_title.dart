@@ -34,7 +34,9 @@ class QuestionTitle extends StatelessWidget {
             children: [
               Container(
                 width: 3,
-                decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(30)),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(30)),
               ),
               const SizedBox(
                 width: 10,
@@ -45,11 +47,21 @@ class QuestionTitle extends StatelessWidget {
                   children: [
                     Text(
                       'question-count-title',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueGrey[800]),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.blueGrey[800]),
                     ).tr(
-                      args: [context.watch<TempBloc>().currentQuestionIndex.toString(), qList.length.toString()],
+                      args: [
+                        context
+                            .watch<TempBloc>()
+                            .currentQuestionIndex
+                            .toString(),
+                        qList.length.toString()
+                      ],
                     ),
-                    question.questionType == Constants.questionTypes.keys.elementAt(4)
+                    question.questionType ==
+                            Constants.questionTypes.keys.elementAt(4)
                         ? DraggableTitle(question: question)
                         : NormalTitle(question: question),
                   ],
@@ -60,9 +72,13 @@ class QuestionTitle extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Visibility(
-          visible: question.questionType == Constants.questionTypes.keys.elementAt(1),
+          visible: question.questionType ==
+              Constants.questionTypes.keys.elementAt(1),
           child: InkWell(
-            onTap: () => NextScreen().nextScreenPopup(context, FullImagePreview(imageUrl: question.questionImageUrl.toString())),
+            onTap: () => NextScreen().nextScreenPopup(
+                context,
+                FullImagePreview(
+                    imageUrl: question.questionImageUrl.toString())),
             child: SizedBox(
               height: 150,
               width: double.infinity,
@@ -74,16 +90,19 @@ class QuestionTitle extends StatelessWidget {
           ),
         ),
         Visibility(
-          visible: question.questionType == Constants.questionTypes.keys.elementAt(3),
+          visible: question.questionType ==
+              Constants.questionTypes.keys.elementAt(3),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: VideoPlayerWidget(
                 videoUrl: question.questionVideoUrl.toString(),
-                videoType: AppService.getVideoType(question.questionVideoUrl.toString()),
+                videoType: AppService.getVideoType(
+                    question.questionVideoUrl.toString()),
               )),
         ),
         Visibility(
-          visible: question.questionType == Constants.questionTypes.keys.elementAt(2),
+          visible: question.questionType ==
+              Constants.questionTypes.keys.elementAt(2),
           child: AudioWidget(
             audioUrl: question.questionAudioUrl.toString(),
           ),
@@ -121,11 +140,14 @@ class DraggableTitle extends StatelessWidget {
     String questionBefore = questionParts.first;
     String questionAfter = questionParts.length > 1 ? questionParts.last : '';
 
-    final String dragTargetText = context.read<QuestionBloc>().dragTargetText ?? '';
-    final double width = dragTargetText.isEmpty ? 150 : (dragTargetText.length) * 13;
+    final String dragTargetText =
+        context.read<QuestionBloc>().dragTargetText ?? '';
+    final double width =
+        dragTargetText.isEmpty ? 150 : (dragTargetText.length) * 13;
 
     return DragTarget<String>(
-      builder: (BuildContext context, List<String?> candidateData, List<dynamic> rejectedData) {
+      builder: (BuildContext context, List<String?> candidateData,
+          List<dynamic> rejectedData) {
         return Wrap(
           runSpacing: 5,
           children: [
@@ -163,7 +185,8 @@ class DraggableTitle extends StatelessWidget {
         );
       },
       onWillAcceptWithDetails: (data) => true,
-      onAcceptWithDetails: (data) => context.read<QuestionBloc>().updateDragTargetText(data.data),
+      onAcceptWithDetails: (data) =>
+          context.read<QuestionBloc>().updateDragTargetText(data.data),
     );
   }
 }

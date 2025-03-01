@@ -34,7 +34,11 @@ class QuestionExplaination extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(q.questionTitle.toString(), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600)),
+                  Text(q.questionTitle.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(
                     height: 10,
                   ),
@@ -71,7 +75,8 @@ class QuestionExplaination extends StatelessWidget {
           height: 150,
           width: double.infinity,
           child: InkWell(
-            onTap: () => NextScreen.nextScreenNormal(context, FullImagePreview(imageUrl: correctAnswer)),
+            onTap: () => NextScreen.nextScreenNormal(
+                context, FullImagePreview(imageUrl: correctAnswer)),
             child: CustomCacheImage(
               imageUrl: correctAnswer,
               radius: 10,
@@ -83,7 +88,10 @@ class QuestionExplaination extends StatelessWidget {
       return Expanded(
         child: Text(
           correctAnswer,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ),
       );
     }

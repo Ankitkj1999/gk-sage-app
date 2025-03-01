@@ -42,8 +42,11 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
 
   Future<List<UserModel>> _getData() async {
     List<UserModel> data = [];
-    await FirebaseService().getTopUsersData(_totalUserforLeaderboard).then((List<UserModel> userList) {
-      int index = userList.indexWhere((element) => element.uid == context.read<UserBloc>().userData!.uid);
+    await FirebaseService()
+        .getTopUsersData(_totalUserforLeaderboard)
+        .then((List<UserModel> userList) {
+      int index = userList.indexWhere(
+          (element) => element.uid == context.read<UserBloc>().userData!.uid);
       int rank = index + 1;
       context.read<UserBloc>().setUserRank(rank);
       debugPrint('rank: $rank');
@@ -65,7 +68,11 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
         automaticallyImplyLeading: true,
         centerTitle: false,
         titleSpacing: 0,
-        actions: [IconButton(onPressed: () async => await _onRefresh(), icon: const Icon(Icons.refresh_rounded))],
+        actions: [
+          IconButton(
+              onPressed: () async => await _onRefresh(),
+              icon: const Icon(Icons.refresh_rounded))
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(),
@@ -90,7 +97,10 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [_topList(context, userList), _bottomList(userList)],
+                  children: [
+                    _topList(context, userList),
+                    _bottomList(userList)
+                  ],
                 );
               }
 
@@ -100,7 +110,12 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                     height: _topHeaderHeight,
                     width: double.infinity,
                     color: Theme.of(context).primaryColor,
-                    child: Center(child: Text('No Users Found', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white))),
+                    child: Center(
+                        child: Text('No Users Found',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(color: Colors.white))),
                   ),
                 ],
               );
@@ -130,7 +145,8 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           itemBuilder: (BuildContext context, int index) {
             if (index <= 2) return Container();
             return InkWell(
-              onTap: () => NextScreen.openBottomSheet(context, PublicProfile(user: userList[index], rank: index + 1)),
+              onTap: () => NextScreen.openBottomSheet(context,
+                  PublicProfile(user: userList[index], rank: index + 1)),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -142,10 +158,10 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                     isThreeLine: false,
                     title: Text(
                       userList[index].name!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600, color: Colors.blueGrey.shade700, fontSize: 18),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blueGrey.shade700,
+                          fontSize: 18),
                     ),
                     trailing: Wrap(
                       children: [
@@ -162,13 +178,17 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.grey.shade800),
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.grey.shade800),
                         ),
                       ],
                     ),
                     subtitle: Visibility(
                       visible: FeatureConfig.userStrengthEnabled,
-                      child: const Text('strength-count').tr(args: [userList[index].strength!.toStringAsFixed(2)]),
+                      child: const Text('strength-count').tr(
+                          args: [userList[index].strength!.toStringAsFixed(2)]),
                     ),
                     leading: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -181,14 +201,22 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                           ),
                           child: Text(
                             '${index + 1}',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.blueGrey),
                           ),
                         ),
                         const SizedBox(
                           width: 15,
                         ),
                         AvatarCircle(
-                            assetString: userList[index].avatarString, imageUrl: userList[index].imageUrl, size: 50, bgColor: ColorConfig.avatarBg3)
+                            assetString: userList[index].avatarString,
+                            imageUrl: userList[index].imageUrl,
+                            size: 50,
+                            bgColor: ColorConfig.avatarBg3)
                       ],
                     )),
               ),
@@ -206,7 +234,9 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       height: _topHeaderHeight,
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30))),
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -222,15 +252,22 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                       children: [
                         const Text(
                           'second',
-                          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900),
                         ).tr(),
                         const SizedBox(
                           height: 5,
                         ),
                         InkWell(
-                          onTap: () => NextScreen.openBottomSheet(context, PublicProfile(user: userList[1], rank: 2)),
+                          onTap: () => NextScreen.openBottomSheet(context,
+                              PublicProfile(user: userList[1], rank: 2)),
                           child: AvatarCircle(
-                              assetString: userList[1].avatarString, imageUrl: userList[1].imageUrl, size: 90, bgColor: ColorConfig.avatarBg2),
+                              assetString: userList[1].avatarString,
+                              imageUrl: userList[1].imageUrl,
+                              size: 90,
+                              bgColor: ColorConfig.avatarBg2),
                         ),
                         const SizedBox(
                           height: 10,
@@ -239,12 +276,20 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                           userList[1].name ?? '',
                           textAlign: TextAlign.center,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        CustomChip1(label: userList[1].points.toString(), icon: IconUtils.starFill, bgColor: ColorConfig.chip3)
+                        CustomChip1(
+                            label: userList[1].points.toString(),
+                            icon: IconUtils.starFill,
+                            bgColor: ColorConfig.chip3)
                       ],
                     ),
                   ),
@@ -259,15 +304,25 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Platform.isAndroid
-                  ? _animatedText()
-                  : const Text('first', style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.w900),).tr(),
+                      ? _animatedText()
+                      : const Text(
+                          'first',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.w900),
+                        ).tr(),
                   const SizedBox(
                     height: 5,
                   ),
                   InkWell(
-                    onTap: () => NextScreen.openBottomSheet(context, PublicProfile(user: userList[0], rank: 1)),
+                    onTap: () => NextScreen.openBottomSheet(
+                        context, PublicProfile(user: userList[0], rank: 1)),
                     child: AvatarCircle(
-                        assetString: userList[0].avatarString, imageUrl: userList[0].imageUrl, size: 140, bgColor: ColorConfig.avatarBg2),
+                        assetString: userList[0].avatarString,
+                        imageUrl: userList[0].imageUrl,
+                        size: 140,
+                        bgColor: ColorConfig.avatarBg2),
                   ),
                   const SizedBox(
                     height: 10,
@@ -276,12 +331,16 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                     userList[0].name!,
                     maxLines: 1,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
-                  CustomChip1(label: userList[0].points.toString(), icon: IconUtils.starFill, bgColor: ColorConfig.chip3)
+                  CustomChip1(
+                      label: userList[0].points.toString(),
+                      icon: IconUtils.starFill,
+                      bgColor: ColorConfig.chip3)
                 ],
               ),
             ),
@@ -299,15 +358,22 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                       children: [
                         const Text(
                           'third',
-                          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900),
                         ).tr(),
                         const SizedBox(
                           height: 5,
                         ),
                         InkWell(
-                          onTap: () => NextScreen.openBottomSheet(context, PublicProfile(user: userList[2], rank: 3)),
+                          onTap: () => NextScreen.openBottomSheet(context,
+                              PublicProfile(user: userList[2], rank: 3)),
                           child: AvatarCircle(
-                              assetString: userList[2].avatarString, imageUrl: userList[2].imageUrl, size: 90, bgColor: ColorConfig.avatarBg2),
+                              assetString: userList[2].avatarString,
+                              imageUrl: userList[2].imageUrl,
+                              size: 90,
+                              bgColor: ColorConfig.avatarBg2),
                         ),
                         const SizedBox(
                           height: 10,
@@ -316,12 +382,20 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
                           userList[2].name!,
                           textAlign: TextAlign.center,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        CustomChip1(label: userList[2].points.toString(), icon: IconUtils.starFill, bgColor: ColorConfig.chip3)
+                        CustomChip1(
+                            label: userList[2].points.toString(),
+                            icon: IconUtils.starFill,
+                            bgColor: ColorConfig.chip3)
                       ],
                     ),
                   ),
@@ -337,7 +411,8 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       repeatForever: true,
       animatedTexts: [
         ColorizeAnimatedText('first'.tr(),
-            textStyle: const TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.w900),
+            textStyle: const TextStyle(
+                color: Colors.white, fontSize: 40, fontWeight: FontWeight.w900),
             speed: const Duration(milliseconds: 800),
             colors: [
               Colors.white,

@@ -10,7 +10,11 @@ openControlDialog(BuildContext context) {
         return AlertDialog(
           content: const ControllSettings(),
           title: const Text('settings').tr(),
-          actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'))
+          ],
         );
       }));
 }

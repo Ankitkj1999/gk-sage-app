@@ -32,7 +32,10 @@ class QuestionOverview extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text('quiz-overview').tr(),
-        titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        titleTextStyle: Theme.of(context)
+            .textTheme
+            .titleMedium
+            ?.copyWith(fontWeight: FontWeight.w600),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 50),
@@ -42,19 +45,27 @@ class QuestionOverview extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(20),
             margin: const EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey[200]!)),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey[200]!)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   'Q${index + 1}. ${_questionTitle(q)}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
                 ),
                 Visibility(
-                  visible: q.questionType == Constants.questionTypes.keys.elementAt(1),
+                  visible: q.questionType ==
+                      Constants.questionTypes.keys.elementAt(1),
                   child: InkWell(
-                    onTap: () => NextScreen().nextScreenPopup(context, FullImagePreview(imageUrl: q.questionImageUrl!)),
+                    onTap: () => NextScreen().nextScreenPopup(context,
+                        FullImagePreview(imageUrl: q.questionImageUrl!)),
                     child: Container(
                       padding: const EdgeInsets.only(top: 10),
                       height: 150,
@@ -66,19 +77,22 @@ class QuestionOverview extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: q.questionType == Constants.questionTypes.keys.elementAt(3),
+                  visible: q.questionType ==
+                      Constants.questionTypes.keys.elementAt(3),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: VideoPlayerWidget(
                           videoUrl: q.questionVideoUrl.toString(),
-                          videoType: AppService.getVideoType(q.questionVideoUrl.toString()),
+                          videoType: AppService.getVideoType(
+                              q.questionVideoUrl.toString()),
                         )),
                   ),
                 ),
                 Visibility(
-                    visible: q.questionType == Constants.questionTypes.keys.elementAt(2),
+                    visible: q.questionType ==
+                        Constants.questionTypes.keys.elementAt(2),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: AudioWidget(
@@ -92,7 +106,8 @@ class QuestionOverview extends StatelessWidget {
                     child: ActionChip(
                       label: const Text('explanation').tr(),
                       onPressed: () {
-                        NextScreen().nextScreenPopup(context, QuestionExplaination(q: q));
+                        NextScreen().nextScreenPopup(
+                            context, QuestionExplaination(q: q));
                       },
                     ),
                   ),
@@ -121,14 +136,18 @@ class QuestionOverview extends StatelessWidget {
     );
   }
 
-  Widget _getOption(Question q, int listIndex, int optionIndex, BuildContext context) {
-    if (q.optionsType == Constants.optionTypes.keys.elementAt(0) || q.optionsType == Constants.optionTypes.keys.elementAt(1)) {
+  Widget _getOption(
+      Question q, int listIndex, int optionIndex, BuildContext context) {
+    if (q.optionsType == Constants.optionTypes.keys.elementAt(0) ||
+        q.optionsType == Constants.optionTypes.keys.elementAt(1)) {
       return RichText(
         text: TextSpan(
           text: '${q.options![optionIndex]}   ',
           style: DefaultTextStyle.of(context).style.copyWith(fontSize: 16),
           children: <TextSpan>[
-            TextSpan(text: _getSelectedAnswer(listIndex, optionIndex, context), style: const TextStyle(color: Colors.blueGrey)),
+            TextSpan(
+                text: _getSelectedAnswer(listIndex, optionIndex, context),
+                style: const TextStyle(color: Colors.blueGrey)),
           ],
         ),
       );
@@ -143,14 +162,16 @@ class QuestionOverview extends StatelessWidget {
     }
   }
 
-  IconData _getIcon(Question q, int optionIndex, BuildContext context, int index) {
+  IconData _getIcon(
+      Question q, int optionIndex, BuildContext context, int index) {
     if (optionIndex == q.correctAnswerIndex) {
       return IconUtils.rightAnswerOption;
     } else {
       final list = XList(context.read<TempBloc>().selectedIndexList);
       if (list[index] == null) {
         return IconUtils.disbbleOption;
-      } else if (optionIndex == context.read<TempBloc>().selectedIndexList[index]) {
+      } else if (optionIndex ==
+          context.read<TempBloc>().selectedIndexList[index]) {
         return IconUtils.wrongAnswerOption;
       } else {
         return IconUtils.disbbleOption;
@@ -162,7 +183,8 @@ class QuestionOverview extends StatelessWidget {
     final list = XList(context.read<TempBloc>().selectedIndexList);
     if (list[index] == null) {
       return 'not-answered()'.tr();
-    } else if (optionIndex == context.read<TempBloc>().selectedIndexList[index]) {
+    } else if (optionIndex ==
+        context.read<TempBloc>().selectedIndexList[index]) {
       return 'your-answer()'.tr();
     } else {
       return '';
@@ -170,7 +192,8 @@ class QuestionOverview extends StatelessWidget {
   }
 
   static String _questionTitle(Question q) {
-    if (q.questionType != Constants.questionTypes.keys.elementAt(4) && !q.questionTitle.toString().contains('<_>')) {
+    if (q.questionType != Constants.questionTypes.keys.elementAt(4) &&
+        !q.questionTitle.toString().contains('<_>')) {
       return q.questionTitle.toString();
     } else {
       List<String> questionParts = q.questionTitle.toString().split('<_>');

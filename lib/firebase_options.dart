@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '619698291708',
     projectId: 'gk-sage-admin-cb224',
     storageBucket: 'gk-sage-admin-cb224.firebasestorage.app',
-    androidClientId: '619698291708-meq4r1r4ijmfjo0l9639iik92i9tid7h.apps.googleusercontent.com',
-    iosClientId: '619698291708-f0nug2m4gjhbfvqedglhsd1fjtn44kpe.apps.googleusercontent.com',
+    androidClientId:
+        '619698291708-meq4r1r4ijmfjo0l9639iik92i9tid7h.apps.googleusercontent.com',
+    iosClientId:
+        '619698291708-f0nug2m4gjhbfvqedglhsd1fjtn44kpe.apps.googleusercontent.com',
     iosBundleId: 'app.gksage.com',
   );
 }

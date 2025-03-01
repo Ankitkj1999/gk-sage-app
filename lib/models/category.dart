@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Category {
@@ -8,13 +7,12 @@ class Category {
   int? quizCount;
   bool? featured;
 
-  Category({
-    required this.name,
-    required this.id,
-    this.thumbnailUrl,
-    this.quizCount,
-    this.featured
-  });
+  Category(
+      {required this.name,
+      required this.id,
+      this.thumbnailUrl,
+      this.quizCount,
+      this.featured});
 
   factory Category.fromFirestore(DocumentSnapshot snap) {
     Map d = snap.data() as Map<dynamic, dynamic>;
@@ -23,7 +21,6 @@ class Category {
         id: d['id'],
         quizCount: d['quiz_count'],
         thumbnailUrl: d['image_url'],
-        featured: d['featured'] ?? false
-    );
+        featured: d['featured'] ?? false);
   }
 }

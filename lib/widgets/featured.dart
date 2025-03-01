@@ -45,13 +45,12 @@ class _FeaturedCategoriesState extends State<FeaturedCategories> {
               children: [
                 Expanded(
                   child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      Category category = snapshot.data[index];
-                      return FeatureCard(category: category);
-                    }
-                  ),
+                      controller: _pageController,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        Category category = snapshot.data[index];
+                        return FeatureCard(category: category);
+                      }),
                 ),
                 Visibility(
                     visible: snapshot.data.length != 0 ? true : false,

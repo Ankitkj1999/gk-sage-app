@@ -9,7 +9,11 @@ import '../../services/firebase_service.dart';
 import '../../utils/next_screen.dart';
 
 class TimerCountDown extends StatefulWidget {
-  const TimerCountDown({super.key, required this.quizTime, required this.qList, required this.selfChallengeMode});
+  const TimerCountDown(
+      {super.key,
+      required this.quizTime,
+      required this.qList,
+      required this.selfChallengeMode});
 
   final int quizTime;
   final List<Question> qList;
@@ -32,7 +36,9 @@ class TimerCountDownState extends State<TimerCountDown> {
     final ub = context.read<UserBloc>();
     final tb = context.read<TempBloc>();
     if (widget.selfChallengeMode == false) {
-      await FirebaseService().updateUserPoints(context.read<UserBloc>().userData!.uid!, context.read<TempBloc>().points);
+      await FirebaseService().updateUserPoints(
+          context.read<UserBloc>().userData!.uid!,
+          context.read<TempBloc>().points);
       await ub.updateUserPointsToBloc(tb.points);
     }
     if (!mounted) return;
@@ -49,14 +55,20 @@ class TimerCountDownState extends State<TimerCountDown> {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(20)),
         child: TimerCountdown(
             onEnd: () => _onEnd(),
             format: CountDownTimerFormat.minutesSeconds,
             enableDescriptions: false,
             spacerWidth: 4,
-            colonsTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            timeTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+            colonsTextStyle: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w600),
+            timeTextStyle: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
             endTime: _endTime));
   }
 }

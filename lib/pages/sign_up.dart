@@ -54,31 +54,43 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   _gotoHomeScreen() {
-    Future.delayed(const Duration(seconds: 1)).then((value) => NextScreen().nextScreenReplace(context, const HomePage()));
+    Future.delayed(const Duration(seconds: 1)).then(
+        (value) => NextScreen().nextScreenReplace(context, const HomePage()));
   }
 
   _gotoSelectAvatarScreen(String userId) {
-    Future.delayed(const Duration(seconds: 1)).then((value) => NextScreen().nextScreenReplace(context, SelectAvatar(userId: userId)));
+    Future.delayed(const Duration(seconds: 1)).then((value) =>
+        NextScreen().nextScreenReplace(context, SelectAvatar(userId: userId)));
   }
 
-  _afterSignUpWithSocialAccount(UserCredential userCredential, RoundedLoadingButtonController btnCtlr) async {
+  _afterSignUpWithSocialAccount(UserCredential userCredential,
+      RoundedLoadingButtonController btnCtlr) async {
     final int initialReward = await FirebaseService().getNewUserReward();
-    final String newPointsHistory = 'New User Reward +$initialReward at ${DateTime.now()}';
+    final String newPointsHistory =
+        'New User Reward +$initialReward at ${DateTime.now()}';
     await FirebaseService()
         .saveUserData(
-            userCredential.user!.uid, userCredential.user!.displayName ?? 'No Name', userCredential.user!.email ?? 'Not Given', null, initialReward)
-        .then((value) async => await FirebaseService()
-            .updateUserStats()
-            .then((value) async => await FirebaseService().updateUserPointHistory(userCredential.user!.uid, newPointsHistory)));
+            userCredential.user!.uid,
+            userCredential.user!.displayName ?? 'No Name',
+            userCredential.user!.email ?? 'Not Given',
+            null,
+            initialReward)
+        .then((value) async => await FirebaseService().updateUserStats().then(
+            (value) async => await FirebaseService().updateUserPointHistory(
+                userCredential.user!.uid, newPointsHistory)));
     btnCtlr.success();
     _gotoSelectAvatarScreen(userCredential.user!.uid);
   }
 
   _handleSignInWithGoogle() async {
     _googleController.start();
-    await AuthService().signInWithGoogle().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithGoogle()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _googleController);
           } else {
@@ -95,9 +107,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
   _handleSignInWithFacebook() async {
     _fbController.start();
-    await AuthService().signInWithFacebook().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithFacebook()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _fbController);
           } else {
@@ -114,9 +130,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
   _handleSignInWithApple() async {
     _appleController.start();
-    await AuthService().signInWithApple().then((UserCredential? userCredential) async {
+    await AuthService()
+        .signInWithApple()
+        .then((UserCredential? userCredential) async {
       if (userCredential != null) {
-        await FirebaseService().checkUserExists(userCredential.user!.uid).then((bool userExist) async {
+        await FirebaseService()
+            .checkUserExists(userCredential.user!.uid)
+            .then((bool userExist) async {
           if (!userExist) {
             _afterSignUpWithSocialAccount(userCredential, _appleController);
           } else {
@@ -136,18 +156,23 @@ class _SignUpPageState extends State<SignUpPage> {
       _formKey.currentState!.save();
       _loginController.start();
       try {
-        await AuthService().signUpWithEmailPassword(_emailCtlr.text, _passCtlr.text).then((UserCredential? userCredential) async {
+        await AuthService()
+            .signUpWithEmailPassword(_emailCtlr.text, _passCtlr.text)
+            .then((UserCredential? userCredential) async {
           if (userCredential != null) {
-            final int initialReward = await FirebaseService().getNewUserReward();
-            final String newPointsHistory = 'New User Reward +$initialReward at ${DateTime.now()}';
+            final int initialReward =
+                await FirebaseService().getNewUserReward();
+            final String newPointsHistory =
+                'New User Reward +$initialReward at ${DateTime.now()}';
             await FirebaseService()
-                .saveUserData(userCredential.user!.uid, _nameCtlr.text, _emailCtlr.text, null, initialReward)
+                .saveUserData(userCredential.user!.uid, _nameCtlr.text,
+                    _emailCtlr.text, null, initialReward)
                 .onError((error, stackTrace) {
               _loginController.reset();
               debugPrint("date saving error: $error");
-            }).then((value) => FirebaseService()
-                    .updateUserStats()
-                    .then((value) => FirebaseService().updateUserPointHistory(userCredential.user!.uid, newPointsHistory)));
+            }).then((value) => FirebaseService().updateUserStats().then(
+                    (value) => FirebaseService().updateUserPointHistory(
+                        userCredential.user!.uid, newPointsHistory)));
             _loginController.success();
             _gotoSelectAvatarScreen(userCredential.user!.uid);
           }
@@ -161,7 +186,8 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  _handleAfterSocialLogin(UserCredential userCredential, RoundedLoadingButtonController controller) async {
+  _handleAfterSocialLogin(UserCredential userCredential,
+      RoundedLoadingButtonController controller) async {
     final userBloc = context.read<UserBloc>();
     final sb = context.read<SettingsBloc>();
     final ab = context.read<AdsBloc>();
@@ -241,8 +267,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(15),
                       hintText: 'full-name'.tr(),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      suffixIcon: IconButton(icon: const Icon(Icons.close), onPressed: _nameCtlr.clear)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      suffixIcon: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: _nameCtlr.clear)),
                 ),
               ),
               const SizedBox(
@@ -259,8 +288,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(15),
                       hintText: 'email'.tr(),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      suffixIcon: IconButton(icon: const Icon(Icons.close), onPressed: _emailCtlr.clear)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      suffixIcon: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: _emailCtlr.clear)),
                 ),
               ),
               const SizedBox(
@@ -278,8 +310,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(15),
                       hintText: 'password'.tr(),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      suffixIcon: IconButton(onPressed: _onSuffixIconPressed, icon: lockIcon)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      suffixIcon: IconButton(
+                          onPressed: _onSuffixIconPressed, icon: lockIcon)),
                 ),
               ),
               const SizedBox(
@@ -297,7 +331,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: [
                     const Text(
                       'signup',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     ).tr()
                   ],
                 ),
@@ -319,9 +356,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     TextButton(
                         child: Text(
                           'login',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Theme.of(context).colorScheme.primary),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.primary),
                         ).tr(),
-                        onPressed: () => NextScreen().nextScreenReplace(context, const LoginPage()))
+                        onPressed: () => NextScreen()
+                            .nextScreenReplace(context, const LoginPage()))
                   ],
                 ),
               ),

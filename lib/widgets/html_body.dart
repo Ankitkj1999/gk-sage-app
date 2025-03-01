@@ -37,9 +37,12 @@ class HtmlBody extends StatelessWidget {
           //color: Colors.grey.shade800,
           fontWeight: FontWeight.w400,
         ),
-        "figure, video, div, img": Style(margin: Margins.zero, padding: HtmlPaddings.zero),
-        "p": Style(padding: HtmlPaddings.only(left: 20, right: 20, top: 5, bottom: 5)),
-        "h1,h2,h3,h4,h5,h6": Style(padding: HtmlPaddings.only(left: 20, right: 20))
+        "figure, video, div, img":
+            Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+        "p": Style(
+            padding: HtmlPaddings.only(left: 20, right: 20, top: 5, bottom: 5)),
+        "h1,h2,h3,h4,h5,h6":
+            Style(padding: HtmlPaddings.only(left: 20, right: 20))
       },
       extensions: [
         TagExtension(
@@ -47,9 +50,11 @@ class HtmlBody extends StatelessWidget {
             builder: (ExtensionContext eContext) {
               final String videoSource = eContext.attributes['src'].toString();
               if (videoSource.contains('youtu')) {
-                return VideoPlayerWidget(videoUrl: videoSource, videoType: 'youtube');
+                return VideoPlayerWidget(
+                    videoUrl: videoSource, videoType: 'youtube');
               } else if (videoSource.contains('vimeo')) {
-                return VideoPlayerWidget(videoUrl: videoSource, videoType: 'vimeo');
+                return VideoPlayerWidget(
+                    videoUrl: videoSource, videoType: 'vimeo');
               }
               return Container();
             }),
@@ -57,22 +62,23 @@ class HtmlBody extends StatelessWidget {
             tagsToExtend: {"video"},
             builder: (ExtensionContext eContext) {
               final String videoSource = eContext.attributes['src'].toString();
-              return VideoPlayerWidget(videoUrl: videoSource, videoType: 'network');
+              return VideoPlayerWidget(
+                  videoUrl: videoSource, videoType: 'network');
             }),
         TagExtension(
             tagsToExtend: {"img"},
             builder: (ExtensionContext eContext) {
               String imageUrl = eContext.attributes['src'].toString();
               return InkWell(
-                  onTap: () => NextScreen.nextScreenNormal(context, FullImagePreview(imageUrl: imageUrl)),
+                  onTap: () => NextScreen.nextScreenNormal(
+                      context, FullImagePreview(imageUrl: imageUrl)),
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
-                    placeholder: (context, url) => const LoadingIndicatorWidget(),
+                    placeholder: (context, url) =>
+                        const LoadingIndicatorWidget(),
                   ));
             }),
       ],
     );
   }
 }
-
-

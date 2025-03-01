@@ -33,7 +33,8 @@ class NextScreen {
         BuildContext context,
         Animation<double> animation,
         Animation<double> secondaryAnimation,
-      ) => page,
+      ) =>
+          page,
       transitionsBuilder: (
         BuildContext context,
         Animation<double> animation,
@@ -48,25 +49,27 @@ class NextScreen {
   }
 
   void nextScreenCloseOthersAnimation(context, page) {
-    Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(
-      pageBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-      ) => page,
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) =>
-          FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
-    ), ((route) => false));
+    Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        ),
+        ((route) => false));
   }
-  
 
   static void openBottomSheet(context, page) {
     showModalBottomSheet(

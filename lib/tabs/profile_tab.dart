@@ -24,7 +24,8 @@ class ProfileTab extends StatefulWidget {
   State<ProfileTab> createState() => _ProfileTabState();
 }
 
-class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMixin {
+class _ProfileTabState extends State<ProfileTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -35,7 +36,9 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
     final int rank = context.watch<UserBloc>().userRank;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      bottomNavigationBar: Visibility(visible: context.read<AdsBloc>().isRewardedEnabled, child: const RewardedAdContainer()),
+      bottomNavigationBar: Visibility(
+          visible: context.read<AdsBloc>().isRewardedEnabled,
+          child: const RewardedAdContainer()),
       appBar: AppBar(
         title: const Text(
           "profile",
@@ -52,7 +55,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
             ),
             label: Text(
               'edit',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ).tr(),
             onPressed: () => NextScreen().nextScreenPopup(
                 context,
@@ -83,7 +89,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                      color: ColorConfig.bgColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                      color: ColorConfig.bgColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
                   child: Column(
                     children: [
                       const SizedBox(
@@ -91,7 +100,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                       ),
                       Text(
                         user!.name!,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Container(
                         padding: const EdgeInsets.all(15),
@@ -116,14 +128,24 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                   ),
                                   Text(
                                     'points',
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.grey[400]),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[400]),
                                   ).tr(),
                                   const SizedBox(
                                     height: 3,
                                   ),
                                   Text(
                                     user.points.toString(),
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                   )
                                 ],
                               ),
@@ -143,14 +165,24 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                   ),
                                   Text(
                                     'rank',
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.grey[400]),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[400]),
                                   ).tr(),
                                   const SizedBox(
                                     height: 3,
                                   ),
                                   Text(
                                     '#$rank',
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                   )
                                 ],
                               ),
@@ -160,72 +192,122 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                       ),
                       GridView(
                         physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 20),
                         shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, childAspectRatio: 1.6, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1.6,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10),
                         children: [
-                          _infoCard(context, 'quiz-completed'.tr(), user.totalQuizPlayed.toString()),
-                          _infoCard(context, 'question-answered'.tr(), user.totalQuestionAnswered.toString()),
-                          _infoCard(context, 'correct-answer'.tr(), user.totalCorrectAns.toString()),
-                          _infoCard(context, 'incorrect-answer'.tr(), user.totalIncorrectAns.toString()),
+                          _infoCard(context, 'quiz-completed'.tr(),
+                              user.totalQuizPlayed.toString()),
+                          _infoCard(context, 'question-answered'.tr(),
+                              user.totalQuestionAnswered.toString()),
+                          _infoCard(context, 'correct-answer'.tr(),
+                              user.totalCorrectAns.toString()),
+                          _infoCard(context, 'incorrect-answer'.tr(),
+                              user.totalIncorrectAns.toString()),
                         ],
                       ),
                       Visibility(
-                        visible: FeatureConfig.userStrengthEnabled,
-                        child: Container(height: 180, margin: const EdgeInsets.fromLTRB(20, 0, 20, 20), width: double.infinity, child: _strengthCard(context, user.strength!))),
+                          visible: FeatureConfig.userStrengthEnabled,
+                          child: Container(
+                              height: 180,
+                              margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                              width: double.infinity,
+                              child: _strengthCard(context, user.strength!))),
                       Visibility(
                         visible: FeatureConfig.bookmarkQuestionEnabled,
                         child: Container(
                             padding: const EdgeInsets.all(10),
                             margin: const EdgeInsets.only(left: 20, right: 20),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(10),
-                              onTap: ()=> NextScreen.nextScreenNormal(context, const BookmarkedQuestions()),
-                              title: Text('bookmarked-questions', style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600, fontSize: 18
-                              ),).tr(),
-                              leading: Icon(IconUtils.bookmark, color: Theme.of(context).primaryColor,),
+                              onTap: () => NextScreen.nextScreenNormal(
+                                  context, const BookmarkedQuestions()),
+                              title: Text(
+                                'bookmarked-questions',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18),
+                              ).tr(),
+                              leading: Icon(
+                                IconUtils.bookmark,
+                                color: Theme.of(context).primaryColor,
+                              ),
                               trailing: const Icon(IconUtils.navigate),
-                            )
-                        ),
+                            )),
                       ),
                       Visibility(
                         visible: FeatureConfig.completedQuizzesEnabled,
                         child: Container(
                             padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(10),
-                              onTap: ()=> NextScreen.nextScreenNormal(context, const CompletedQuizzes()),
-                              title: Text('completed-quizzes', style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600, fontSize: 18
-                              ),).tr(),
-                              leading: Icon(IconUtils.done, color: Theme.of(context).primaryColor,),
+                              onTap: () => NextScreen.nextScreenNormal(
+                                  context, const CompletedQuizzes()),
+                              title: Text(
+                                'completed-quizzes',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18),
+                              ).tr(),
+                              leading: Icon(
+                                IconUtils.done,
+                                color: Theme.of(context).primaryColor,
+                              ),
                               trailing: const Icon(IconUtils.navigate),
-                            )
-                        ),
+                            )),
                       ),
                       Visibility(
                         visible: FeatureConfig.pointsHistoryEnabled,
                         child: Container(
                             padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(10),
-                              onTap: ()=> NextScreen.nextScreenNormal(context, const PointsHistory()),
-                              title: Text('points-history', style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600, fontSize: 18
-                              ),).tr(),
-                              leading: Icon(IconUtils.starFill, color: Theme.of(context).primaryColor,),
+                              onTap: () => NextScreen.nextScreenNormal(
+                                  context, const PointsHistory()),
+                              title: Text(
+                                'points-history',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18),
+                              ).tr(),
+                              leading: Icon(
+                                IconUtils.starFill,
+                                color: Theme.of(context).primaryColor,
+                              ),
                               trailing: const Icon(IconUtils.navigate),
-                            )
-                        ),
+                            )),
                       ),
-                      const SizedBox(height: 50,),
+                      const SizedBox(
+                        height: 50,
+                      ),
                     ],
                   ),
                 ),
@@ -233,7 +315,11 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                   top: -55,
                   child: Column(
                     children: [
-                      AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 110, bgColor: ColorConfig.avatarBg4),
+                      AvatarCircle(
+                          assetString: user.avatarString,
+                          imageUrl: user.imageUrl,
+                          size: 110,
+                          bgColor: ColorConfig.avatarBg4),
                     ],
                   ),
                 )
@@ -248,7 +334,8 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
   Widget _infoCard(BuildContext context, String title, String value) {
     return Container(
       padding: const EdgeInsets.fromLTRB(15, 15, 10, 5),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -262,7 +349,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           )
         ],
@@ -271,10 +361,12 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _strengthCard(BuildContext context, double strength) {
-    final strengthText = '${context.read<UserBloc>().userData!.totalCorrectAns}/${context.read<UserBloc>().userData!.totalQuestionAnswered}';
+    final strengthText =
+        '${context.read<UserBloc>().userData!.totalCorrectAns}/${context.read<UserBloc>().userData!.totalQuestionAnswered}';
     return Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -289,7 +381,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                 ).tr(),
                 Text(
                   strength.toStringAsFixed(2),
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -302,7 +397,10 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                 percent: 0.7,
                 center: Text(
                   strengthText,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 25),
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall
+                      ?.copyWith(fontSize: 25),
                 ),
                 progressColor: Theme.of(context).primaryColor,
                 backgroundColor: ColorConfig.bgColor,

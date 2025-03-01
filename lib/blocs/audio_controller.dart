@@ -5,12 +5,10 @@ import 'package:soundpool/soundpool.dart';
 
 import '../configs/app_config.dart';
 
-class SoundControllerBloc extends ChangeNotifier{
-
-  SoundControllerBloc(){
+class SoundControllerBloc extends ChangeNotifier {
+  SoundControllerBloc() {
     checkSoundSettings();
   }
-
 
   bool _audioEnabled = true;
   bool get audioEnabled => _audioEnabled;
@@ -27,45 +25,47 @@ class SoundControllerBloc extends ChangeNotifier{
   late int _congratsSoundId;
   int get congratsSoundId => _congratsSoundId;
 
-  final Soundpool pool = Soundpool.fromOptions(options: SoundpoolOptions.kDefault);
+  final Soundpool pool =
+      Soundpool.fromOptions(options: SoundpoolOptions.kDefault);
 
-
-  initSounds ()async{
-    _clickSoundId = await rootBundle.load(Config.clickSound).then((ByteData soundData) => pool.load(soundData));
-    _optionSoundId = await rootBundle.load(Config.optionsSound).then((ByteData soundData) => pool.load(soundData));
-    _congratsSoundId = await rootBundle.load(Config.congratsSound).then((ByteData soundData) => pool.load(soundData));
+  initSounds() async {
+    _clickSoundId = await rootBundle
+        .load(Config.clickSound)
+        .then((ByteData soundData) => pool.load(soundData));
+    _optionSoundId = await rootBundle
+        .load(Config.optionsSound)
+        .then((ByteData soundData) => pool.load(soundData));
+    _congratsSoundId = await rootBundle
+        .load(Config.congratsSound)
+        .then((ByteData soundData) => pool.load(soundData));
     notifyListeners();
   }
 
-  playSound(int newSoundId){
+  playSound(int newSoundId) {
     pool.play(newSoundId);
   }
 
-  checkSoundSettings () async{
-    await SPService().getSoundSettings().then((value){
+  checkSoundSettings() async {
+    await SPService().getSoundSettings().then((value) {
       _audioEnabled = value;
     });
-    await SPService().getVibrationSettings().then((value){
+    await SPService().getVibrationSettings().then((value) {
       _vibrationEnabled = value;
     });
     notifyListeners();
   }
 
-  controlSoundSettings (bool newValue){
+  controlSoundSettings(bool newValue) {
     debugPrint(newValue.toString());
     SPService().saveSoundSettings(newValue);
     _audioEnabled = newValue;
     notifyListeners();
   }
 
-  controlVibrationSettings (bool newValue){
+  controlVibrationSettings(bool newValue) {
     debugPrint(newValue.toString());
     SPService().saveVibrationSettings(newValue);
     _vibrationEnabled = newValue;
     notifyListeners();
   }
-
-
-
-  
 }

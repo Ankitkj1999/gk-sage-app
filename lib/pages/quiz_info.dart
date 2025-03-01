@@ -38,7 +38,8 @@ class _QuizInfoState extends State<QuizInfo> {
 
   // Old code:
   Future _checkEligibility() async {
-    debugPrint(" Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
+    debugPrint(
+        " Point: Checking the eligibility ${DateTime.now().toIso8601String()}");
     if (context.read<UserBloc>().userData!.points! <
         widget.quiz.pointsRequired!) {
       openAnimationDialog(
@@ -49,7 +50,8 @@ class _QuizInfoState extends State<QuizInfo> {
               .tr(args: [widget.quiz.pointsRequired.toString()]));
     } else {
       setState(() => _isLoading = true);
-      debugPrint(" Point: Getting the questions ${DateTime.now().toIso8601String()}");
+      debugPrint(
+          " Point: Getting the questions ${DateTime.now().toIso8601String()}");
       await FirebaseService()
           .getQuestions(widget.quiz.id!)
           .then((List<Question> qList) async {
@@ -68,7 +70,8 @@ class _QuizInfoState extends State<QuizInfo> {
               (a, b) => a.createdAt!.compareTo(b.createdAt!),
             );
           }
-          debugPrint("Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
+          debugPrint(
+              "Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
           // await FirebaseService()
           //     .updateUserPointsByTransection(
           //         context.read<UserBloc>().userData!.uid!,
@@ -113,8 +116,8 @@ class _QuizInfoState extends State<QuizInfo> {
 
 // Continue with initializing temp data and navigating
           await context.read<TempBloc>().intializeTempData(
-            context.read<UserBloc>().userData!.points!,
-          );
+                context.read<UserBloc>().userData!.points!,
+              );
           setState(() => _isLoading = false);
           NextScreen().nextScreenReplace(
             context,
@@ -125,8 +128,6 @@ class _QuizInfoState extends State<QuizInfo> {
               selfChallengeMode: false,
             ),
           );
-
-
 
           debugPrint(
               "Point: Navigating to the quiz screen ${DateTime.now().toIso8601String()}");
@@ -141,7 +142,6 @@ class _QuizInfoState extends State<QuizInfo> {
       });
     }
   }
-
 
   // New Code: Nevagating Immediately after getting the code
   // Future _checkEligibility() async {
@@ -218,8 +218,6 @@ class _QuizInfoState extends State<QuizInfo> {
   //   // Optionally, you might remove the loading state now since we've navigated.
   //   // setState(() => _isLoading = false);
   // }
-
-
 
   @override
   Widget build(BuildContext context) {

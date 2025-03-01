@@ -9,7 +9,11 @@ import '../pages/quiz_info.dart';
 import '../utils/next_screen.dart';
 
 class QuizCard extends StatelessWidget {
-  const QuizCard({super.key, required this.quiz, required this.heroTag, this.enablePlayAgain});
+  const QuizCard(
+      {super.key,
+      required this.quiz,
+      required this.heroTag,
+      this.enablePlayAgain});
 
   final Quiz quiz;
   final String heroTag;
@@ -17,13 +21,17 @@ class QuizCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List completedIds = context.watch<UserBloc>().userData!.completedQuizzes ?? [];
+    final List completedIds =
+        context.watch<UserBloc>().userData!.completedQuizzes ?? [];
     return Stack(
       children: [
         Container(
             margin: const EdgeInsets.only(bottom: 20),
             padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10), color: Colors.white),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white),
             child: InkWell(
               onTap: () => NextScreen.nextScreenNormal(
                   context,
@@ -37,7 +45,10 @@ class QuizCard extends StatelessWidget {
                   SizedBox(
                     height: 70,
                     width: 70,
-                    child: Hero(tag: heroTag, child: CustomCacheImage(imageUrl: quiz.thumbnailUrl, radius: 10)),
+                    child: Hero(
+                        tag: heroTag,
+                        child: CustomCacheImage(
+                            imageUrl: quiz.thumbnailUrl, radius: 10)),
                   ),
                   const SizedBox(
                     width: 15,
@@ -50,14 +61,19 @@ class QuizCard extends StatelessWidget {
                         Text(
                           quiz.name.toString(),
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                         const SizedBox(
                           height: 3,
                         ),
                         Wrap(
                           children: [
-                            const Text('questions-count').tr(args: [quiz.questionCount.toString()]),
+                            const Text('questions-count')
+                                .tr(args: [quiz.questionCount.toString()]),
                             const SizedBox(
                               width: 10,
                             ),
@@ -73,11 +89,15 @@ class QuizCard extends StatelessWidget {
                                   const SizedBox(
                                     width: 1,
                                   ),
-                                  const Text('minute-count').tr(args: [quiz.quizTime.toString()]),
+                                  const Text('minute-count')
+                                      .tr(args: [quiz.quizTime.toString()]),
                                 ],
                               ),
                             ),
-                            Visibility(visible: enablePlayAgain == true, child: Chip(label: const Text('play-again').tr()))
+                            Visibility(
+                                visible: enablePlayAgain == true,
+                                child:
+                                    Chip(label: const Text('play-again').tr()))
                           ],
                         )
                       ],
@@ -96,7 +116,9 @@ class QuizCard extends StatelessWidget {
           child: Align(
               alignment: Alignment.topRight,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), topRight: Radius.circular(10)),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    topRight: Radius.circular(10)),
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   color: Theme.of(context).primaryColor,

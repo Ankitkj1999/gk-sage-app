@@ -7,7 +7,8 @@ import 'package:quiz_app/utils/icon_utils.dart';
 import '../pages/custom_notification_details.dart';
 import 'next_screen.dart';
 
-Future<void> openNotificationDialog(context, NotificationModel notificationModel) {
+Future<void> openNotificationDialog(
+    context, NotificationModel notificationModel) {
   return Dialogs.materialDialog(
     context: context,
     title: "New Notification Alert!",
@@ -27,7 +28,10 @@ Future<void> openNotificationDialog(context, NotificationModel notificationModel
         IconsOutlineButton(
           onPressed: () {
             Navigator.pop(context);
-            NextScreen.nextScreenNormal(context, CustomNotificationDeatils(notificationModel: notificationModel));
+            NextScreen.nextScreenNormal(
+                context,
+                CustomNotificationDeatils(
+                    notificationModel: notificationModel));
           },
           text: 'open-details'.tr(),
           iconData: IconUtils.bell1,

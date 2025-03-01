@@ -4,9 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/configs/app_config.dart';
 
-DecorationImage getUserImageforEditProfile(BuildContext context, String? imageUrl, File? imageFile, String? assetString) {
+DecorationImage getUserImageforEditProfile(BuildContext context,
+    String? imageUrl, File? imageFile, String? assetString) {
   return DecorationImage(
-      fit: imageUrl != null || imageFile != null ? BoxFit.cover : BoxFit.scaleDown,
+      fit: imageUrl != null || imageFile != null
+          ? BoxFit.cover
+          : BoxFit.scaleDown,
       image: imageUrl != null
           ? CachedNetworkImageProvider(imageUrl)
           : imageFile != null

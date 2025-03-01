@@ -29,7 +29,8 @@ class OptionCard extends StatelessWidget {
               child: Text(
             optionTitle,
             textAlign: TextAlign.start,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: isSelected ? Colors.white : Colors.blueGrey.shade600),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: isSelected ? Colors.white : Colors.blueGrey.shade600),
           )),
           const SizedBox(
             width: 5,

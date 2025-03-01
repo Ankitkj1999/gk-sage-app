@@ -12,7 +12,6 @@ import '../services/firebase_service.dart';
 class HomeCategories extends StatelessWidget {
   const HomeCategories({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,9 +27,13 @@ class HomeCategories extends StatelessWidget {
               children: [
                 Text(
                   'categories',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[900], fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.grey[900], fontWeight: FontWeight.w600),
                 ).tr(),
-                TextButton(onPressed: () => context.read<TabControllerBloc>().controlTab(1), child: const Text('explore-all').tr())
+                TextButton(
+                    onPressed: () =>
+                        context.read<TabControllerBloc>().controlTab(1),
+                    child: const Text('explore-all').tr())
               ],
             ),
           ),
@@ -53,23 +56,32 @@ class HomeCategories extends StatelessWidget {
                       return Flexible(
                         flex: 1,
                         child: InkWell(
-                          onTap: ()=> NextScreen.nextScreenNormal(context, Quizzes(category: category)),
+                          onTap: () => NextScreen.nextScreenNormal(
+                              context, Quizzes(category: category)),
                           child: Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 90, child: CustomCacheImage(imageUrl: category.thumbnailUrl, radius: 5)),
+                                SizedBox(
+                                    height: 90,
+                                    child: CustomCacheImage(
+                                        imageUrl: category.thumbnailUrl,
+                                        radius: 5)),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 SizedBox(
                                     height: 50,
                                     child: Text(category.name.toString(),
-                                        maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                          fontWeight: FontWeight.w600
-                                        )))
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.w600)))
                               ],
                             ),
                           ),

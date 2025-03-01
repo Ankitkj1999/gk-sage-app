@@ -51,7 +51,9 @@ AppBar progessAppBar({
                   width: 40,
                   height: 30,
                   margin: const EdgeInsets.only(right: 0, left: 10),
-                  decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(20)),
                   child: const Icon(IconUtils.addBookmark)),
             ),
           ),
@@ -61,7 +63,9 @@ AppBar progessAppBar({
               width: 40,
               height: 30,
               margin: const EdgeInsets.only(right: 10, left: 10),
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(20)),
               child: const Icon(
                 Ionicons.options,
                 size: 20,

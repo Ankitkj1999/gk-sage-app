@@ -8,7 +8,8 @@ Future<void> openNotificationPermissionDialog(context) {
     context: context,
     title: 'Allow Notifications from Settings',
     titleAlign: TextAlign.center,
-    msg: 'You need to allow notifications from your settings first to enable this',
+    msg:
+        'You need to allow notifications from your settings first to enable this',
     titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     msgAlign: TextAlign.center,
     msgStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -27,7 +28,8 @@ Future<void> openNotificationPermissionDialog(context) {
           },
           text: 'Open Settings',
           color: Theme.of(context).primaryColor,
-          textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          textStyle:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           iconColor: Colors.white,
         ),
       ];

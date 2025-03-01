@@ -4,8 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../configs/ad_config.dart';
 
-class AdsBloc  extends ChangeNotifier{
-
+class AdsBloc extends ChangeNotifier {
   bool _isInterstialEnabled = false;
   bool get isInterstitialEnabled => _isInterstialEnabled;
 
@@ -21,16 +20,16 @@ class AdsBloc  extends ChangeNotifier{
   int _rewardedAdPoints = 0;
   int get rewardedAdPoints => _rewardedAdPoints;
 
-  Future checkAds ()async{
+  Future checkAds() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentSnapshot snap = await firestore.collection('settings').doc('ads').get();
-    if(snap.exists){
+    DocumentSnapshot snap =
+        await firestore.collection('settings').doc('ads').get();
+    if (snap.exists) {
       _isInterstialEnabled = snap.get('interstitial_ad') ?? false;
       _isRewardedEnabled = snap.get('rewarded_ad') ?? false;
       _isBannerAdEnabled = snap.get('banner_ad') ?? false;
       _rewardedAdPoints = snap.get('reward_ad_points') ?? 0;
-
-    }else{
+    } else {
       _isInterstialEnabled = false;
       _isRewardedEnabled = false;
       _isBannerAdEnabled = false;
@@ -41,7 +40,7 @@ class AdsBloc  extends ChangeNotifier{
 
   InterstitialAd? _interstitialAd;
 
-  void createInterstitialAd(){
+  void createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: AdConfig.getInterstitialAdUnitId(),
         request: const AdRequest(),
@@ -59,28 +58,28 @@ class AdsBloc  extends ChangeNotifier{
             notifyListeners();
             createInterstitialAd();
           },
-    ));
+        ));
   }
 
   void showInterstitialAd() {
-    if(_interstitialAd != null){
-
+    if (_interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) => debugPrint('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        debugPrint('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _interstitialAd = null;
-        _isInterstitalAdLoaded = false;
-        notifyListeners();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _interstitialAd = null;
-        _isInterstitalAdLoaded = false;
-        notifyListeners();
-      },
+        onAdShowedFullScreenContent: (InterstitialAd ad) =>
+            debugPrint('ad onAdShowedFullScreenContent.'),
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          debugPrint('$ad onAdDismissedFullScreenContent.');
+          ad.dispose();
+          _interstitialAd = null;
+          _isInterstitalAdLoaded = false;
+          notifyListeners();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
+          ad.dispose();
+          _interstitialAd = null;
+          _isInterstitalAdLoaded = false;
+          notifyListeners();
+        },
       );
       _interstitialAd!.show();
       _interstitialAd = null;
@@ -88,11 +87,9 @@ class AdsBloc  extends ChangeNotifier{
     }
   }
 
-
   @override
   void dispose() {
     _interstitialAd?.dispose();
     super.dispose();
   }
-
 }

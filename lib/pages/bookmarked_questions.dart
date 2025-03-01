@@ -38,7 +38,9 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
     final chunks = partition(itemIds, 10);
     List<Question> qList = [];
     final querySnapshots = await Future.wait(chunks.map((chunk) {
-      Query itemsQuery = FirebaseFirestore.instance.collection('questions').where("id", whereIn: chunk);
+      Query itemsQuery = FirebaseFirestore.instance
+          .collection('questions')
+          .where("id", whereIn: chunk);
       return itemsQuery.get();
     }).toList());
     for (var element in querySnapshots) {
@@ -88,7 +90,9 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
               },
             );
           } else {
-            return EmptyAnimation(animationString: Config.emptyAnimation, title: 'no-content'.tr());
+            return EmptyAnimation(
+                animationString: Config.emptyAnimation,
+                title: 'no-content'.tr());
           }
         },
       ),
@@ -99,7 +103,10 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
     return Container(
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey[200]!)),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[200]!)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +117,10 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
               Expanded(
                 child: Text(
                   'Q${index + 1}. ${_questionTitle(q)}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
                 ),
               ),
               PopupMenuButton(
@@ -120,7 +130,10 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
                       value: 'clear',
                       child: Text(
                         'remove',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ).tr(),
                     ),
                   ];
@@ -131,9 +144,11 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
             ],
           ),
           Visibility(
-            visible: q.questionType == Constants.questionTypes.keys.elementAt(1),
+            visible:
+                q.questionType == Constants.questionTypes.keys.elementAt(1),
             child: InkWell(
-              onTap: () => NextScreen().nextScreenPopup(context, FullImagePreview(imageUrl: q.questionImageUrl!)),
+              onTap: () => NextScreen().nextScreenPopup(
+                  context, FullImagePreview(imageUrl: q.questionImageUrl!)),
               child: Container(
                 padding: const EdgeInsets.only(top: 10),
                 height: 150,
@@ -145,19 +160,22 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
             ),
           ),
           Visibility(
-            visible: q.questionType == Constants.questionTypes.keys.elementAt(3),
+            visible:
+                q.questionType == Constants.questionTypes.keys.elementAt(3),
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: VideoPlayerWidget(
                     videoUrl: q.questionVideoUrl.toString(),
-                    videoType: AppService.getVideoType(q.questionVideoUrl.toString()),
+                    videoType:
+                        AppService.getVideoType(q.questionVideoUrl.toString()),
                   )),
             ),
           ),
           Visibility(
-              visible: q.questionType == Constants.questionTypes.keys.elementAt(2),
+              visible:
+                  q.questionType == Constants.questionTypes.keys.elementAt(2),
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: AudioWidget(
@@ -171,7 +189,8 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
               child: ActionChip(
                 label: const Text('explanation').tr(),
                 onPressed: () {
-                  NextScreen().nextScreenPopup(context, QuestionExplaination(q: q));
+                  NextScreen()
+                      .nextScreenPopup(context, QuestionExplaination(q: q));
                 },
               ),
             ),
@@ -198,8 +217,11 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
   }
 
   Widget _getOption(Question q, int optionIndex) {
-    if (q.optionsType == Constants.optionTypes.keys.elementAt(0) || q.optionsType == Constants.optionTypes.keys.elementAt(1)) {
-      return Text(q.options![optionIndex], style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16));
+    if (q.optionsType == Constants.optionTypes.keys.elementAt(0) ||
+        q.optionsType == Constants.optionTypes.keys.elementAt(1)) {
+      return Text(q.options![optionIndex],
+          style:
+              Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16));
     } else if (q.optionsType == Constants.optionTypes.keys.elementAt(2)) {
       return Container(
         height: 150,
@@ -220,7 +242,8 @@ class _BookmarkedQuestionsState extends State<BookmarkedQuestions> {
   }
 
   static String _questionTitle(Question q) {
-    if (q.questionType != Constants.questionTypes.keys.elementAt(4) && !q.questionTitle.toString().contains('<_>')) {
+    if (q.questionType != Constants.questionTypes.keys.elementAt(4) &&
+        !q.questionTitle.toString().contains('<_>')) {
       return q.questionTitle.toString();
     } else {
       List<String> questionParts = q.questionTitle.toString().split('<_>');

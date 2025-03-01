@@ -10,7 +10,8 @@ class AudioWidget extends StatefulWidget {
   State<AudioWidget> createState() => _AudioWidgetState();
 }
 
-class _AudioWidgetState extends State<AudioWidget> with SingleTickerProviderStateMixin {
+class _AudioWidgetState extends State<AudioWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final player = AudioPlayer();
 
@@ -29,13 +30,13 @@ class _AudioWidgetState extends State<AudioWidget> with SingleTickerProviderStat
     }
   }
 
-  _onRestart ()async{
-    if(player.playing){
+  _onRestart() async {
+    if (player.playing) {
       await player.seek(Duration.zero);
       _controller.reverse();
       player.play();
       _controller.forward();
-    }else{
+    } else {
       await player.seek(Duration.zero);
       player.play();
       _controller.forward();
@@ -68,11 +69,16 @@ class _AudioWidgetState extends State<AudioWidget> with SingleTickerProviderStat
           backgroundColor: Theme.of(context).primaryColor.withOpacity(0.7),
           radius: 25,
           child: InkWell(
-            onTap: () => _onRestart(),
-            child: const Icon(Icons.restart_alt, color: Colors.white, size: 30,)
-          ),
+              onTap: () => _onRestart(),
+              child: const Icon(
+                Icons.restart_alt,
+                color: Colors.white,
+                size: 30,
+              )),
         ),
-        const SizedBox(width: 10,),
+        const SizedBox(
+          width: 10,
+        ),
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
           radius: 40,

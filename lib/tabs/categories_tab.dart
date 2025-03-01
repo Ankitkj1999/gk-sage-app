@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:quiz_app/cards/category_card.dart';
+import 'package:quiz_app/configs/color_config.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 import 'package:quiz_app/utils/empty_animation.dart';
 import 'package:quiz_app/widgets/loading_widget.dart';
@@ -43,6 +44,7 @@ class _CategoriesTabState extends State<CategoriesTab>
           physics: const BouncingScrollPhysics(),
           slivers: <Widget>[
             SliverAppBar.medium(
+              backgroundColor: ColorConfig.appThemeColor,
               stretch: true,
               elevation: 0,
               expandedHeight: 120,
@@ -64,17 +66,20 @@ class _CategoriesTabState extends State<CategoriesTab>
                   if (snapshot.connectionState != ConnectionState.done) {
                     return Column(
                       children: [
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.30),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.30),
                         const LoadingIndicatorWidget(),
                       ],
                     );
                   } else if (snapshot.hasData && snapshot.data.length != 0) {
                     return AnimationLimiter(
                       child: GridView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 10),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 1,
                           childAspectRatio: 3.0,
                         ),

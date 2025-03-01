@@ -6,13 +6,11 @@ class QuestionBloc extends ChangeNotifier {
 
   Question? _question;
   Question? get question => _question;
-  
 
   String? _dragTargetText;
   String? get dragTargetText => _dragTargetText;
 
-
-  updateDragTargetText (String? value){
+  updateDragTargetText(String? value) {
     _dragTargetText = value;
     notifyListeners();
   }
@@ -27,7 +25,8 @@ class QuestionBloc extends ChangeNotifier {
 
   controlPage(int newPage) {
     _pageIndex = newPage;
-    pageController.animateToPage(newPage, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    pageController.animateToPage(newPage,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
     notifyListeners();
   }
 
