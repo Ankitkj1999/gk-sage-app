@@ -4,7 +4,7 @@ description: A new Flutter project.
 publish_to: 'none'
 
 
-version: 2.1.3+151
+version: 2.1.3+153
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -95,6 +95,7 @@ flutter:
     - assets/animations/
     - assets/translations/
     - assets/sounds/
+    - assets/images/new_avatars/
 
 
   fonts:

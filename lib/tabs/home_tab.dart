@@ -20,6 +20,7 @@ import 'package:quiz_app/widgets/custom_chip.dart';
 import 'package:quiz_app/widgets/rewarded_ad_container.dart';
 // import '../IAP/iap_config.dart';
 // import '../IAP/iap_page.dart';
+import '../services/greeting_service.dart';
 import '../widgets/home_categories.dart';
 import '../widgets/featured.dart';
 import '../widgets/sp_category1.dart';
@@ -168,7 +169,8 @@ class _TopBar extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'welcome-back',
+                          // 'welcome-back',
+                          GreetingService.getGreeting(context),
                           style: Theme.of(context).primaryTextTheme.bodyMedium,
                         ).tr(),
                         const SizedBox(

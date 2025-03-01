@@ -70,24 +70,24 @@ class FeatureCard extends StatelessWidget {
                       
                     ],
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(15, 6, 15, 6),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.white60,
-                        )),
-                    child: Text(
-                      'explore',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.white),
-                    ).tr(),
-                  )
+                  // const SizedBox(
+                  //   height: 8,
+                  // ),
+                  // Container(
+                  //   padding: const EdgeInsets.fromLTRB(15, 6, 15, 6),
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       border: Border.all(
+                  //         color: Colors.white60,
+                  //       )),
+                  //   child: Text(
+                  //     'explore',
+                  //     style: Theme.of(context)
+                  //         .textTheme
+                  //         .bodyMedium
+                  //         ?.copyWith(color: Colors.white),
+                  //   ).tr(),
+                  // )
                 ],
               ),
             ),

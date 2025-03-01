@@ -53,7 +53,10 @@ class SettingsBloc extends ChangeNotifier{
 
 
   String _appVersion = '0.0';
+  String _appBuildNumber = '0';
   String get appVersion => _appVersion;
+  String get appBuildNumber => _appBuildNumber;
+
 
   String _packageName = '';
   String get packageName => _packageName;
@@ -61,6 +64,7 @@ class SettingsBloc extends ChangeNotifier{
   void initPackageInfo () async{
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     _appVersion = packageInfo.version;
+    _appBuildNumber = packageInfo.buildNumber;
     _packageName = packageInfo.packageName;
     notifyListeners();
     

@@ -15,8 +15,9 @@ class VersionInfo extends StatelessWidget {
       padding: const EdgeInsets.only(top: 30),
       child: Column(
         children: [
+          SizedBox(height: 8,),
           Image.asset(Config.logo, width: 140,),
-          Text('App version: ${context.read<SettingsBloc>().appVersion}')
+          Text('App version: ${context.read<SettingsBloc>().appVersion} : ${context.read<SettingsBloc>().appBuildNumber}', ),
         ],
       ),
     );
