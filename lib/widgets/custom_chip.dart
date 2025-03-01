@@ -18,7 +18,7 @@ class CustomChip extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: bgColor.withOpacity(0.6)),
+          color: bgColor.withOpacity(0.8)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

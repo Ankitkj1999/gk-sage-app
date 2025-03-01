@@ -6,7 +6,12 @@ class CustomCacheImageWithDarkFilterFull extends StatelessWidget {
   final double radius;
   final bool? circularShape;
   final bool? allPosition;
-  const CustomCacheImageWithDarkFilterFull({super.key, required this.imageUrl, required this.radius, this.circularShape, this.allPosition});
+  const CustomCacheImageWithDarkFilterFull(
+      {super.key,
+      required this.imageUrl,
+      required this.radius,
+      this.circularShape,
+      this.allPosition});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,12 @@ class CustomCacheImageWithDarkFilterTopBottom extends StatelessWidget {
   final double radius;
   final bool? circularShape;
   final bool? allPosition;
-  const CustomCacheImageWithDarkFilterTopBottom({super.key, required this.imageUrl, required this.radius, this.circularShape, this.allPosition});
+  const CustomCacheImageWithDarkFilterTopBottom(
+      {super.key,
+      required this.imageUrl,
+      required this.radius,
+      this.circularShape,
+      this.allPosition});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +122,12 @@ class CustomCacheImageWithDarkFilterBottom extends StatelessWidget {
   final double radius;
   final bool? circularShape;
   final bool? allPosition;
-  const CustomCacheImageWithDarkFilterBottom({super.key, required this.imageUrl, required this.radius, this.circularShape, this.allPosition});
+  const CustomCacheImageWithDarkFilterBottom(
+      {super.key,
+      required this.imageUrl,
+      required this.radius,
+      this.circularShape,
+      this.allPosition});
 
   @override
   Widget build(BuildContext context) {
@@ -144,12 +159,13 @@ class CustomCacheImageWithDarkFilterBottom extends StatelessWidget {
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                end: Alignment.center,
                 colors: [
                   Color(0x00000000),
-                  Color(0x00000000),
-                  Color(0x00000000),
-                  Color(0xcc000000),
+                  Color(0x38595959),
+                  Color(0x59595959),
+                  Color(0x59393939),
+                  Color(0x99000000),
                 ],
               ),
             ),
