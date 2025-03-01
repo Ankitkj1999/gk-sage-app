@@ -19,6 +19,7 @@ class ColorConfig{
   static const Color avatarBg1 = Colors.purple;
   static final Color avatarBg2 = Colors.blue.shade700;
   static final Color avatarBg3 = Colors.green.shade100;
+  static final Color avatarBg4 =  Colors.greenAccent;
   static const Color chip3 = Colors.blue;
 
   static const Color overviewBtn = Colors.blueAccent;

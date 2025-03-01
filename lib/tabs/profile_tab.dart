@@ -233,7 +233,7 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                   top: -55,
                   child: Column(
                     children: [
-                      AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 110, bgColor: Colors.greenAccent),
+                      AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 110, bgColor: ColorConfig.avatarBg4),
                     ],
                   ),
                 )

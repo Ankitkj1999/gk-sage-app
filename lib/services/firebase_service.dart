@@ -72,6 +72,7 @@ class FirebaseService {
     await firestore.collection('questions').where('quiz_id', isEqualTo: quizId).orderBy('created_at', descending: false).get().then((QuerySnapshot? snapshot){
       data = snapshot!.docs.map((e) => Question.fromFirestore(e)).toList();
     });
+    debugPrint('The question object is: ${data.toString()}');
     return data;
   }
 

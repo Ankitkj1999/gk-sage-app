@@ -127,7 +127,7 @@ class _RewardedAdContainerState extends State<RewardedAdContainer> {
         alignment: Alignment.center,
         height: 60,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor,),
         child: _isLoading
             ? const LoadingIndicatorWidget(
                 color: Colors.white,

@@ -200,7 +200,7 @@ class _TopBar extends StatelessWidget {
                   glowRadiusFactor: 0.2,
                   child: InkWell(
                     onTap: () => context.read<TabControllerBloc>().controlTab(2),
-                    child: AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 60, bgColor: ColorConfig.avatarBg1),
+                    child: AvatarCircle(assetString: user.avatarString, imageUrl: user.imageUrl, size: 60, bgColor: ColorConfig.avatarBg4),
                   ),
                 )
               ],
