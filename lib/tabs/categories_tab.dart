@@ -9,6 +9,7 @@ import 'package:quiz_app/utils/empty_animation.dart';
 import 'package:quiz_app/widgets/loading_widget.dart';
 import '../configs/app_config.dart';
 import '../models/category.dart';
+import '../services/MultipleCubesPainterService.dart';
 
 class CategoriesTab extends StatefulWidget {
   const CategoriesTab({super.key});
@@ -43,22 +44,82 @@ class _CategoriesTabState extends State<CategoriesTab>
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: <Widget>[
+            // SliverAppBar.medium(
+            //   backgroundColor: ColorConfig.appThemeColor,
+            //   stretch: true,
+            //   elevation: 0,
+            //   expandedHeight: 120,
+            //   toolbarHeight: kToolbarHeight,
+            //   title: const Text(
+            //     'all-categories',
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ).tr(),
+            //   titleSpacing: 0,
+            //   automaticallyImplyLeading: false,
+            //   centerTitle: true,
+            // ),
+            // SliverAppBar.medium(
+            //   backgroundColor: ColorConfig.appThemeColor,
+            //   stretch: true,
+            //   elevation: 0,
+            //   expandedHeight: 120,
+            //   toolbarHeight: kToolbarHeight,
+            //   flexibleSpace: Stack(
+            //     children: [
+            //       // Fills the entire flexible space with cubes.
+            //       Positioned.fill(
+            //         child: CustomPaint(
+            //           painter: MultipleCubesPainterService(), // Your cubes painter
+            //           child: Container(),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            //   title: const Text(
+            //     'all-categories',
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ).tr(),
+            //   titleSpacing: 0,
+            //   automaticallyImplyLeading: false,
+            //   centerTitle: true,
+            // )
+
             SliverAppBar.medium(
               backgroundColor: ColorConfig.appThemeColor,
               stretch: true,
               elevation: 0,
               expandedHeight: 120,
               toolbarHeight: kToolbarHeight,
-              title: const Text(
-                'all-categories',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ).tr(),
-              titleSpacing: 0,
+              flexibleSpace: Stack(
+                children: [
+                  // 1) Background cubes
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: MultipleCubesPainterService(), // Your cubes painter
+                      child: Container(),
+                    ),
+                  ),
+                  // 2) Centered text overlay
+                  Center(
+                    child: Text(
+                      'all-categories',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20, // adjust as needed
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(), // if using easy_localization for translation
+                  ),
+                ],
+              ),
               automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
+              // Optionally remove the title property since we’re adding the text manually
+            )
+,
             SliverToBoxAdapter(
               child: FutureBuilder(
                 future: _future,
