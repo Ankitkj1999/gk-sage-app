@@ -15,6 +15,7 @@ import 'package:quiz_app/utils/next_screen.dart';
 import 'package:quiz_app/widgets/avatar_circle.dart';
 import 'package:quiz_app/widgets/loading_widget.dart';
 
+import '../services/v_pattern_background.dart';
 import '../widgets/podium_widget.dart'; // Import the new Podium widget
 
 class LeaderboardTab extends StatefulWidget {
@@ -78,48 +79,58 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
         onRefresh: () => _onRefresh(),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: FutureBuilder(
-            future: _userData,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
+          child: CustomPaint(
+
+              painter: VPatternPainter(
+                backgroundColor: ColorConfig.appThemeColor,
+                // backgroundColor: Color(0xFF7D62FF),
+                patternColor: Color(0xFF9A84FF),
+                // patternHeight: 70.0,
+              ),
+
+            child: FutureBuilder(
+              future: _userData,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: _topHeaderHeight,
+                        color: Theme.of(context).primaryColor,
+                        child: const LoadingIndicatorWidget(color: Colors.white),
+                      ),
+                    ],
+                  );
+                }
+                if (snapshot.hasData && snapshot.data.length != 0) {
+                  List<UserModel> userList = snapshot.data;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _topList(context, userList),
+                      _bottomList(userList)
+                    ],
+                  );
+                }
+
                 return Column(
                   children: [
                     Container(
                       height: _topHeaderHeight,
+                      width: double.infinity,
                       color: Theme.of(context).primaryColor,
-                      child: const LoadingIndicatorWidget(color: Colors.white),
+                      child: Center(
+                          child: Text('No Users Found',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(color: Colors.white))),
                     ),
                   ],
                 );
-              }
-              if (snapshot.hasData && snapshot.data.length != 0) {
-                List<UserModel> userList = snapshot.data;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _topList(context, userList),
-                    _bottomList(userList)
-                  ],
-                );
-              }
-
-              return Column(
-                children: [
-                  Container(
-                    height: _topHeaderHeight,
-                    width: double.infinity,
-                    color: Theme.of(context).primaryColor,
-                    child: Center(
-                        child: Text('No Users Found',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(color: Colors.white))),
-                  ),
-                ],
-              );
-            },
+              },
+            ),
           ),
         ),
       ),
@@ -130,6 +141,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
     return DelayedDisplay(
       delay: const Duration(milliseconds: 200),
       child: Container(
+        color: Colors.transparent,
         child: ListView.separated(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
           shrinkWrap: true,
@@ -243,7 +255,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
       height: _topHeaderHeight,
       decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          // color: Theme.of(context).primaryColor,
           borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30)
