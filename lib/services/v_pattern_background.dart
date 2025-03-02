@@ -11,7 +11,7 @@ class VPatternPainter extends CustomPainter {
   VPatternPainter({
     this.backgroundColor = ColorConfig.appThemeColor,
     // this.backgroundColor = const Color(0xFF7D62FF),
-    this.patternColor = const Color(0xFF9A84FF),
+    this.patternColor = const Color(0xFF8E77FA),
     this.patternSpacing = 350.0, // Increased spacing between V patterns
   });
 

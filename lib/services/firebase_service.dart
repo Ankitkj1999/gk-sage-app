@@ -22,6 +22,10 @@ class FirebaseService {
         .then((QuerySnapshot? snapshot) {
       data = snapshot!.docs.map((e) => Category.fromFirestore(e)).toList();
     });
+    debugPrint("The data of category:");
+    for(var catogery in data){
+      debugPrint("- Name: ${catogery.name}, ID: ${catogery.id}, Quiz Count: ${catogery.quizCount}");
+    }
     return data;
   }
 
@@ -69,6 +73,7 @@ class FirebaseService {
     await firestore.collection('quizes').get().then((QuerySnapshot? snapshot) {
       data = snapshot!.docs.map((e) => Quiz.fromFirestore(e)).toList();
     });
+    debugPrint("The data of quizeds is ${data.toString()} and length is ${data.length}");
     return data;
   }
 

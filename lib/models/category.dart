@@ -23,4 +23,9 @@ class Category {
         thumbnailUrl: d['image_url'],
         featured: d['featured'] ?? false);
   }
+
+  @override
+  String toString(){
+    return 'Catogery{name: $name, id: $id, quizCount: $quizCount, featured: $featured}';
+  }
 }
