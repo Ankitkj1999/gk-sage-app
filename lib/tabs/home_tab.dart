@@ -11,17 +11,17 @@ import 'package:quiz_app/blocs/tab_controller.dart';
 import 'package:quiz_app/blocs/user_bloc.dart';
 import 'package:quiz_app/configs/app_config.dart';
 import 'package:quiz_app/configs/color_config.dart';
+import 'package:quiz_app/models/quiz.dart';
 import 'package:quiz_app/pages/notifications.dart';
 import 'package:quiz_app/pages/self_challenge.dart';
 import 'package:quiz_app/pages/settings.dart';
+import 'package:quiz_app/services/drift_service.dart';
 import 'package:quiz_app/tabs/leaderboard_tab.dart';
 import 'package:quiz_app/utils/icon_utils.dart';
 import 'package:quiz_app/utils/next_screen.dart';
 import 'package:quiz_app/widgets/avatar_circle.dart';
 import 'package:quiz_app/widgets/custom_chip.dart';
 import 'package:quiz_app/widgets/rewarded_ad_container.dart';
-// import '../IAP/iap_config.dart';
-// import '../IAP/iap_page.dart';
 import '../services/MultipleCubesPainterService.dart';
 import '../services/cubes_backgound_service.dart';
 import '../services/greeting_service.dart';
@@ -40,6 +40,34 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
+  final DriftService _driftService = DriftService();
+  bool _isSyncing = false;
+  List<Quiz> _localQuizzes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _syncQuizzes();
+  }
+
+  Future<void> _syncQuizzes() async {
+    setState(() {
+      _isSyncing = true;
+    });
+
+    _localQuizzes = await _driftService.syncAndGetAllQuizzes();
+
+    setState(() {
+      _isSyncing = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _driftService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final sb = context.read<SettingsBloc>();
@@ -51,33 +79,45 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _TopBar(),
-            Column(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const FeaturedCategories(),
-                const HomeCategories(),
-                sb.specialCategory.enabled ?? false
-                    ? SpecialCategory1(catID: sb.specialCategory.id1.toString())
-                    : const SizedBox.shrink(),
-                const SizedBox(height: 30),
-                sb.specialCategory.enabled ?? false
-                    ? SpecialCategory2(catID: sb.specialCategory.id2.toString())
-                    : const SizedBox.shrink(),
-                sb.selfChallengeModeEnabled
-                    ? const _SelfChallengeContainer()
-                    : const SizedBox.shrink(),
-                ab.isRewardedEnabled
-                    ? const RewardedAdContainer()
-                    : const SizedBox.shrink(),
+                const _TopBar(),
+                Column(
+                  children: [
+                    const FeaturedCategories(),
+                    const HomeCategories(),
+                    sb.specialCategory.enabled ?? false
+                        ? SpecialCategory1(catID: sb.specialCategory.id1.toString())
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 30),
+                    sb.specialCategory.enabled ?? false
+                        ? SpecialCategory2(catID: sb.specialCategory.id2.toString())
+                        : const SizedBox.shrink(),
+                    sb.selfChallengeModeEnabled
+                        ? const _SelfChallengeContainer()
+                        : const SizedBox.shrink(),
+                    ab.isRewardedEnabled
+                        ? const RewardedAdContainer()
+                        : const SizedBox.shrink(),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          // Show loading indicator when syncing
+          if (_isSyncing)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -86,11 +126,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 }
 
+// Keep existing _SelfChallengeContainer and _TopBar classes unchanged
 class _SelfChallengeContainer extends StatelessWidget {
   const _SelfChallengeContainer();
 
   @override
   Widget build(BuildContext context) {
+    // Existing implementation...
     return InkWell(
       onTap: () => NextScreen.nextScreenNormal(
           context,
@@ -173,10 +215,9 @@ class _TopBar extends StatelessWidget {
     final int rank = context.watch<UserBloc>().userRank;
 
     return SizedBox(
-      height: 140, // The total height of your top bar
+      height: 140,
       child: Stack(
         children: [
-          // 1) Background gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -189,26 +230,16 @@ class _TopBar extends StatelessWidget {
               ),
             ),
           ),
-
-          // 2) Cubes painter
-          // Use the same size as your top bar so cubes fill the area
-          // CustomPaint(
-          //   size: const Size(double.infinity, 140),
-          //   painter: MultipleCubesPainterService(),
-          // ),
           CustomPaint(
             size: const Size(double.infinity, 140),
             painter: CachedCubesPainter(),
           ),
-
-          // 3) Foreground UI (your existing _TopBar content)
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 10, 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- Row with greeting, user name, avatar glow ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,8 +270,8 @@ class _TopBar extends StatelessWidget {
                                 .textTheme
                                 .titleLarge
                                 ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -263,7 +294,6 @@ class _TopBar extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  // --- Row with points, rank, notifications, settings, etc. ---
                   Row(
                     children: [
                       InkWell(
@@ -312,7 +342,6 @@ class _TopBar extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      // Additional icons or store, if needed
                     ],
                   ),
                 ],
