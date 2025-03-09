@@ -1,21 +1,27 @@
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/blocs/audio_controller.dart';
+import 'package:quiz_app/blocs/settings_bloc.dart';
+import 'package:quiz_app/blocs/user_bloc.dart';
 import 'package:quiz_app/cards/option_card.dart';
 import 'package:quiz_app/cards/image_option_card.dart';
 import 'package:quiz_app/models/question.dart';
+import 'package:quiz_app/models/user.dart';
+import 'package:quiz_app/pages/quiz_screen/close_dialog.dart';
+import 'package:quiz_app/pages/quiz_screen/control_dialog.dart';
 import 'package:quiz_app/pages/quiz_screen/quiz_explanation.dart';
+import 'package:quiz_app/services/firebase_service.dart';
 import 'package:quiz_app/utils/cached_image.dart';
 import 'package:quiz_app/utils/next_screen.dart';
 import 'package:quiz_app/utils/image_preview.dart';
+import 'package:quiz_app/configs/feature_config.dart';
+import 'package:quiz_app/utils/icon_utils.dart';
 
 import '../blocs/endlessQuiz_bloc.dart';
-import '../blocs/settings_bloc.dart';
-import '../blocs/user_bloc.dart';
-import '../models/user.dart';
-import '../services/firebase_service.dart';
 
 class RunTab extends StatefulWidget {
   const RunTab({super.key});
@@ -27,8 +33,8 @@ class RunTab extends StatefulWidget {
 class _RunTabState extends State<RunTab> {
   late EndlessQuizBloc _endlessQuizBloc;
   int? _selectedOptionIndex;
-
-  int _points = 0;
+  // Point tracking variables
+  int _sessionPoints = 0;
   int _correctAnswers = 0;
   int _incorrectAnswers = 0;
   bool _pointsAdded = false;
@@ -41,7 +47,8 @@ class _RunTabState extends State<RunTab> {
 
   @override
   void dispose() {
-     if (_pointsAdded) {
+    // Save any unsaved points before disposing
+    if (_pointsAdded) {
       _savePointsToFirebase();
     }
     _endlessQuizBloc.dispose();
@@ -77,26 +84,24 @@ class _RunTabState extends State<RunTab> {
     if (selectedIndex == currentQuestion.correctAnswerIndex) {
       // Correct answer
       setState(() {
-        _points += sb.correctAnsReward;
+        _sessionPoints += sb.correctAnsReward;
         _correctAnswers++;
         _pointsAdded = true;
       });
     } else {
       // Incorrect answer
       setState(() {
-        _points -= sb.incorrectAnsPenalty;
+        _sessionPoints -= sb.incorrectAnsPenalty;
         _incorrectAnswers++;
         _pointsAdded = true;
       });
     }
   }
 
-
   void _onNextQuestion() async {
     // If points were calculated and not yet saved, save them
     if (_pointsAdded) {
       await _savePointsToFirebase();
-      _pointsAdded = false;
     }
 
     _endlessQuizBloc.nextQuestion();
@@ -109,31 +114,31 @@ class _RunTabState extends State<RunTab> {
     try {
       final UserModel? user = context.read<UserBloc>().userData;
       if (user != null && user.uid != null) {
-        // Get current user points
+        // Get current user points from UserBloc
         final int currentPoints = user.points ?? 0;
 
-        // Calculate new total points (add session points to existing points)
-        final int newTotalPoints = currentPoints + (_points);
+        // Calculate new total (add session points to existing total)
+        final int newTotalPoints = currentPoints + _sessionPoints;
 
-        // Update points in Firebase with the new total
+        // Update points in Firebase
         await FirebaseService().updateUserPoints(user.uid!, newTotalPoints);
 
-        // Update points in UserBloc with the new total
+        // Update points in UserBloc
         await context.read<UserBloc>().updateUserPointsToBloc(newTotalPoints);
 
-        // Update points history (show just the change, not the total)
+        // Update points history
         String newHistory = '';
-        if (_points.isNegative) {
-          newHistory = 'Run Quiz Session $_points at ${DateTime.now()}';
+        if (_sessionPoints.isNegative) {
+          newHistory = 'Run Quiz $_sessionPoints at ${DateTime.now()}';
         } else {
-          newHistory = 'Run Quiz Session +$_points at ${DateTime.now()}';
+          newHistory = 'Run Quiz +$_sessionPoints at ${DateTime.now()}';
         }
         await FirebaseService().updateUserPointHistory(user.uid!, newHistory);
 
-        // Reset session points after saving
+        // Reset session points tracking after saving
         setState(() {
           _pointsAdded = false;
-          // Don't reset _points here if you want to accumulate across the session
+          _sessionPoints = 0; // Reset after updating Firebase
         });
       }
     } catch (e) {
@@ -141,38 +146,106 @@ class _RunTabState extends State<RunTab> {
     }
   }
 
+  Future _handleAddToBookmark() async {
+    final Question? question = _endlessQuizBloc.currentQuestion;
+    if (question != null && question.id != null) {
+      await FirebaseService().addToBookmark(question.id!).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('bookmark-message'.tr())),
+        );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error on adding bookmark')),
+      );
+    }
+  }
 
-  // Progress indicator
-  Widget _buildProgressIndicator() {
-    return Container(
-      height: 10,
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Flexible(
-            flex: _endlessQuizBloc.currentQuestionIndex + 1,
-            child: Container(
+  // Custom progress AppBar for Run Tab
+  PreferredSizeWidget _buildRunAppBar() {
+    // Calculate percentage for the progress indicator
+    double progress = 0.0;
+    if (_endlessQuizBloc.questionQueue.isNotEmpty) {
+      progress = (_endlessQuizBloc.currentQuestionIndex + 1) /
+          (_endlessQuizBloc.questionQueue.length);
+      // Cap at 1.0 to prevent overflow
+      progress = progress > 1.0 ? 1.0 : progress;
+    }
+
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      titleSpacing: 0,
+      title: LinearPercentIndicator(
+        animation: true,
+        animationDuration: 400,
+        lineHeight: 20.0,
+        leading: IconButton(
+            padding: const EdgeInsets.only(left: 10),
+            onPressed: () => openQuizCloseDialog(context: context),
+            icon: const Icon(
+              Icons.close,
+              color: Colors.black,
+            )),
+        trailing: Row(
+          children: [
+            // Points indicator
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(10),
+                color: Colors.amber.shade100,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.amber.shade800, width: 1),
+              ),
+              child: Text(
+                '${_sessionPoints >= 0 ? "+" : ""}$_sessionPoints pts',
+                style: TextStyle(
+                  color: Colors.amber.shade900,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Flexible(
-            flex: 100 - (_endlessQuizBloc.currentQuestionIndex + 1),
-            child: Container(),
-          ),
-        ],
+            Visibility(
+              visible: FeatureConfig.bookmarkQuestionEnabled,
+              child: InkWell(
+                onTap: () => _handleAddToBookmark(),
+                child: Container(
+                    width: 40,
+                    height: 30,
+                    margin: const EdgeInsets.only(right: 0, left: 10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: const Icon(IconUtils.addBookmark)),
+              ),
+            ),
+            InkWell(
+              onTap: () => openControlDialog(context),
+              child: Container(
+                width: 40,
+                height: 30,
+                margin: const EdgeInsets.only(right: 10, left: 10),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(20)),
+                child: const Icon(
+                  Ionicons.options,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ),
+        percent: progress,
+        progressColor: Theme.of(context).primaryColor,
+        barRadius: const Radius.circular(30),
+        animateFromLastPercent: true,
       ),
     );
   }
 
-  // Question title widget (similar to QuestionTitle)
+  // Question title widget
   Widget _buildQuestionTitle(Question question) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +308,7 @@ class _RunTabState extends State<RunTab> {
     );
   }
 
-  // Options widget (similar to QuizOptions)
+  // Options widget
   Widget _buildOptions(Question question) {
     final bool hasSelectedOption = _selectedOptionIndex != null;
     final int correctAnswerIndex = question.correctAnswerIndex ?? 0;
@@ -366,34 +439,7 @@ class _RunTabState extends State<RunTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "run",
-          style: TextStyle(color: Colors.white),
-        ).tr(),
-        centerTitle: true,
-        actions: [
-          if (_endlessQuizBloc.isLoading)
-            Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-              ),
-            ),
-        ],
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(10),
-        //   child: _buildProgressIndicator(),
-        // ),
-      ),
+      appBar: _buildRunAppBar(),
       body: AnimatedBuilder(
         animation: _endlessQuizBloc,
         builder: (context, _) {
@@ -443,7 +489,7 @@ class _RunTabState extends State<RunTab> {
   }
 }
 
-// Extended OptionCard with correct/incorrect state
+// Option card for displaying options
 class OptionCard extends StatelessWidget {
   final String optionTitle;
   final bool isSelected;
@@ -516,7 +562,7 @@ class OptionCard extends StatelessWidget {
   }
 }
 
-// ExplanationWidget for explanations
+// Explanation widget for showing explanations
 class ExplanationWidget extends StatelessWidget {
   final String? explanation;
   final bool isCorrect;
