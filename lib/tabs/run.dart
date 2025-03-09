@@ -1,8 +1,15 @@
+import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/blocs/audio_controller.dart';
+import 'package:quiz_app/cards/option_card.dart';
+import 'package:quiz_app/cards/image_option_card.dart';
 import 'package:quiz_app/models/question.dart';
+import 'package:quiz_app/pages/quiz_screen/quiz_explanation.dart';
+import 'package:quiz_app/utils/cached_image.dart';
+import 'package:quiz_app/utils/next_screen.dart';
+import 'package:quiz_app/utils/image_preview.dart';
 
 import '../blocs/endlessQuiz_bloc.dart';
 
@@ -49,12 +56,257 @@ class _RunTabState extends State<RunTab> {
     });
   }
 
+  // Progress indicator
+  Widget _buildProgressIndicator() {
+    return Container(
+      height: 10,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Flexible(
+            flex: _endlessQuizBloc.currentQuestionIndex + 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 100 - (_endlessQuizBloc.currentQuestionIndex + 1),
+            child: Container(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Question title widget (similar to QuestionTitle)
+  Widget _buildQuestionTitle(Question question) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: 3,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(30)),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question ${_endlessQuizBloc.currentQuestionIndex + 1}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.blueGrey[800]),
+                    ),
+                    Text(
+                      question.questionTitle ?? 'No question text',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blueGrey.shade900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        Visibility(
+          visible: question.questionImageUrl != null && question.questionImageUrl!.isNotEmpty,
+          child: InkWell(
+            onTap: () => NextScreen().nextScreenPopup(
+                context,
+                FullImagePreview(
+                    imageUrl: question.questionImageUrl.toString())),
+            child: SizedBox(
+              height: 150,
+              width: double.infinity,
+              child: CustomCacheImage(
+                imageUrl: question.questionImageUrl,
+                radius: 5,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Options widget (similar to QuizOptions)
+  Widget _buildOptions(Question question) {
+    final bool hasSelectedOption = _selectedOptionIndex != null;
+    final int correctAnswerIndex = question.correctAnswerIndex ?? 0;
+
+    // Determine if the selected option is correct
+    final bool isCorrect =
+        hasSelectedOption && _selectedOptionIndex == correctAnswerIndex;
+
+    // Get correct answer text if needed
+    String? correctAnswerText;
+    if (hasSelectedOption && !isCorrect && question.options != null) {
+      if (correctAnswerIndex >= 0 &&
+          correctAnswerIndex < question.options!.length) {
+        correctAnswerText = question.options![correctAnswerIndex];
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20, top: 20),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey[200]!,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5))
+                ]),
+            child: LiveList(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: question.options?.length ?? 0,
+              itemBuilder: (context, optionIndex, animation) {
+                final String option = question.options?[optionIndex] ?? 'No option';
+                bool isSelected = _selectedOptionIndex != null &&
+                    _selectedOptionIndex == optionIndex;
+
+                return FadeTransition(
+                  opacity: Tween<double>(begin: 0, end: 1).animate(animation),
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                        begin: const Offset(0, -0.1), end: Offset.zero)
+                        .animate(animation),
+                    child: InkWell(
+                      onTap: _selectedOptionIndex == null
+                          ? () => _onOptionSelected(optionIndex)
+                          : null,
+                      child: OptionCard(
+                        optionTitle: option,
+                        isSelected: isSelected,
+                        isCorrect: hasSelectedOption ? optionIndex == correctAnswerIndex : null,
+                        isIncorrect: hasSelectedOption && isSelected && optionIndex != correctAnswerIndex,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          // Show explanation when an option is selected
+          if (_selectedOptionIndex != null &&
+              question.explaination != null &&
+              question.explaination!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              child: ExplanationWidget(
+                explanation: question.explaination,
+                isCorrect: isCorrect,
+                correctAnswer: correctAnswerText,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // Next button widget
+  Widget _buildNextButton() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      width: double.infinity,
+      height: 55,
+      child: ElevatedButton(
+        onPressed: _selectedOptionIndex != null ? _onNextQuestion : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Next Question',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (_endlessQuizBloc.isLoading)
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Run').tr(),
+        backgroundColor: Theme.of(context).primaryColor,
+        title: const Text(
+          "run",
+          style: TextStyle(color: Colors.white),
+        ).tr(),
         centerTitle: true,
+        actions: [
+          if (_endlessQuizBloc.isLoading)
+            Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
+            ),
+        ],
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(10),
+        //   child: _buildProgressIndicator(),
+        // ),
       ),
       body: AnimatedBuilder(
         animation: _endlessQuizBloc,
@@ -82,191 +334,165 @@ class _RunTabState extends State<RunTab> {
             );
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Question counter and batch info
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        'Question ${_endlessQuizBloc.currentQuestionIndex + 1}',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      if (_endlessQuizBloc.isLoading)
-                        SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2)
-                        ),
+                      _buildQuestionTitle(currentQuestion),
+                      _buildOptions(currentQuestion),
                     ],
                   ),
                 ),
-
-                // Question card
-                Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        if (currentQuestion.questionImageUrl != null &&
-                            currentQuestion.questionImageUrl!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Image.network(
-                              currentQuestion.questionImageUrl!,
-                              height: 150,
-                              width: double.infinity,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                            ),
-                          ),
-
-                        Text(
-                          currentQuestion.questionTitle ?? 'No question text',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Options
-                ...List.generate(
-                  currentQuestion.options?.length ?? 0,
-                      (index) {
-                    final bool isSelected = _selectedOptionIndex == index;
-                    final bool isCorrect = currentQuestion.correctAnswerIndex == index;
-                    final bool showResult = _selectedOptionIndex != null;
-
-                    Color cardColor = Colors.white;
-                    if (showResult) {
-                      if (isCorrect) {
-                        cardColor = Colors.green.shade100;
-                      } else if (isSelected && !isCorrect) {
-                        cardColor = Colors.red.shade100;
-                      }
-                    } else if (isSelected) {
-                      cardColor = Colors.blue.shade100;
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: InkWell(
-                        onTap: _selectedOptionIndex == null
-                            ? () => _onOptionSelected(index)
-                            : null,
-                        child: Card(
-                          color: cardColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Text(
-                                  String.fromCharCode(65 + index), // A, B, C, D
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    currentQuestion.options?[index]?.toString() ?? 'No option',
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 10),
-
-                // Explanation (only shown after selection)
-                if (_selectedOptionIndex != null &&
-                    currentQuestion.explaination != null &&
-                    currentQuestion.explaination!.isNotEmpty)
-                  Card(
-                    color: Colors.amber.shade50,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Explanation:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            currentQuestion.explaination!,
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                const SizedBox(height: 20),
-
-                // Next button
-                ElevatedButton(
-                  onPressed: _selectedOptionIndex != null ? _onNextQuestion : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Next Question', style: TextStyle(fontSize: 18)),
-                      if (_endlessQuizBloc.isLoading)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              )
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-
-                // Debugging info
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text(
-                    'Loaded ${_endlessQuizBloc.questionQueue.length} questions in queue',
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              _buildNextButton(),
+            ],
           );
         },
+      ),
+    );
+  }
+}
+
+// Extended OptionCard with correct/incorrect state
+class OptionCard extends StatelessWidget {
+  final String optionTitle;
+  final bool isSelected;
+  final bool? isCorrect;
+  final bool? isIncorrect;
+
+  const OptionCard({
+    super.key,
+    required this.optionTitle,
+    required this.isSelected,
+    this.isCorrect,
+    this.isIncorrect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color optionBgColor = Colors.transparent;
+    Color borderColor = Colors.grey[300]!;
+
+    if (isCorrect == true) {
+      optionBgColor = Colors.green.withOpacity(0.1);
+      borderColor = Colors.green;
+    } else if (isIncorrect == true) {
+      optionBgColor = Colors.red.withOpacity(0.1);
+      borderColor = Colors.red;
+    } else if (isSelected) {
+      optionBgColor = Theme.of(context).primaryColor.withOpacity(0.1);
+      borderColor = Theme.of(context).primaryColor;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: optionBgColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: borderColor, width: 1.5),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 28,
+            width: 28,
+            decoration: BoxDecoration(
+              color: isSelected ? Theme.of(context).primaryColor : Colors.grey[200],
+              shape: BoxShape.circle,
+            ),
+            child: isSelected
+                ? const Icon(Icons.check, color: Colors.white, size: 18)
+                : null,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              optionTitle,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.blueGrey[800],
+              ),
+            ),
+          ),
+          if (isCorrect == true)
+            const Icon(Icons.check_circle, color: Colors.green),
+          if (isIncorrect == true)
+            const Icon(Icons.cancel, color: Colors.red),
+        ],
+      ),
+    );
+  }
+}
+
+// ExplanationWidget for explanations
+class ExplanationWidget extends StatelessWidget {
+  final String? explanation;
+  final bool isCorrect;
+  final String? correctAnswer;
+
+  const ExplanationWidget({
+    super.key,
+    this.explanation,
+    required this.isCorrect,
+    this.correctAnswer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: isCorrect ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isCorrect ? Colors.green : Colors.red,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isCorrect ? Icons.check_circle : Icons.cancel,
+                color: isCorrect ? Colors.green : Colors.red,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                isCorrect ? 'Correct!' : 'Incorrect',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isCorrect ? Colors.green : Colors.red,
+                ),
+              ),
+            ],
+          ),
+          if (!isCorrect && correctAnswer != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              'Correct answer: $correctAnswer',
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+          if (explanation != null && explanation!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            const Text(
+              'Explanation:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 5),
+            Text(explanation!),
+          ],
+        ],
       ),
     );
   }
