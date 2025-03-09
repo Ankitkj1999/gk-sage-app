@@ -109,13 +109,19 @@ class _RunTabState extends State<RunTab> {
     try {
       final UserModel? user = context.read<UserBloc>().userData;
       if (user != null && user.uid != null) {
-        // Update points in Firebase
-        await FirebaseService().updateUserPoints(user.uid!, _points);
+        // Get current user points
+        final int currentPoints = user.points ?? 0;
 
-        // Update points in UserBloc
-        await context.read<UserBloc>().updateUserPointsToBloc(_points);
+        // Calculate new total points (add session points to existing points)
+        final int newTotalPoints = currentPoints + (_points);
 
-        // Update points history
+        // Update points in Firebase with the new total
+        await FirebaseService().updateUserPoints(user.uid!, newTotalPoints);
+
+        // Update points in UserBloc with the new total
+        await context.read<UserBloc>().updateUserPointsToBloc(newTotalPoints);
+
+        // Update points history (show just the change, not the total)
         String newHistory = '';
         if (_points.isNegative) {
           newHistory = 'Run Quiz Session $_points at ${DateTime.now()}';
@@ -124,14 +130,11 @@ class _RunTabState extends State<RunTab> {
         }
         await FirebaseService().updateUserPointHistory(user.uid!, newHistory);
 
-        // Update user stats
-        await FirebaseService().updateUserStatToDatabase(
-            user.uid!,
-            user.totalQuizPlayed! + 1,
-            user.totalQuestionAnswered! + 1,
-            user.totalCorrectAns! + (_selectedOptionIndex == _endlessQuizBloc.currentQuestion?.correctAnswerIndex ? 1 : 0),
-            user.totalIncorrectAns! + (_selectedOptionIndex != _endlessQuizBloc.currentQuestion?.correctAnswerIndex ? 1 : 0)
-        );
+        // Reset session points after saving
+        setState(() {
+          _pointsAdded = false;
+          // Don't reset _points here if you want to accumulate across the session
+        });
       }
     } catch (e) {
       debugPrint('Error saving points: $e');
