@@ -22,6 +22,7 @@ import 'package:quiz_app/utils/next_screen.dart';
 import 'package:quiz_app/widgets/avatar_circle.dart';
 import 'package:quiz_app/widgets/custom_chip.dart';
 import 'package:quiz_app/widgets/rewarded_ad_container.dart';
+import '../models/category.dart';
 import '../services/MultipleCubesPainterService.dart';
 import '../services/cubes_backgound_service.dart';
 import '../services/greeting_service.dart';
@@ -43,6 +44,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   final DriftService _driftService = DriftService();
   bool _isSyncing = false;
   List<Quiz> _localQuizzes = [];
+  List<Category> _localCatogery = [];
 
   @override
   void initState() {
@@ -56,6 +58,9 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     });
 
     _localQuizzes = await _driftService.syncAndGetAllQuizzes();
+    _localCatogery = await _driftService.syncAndGetAllCategories();
+
+
 
     setState(() {
       _isSyncing = false;

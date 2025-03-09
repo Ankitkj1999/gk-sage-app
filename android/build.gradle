@@ -1,3 +1,4 @@
+//android/build.gradle
 buildscript {
 //    ext.kotlin_version = '1.8.21'
     ext.kotlin_version = '1.9.10'
@@ -7,16 +8,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'  // Update AGP to 7.4.2
+        classpath 'com.android.tools.build:gradle:8.1.0'  // Update AGP to 7.4.2
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 
-
-
-
-//
 //allprojects {
 //    repositories {
 //        google()
@@ -31,7 +28,6 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(':app')
 }
-
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

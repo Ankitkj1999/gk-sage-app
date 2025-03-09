@@ -4,6 +4,8 @@ import 'package:quiz_app/database/database.dart';
 import 'package:quiz_app/models/quiz.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 
+import '../models/category.dart';
+
 class DriftService {
   static final DriftService _instance = DriftService._internal();
   factory DriftService() => _instance;
@@ -11,6 +13,7 @@ class DriftService {
 
   final QuizDatabase _database = QuizDatabase();
   final FirebaseService _firebaseService = FirebaseService();
+
 
   // Convert from Firebase Quiz to Drift QuizzesTableCompanion
   QuizzesTableCompanion _convertToCompanion(Quiz quiz) {
@@ -28,6 +31,8 @@ class DriftService {
       index: Value(quiz.index),
     );
   }
+
+
 
   // Convert from Drift QuizzesTableData to Firebase Quiz
   Quiz _convertToDomainModel(QuizzesTableData data) {
@@ -90,6 +95,107 @@ class DriftService {
       return [];
     }
   }
+
+
+
+
+
+  // CATEGORY METHODS
+  // Convert from Firebase Category to Drift CategoriesTableCompanion
+  CategoriesTableCompanion _convertCategoryToCompanion(Category category) {
+    return CategoriesTableCompanion(
+      id: Value(category.id ?? ''),
+      name: Value(category.name),
+      thumbnailUrl: Value(category.thumbnailUrl),
+      quizCount: Value(category.quizCount),
+      featured: Value(category.featured),
+    );
+  }
+
+  // Convert from Drift CategoriesTableData to Firebase Category
+  Category _convertCategoryToDomainModel(CategoriesTableData data) {
+    return Category(
+      name: data.name ?? '',
+      id: data.id,
+      thumbnailUrl: data.thumbnailUrl,
+      quizCount: data.quizCount,
+      featured: data.featured,
+    );
+  }
+
+  // Fetch categories from Firestore and save to local database
+  Future<List<Category>> syncAndGetAllCategories() async {
+    try {
+      // Fetch categories from Firebase
+      debugPrint('Fetching categories from Firebase...');
+      List<Category> firebaseCategories = await _firebaseService.getCategories();
+
+      // Convert and save all categories to the local database
+      debugPrint('Converting and saving ${firebaseCategories.length} categories to local database...');
+      List<CategoriesTableCompanion> companions =
+      firebaseCategories.map((category) => _convertCategoryToCompanion(category)).toList();
+
+      await _database.insertCategories(companions);
+
+      // Fetch all categories from local database
+      debugPrint('Retrieving categories from local database...');
+      List<CategoriesTableData> localCategoriesData = await _database.getAllCategories();
+      List<Category> localCategories = localCategoriesData.map(_convertCategoryToDomainModel).toList();
+
+      debugPrint('Synced ${firebaseCategories.length} categories to local database');
+      debugPrint('Total categories in local database: ${localCategories.length}');
+
+      // Print all categories for debugging
+      for (var category in localCategories) {
+        debugPrint('- Name: ${category.name}, ID: ${category.id}, Quiz Count: ${category.quizCount}');
+      }
+
+      return localCategories;
+    } catch (e) {
+      debugPrint('Error syncing categories: $e');
+      return [];
+    }
+  }
+
+  // Get all categories from local database
+  Future<List<Category>> getAllCategories() async {
+    try {
+      List<CategoriesTableData> data = await _database.getAllCategories();
+      return data.map(_convertCategoryToDomainModel).toList();
+    } catch (e) {
+      debugPrint('Error getting categories from local database: $e');
+      return [];
+    }
+  }
+
+  // Get a specific category with all its quizzes
+  Future<Map<String, dynamic>> getCategoryWithQuizzes(String categoryId) async {
+    try {
+      CategoryWithQuizzes result = await _database.getCategoryWithQuizzes(categoryId);
+
+      Category category = _convertCategoryToDomainModel(result.category);
+      List<Quiz> quizzes = result.quizzes.map(_convertToDomainModel).toList();
+
+      return {
+        'category': category,
+        'quizzes': quizzes,
+      };
+    } catch (e) {
+      debugPrint('Error getting category with quizzes: $e');
+      return {
+        'category': null,
+        'quizzes': <Quiz>[],
+      };
+    }
+  }
+
+
+
+  Future<void> syncAll() async {
+    await syncAndGetAllCategories();
+    await syncAndGetAllQuizzes();
+  }
+
 
   // Close the database
   void close() {

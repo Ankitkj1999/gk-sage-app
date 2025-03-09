@@ -72,30 +72,6 @@ class _QuizInfoState extends State<QuizInfo> {
           }
           debugPrint(
               "Point: Shuffling the questions ${DateTime.now().toIso8601String()}");
-          // await FirebaseService()
-          //     .updateUserPointsByTransection(
-          //         context.read<UserBloc>().userData!.uid!,
-          //         false,
-          //         widget.quiz.pointsRequired!)
-          //     .then(
-          //         (value) => _updatePointsHistory(widget.quiz.pointsRequired!))
-          //     .then((_) => context.read<UserBloc>().getUserData())
-          //     .then((_) async {
-          //   debugPrint(
-          //       "Point: Updating the user points ${DateTime.now().toIso8601String()}");
-          //   await context
-          //       .read<TempBloc>()
-          //       .intializeTempData(context.read<UserBloc>().userData!.points!);
-          //   setState(() => _isLoading = false);
-          //   // ignore: use_build_context_synchronously
-          //   NextScreen().nextScreenReplace(
-          //       context,
-          //       QuizScreen(
-          //         qList: qList,
-          //         hasTimer: widget.quiz.timer!,
-          //         quizTime: widget.quiz.quizTime!,
-          //         selfChallengeMode: false,
-          //       ));
 // After verifying questions are not empty and shuffling/sorting them...
           await FirebaseService().updateUserPointsByTransection(
             context.read<UserBloc>().userData!.uid!,

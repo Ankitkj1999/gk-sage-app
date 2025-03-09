@@ -1,4 +1,6 @@
+//app/build.gradle
 plugins {
+
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
@@ -33,7 +35,9 @@ def keystoreProperties = new Properties()
    }
 
 android {
+    namespace "app.gksage.com"
     compileSdkVersion 34
+    buildToolsVersion "34.0.0"
 //    ndkVersion flutter.ndkVersion
     ndkVersion "25.2.9519653"
     compileOptions {
