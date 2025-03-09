@@ -28,3 +28,26 @@ class CategoriesTable extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+
+class QuestionsTable extends Table {
+  TextColumn get id => text()();
+  TextColumn get quizId => text().references(QuizzesTable, #id)();
+  TextColumn get catId => text().nullable()();
+  TextColumn get questionTitle => text().nullable()();
+  // Store serialized JSON for options list
+  TextColumn get options => text().nullable()();
+  IntColumn get correctAnswerIndex => integer().nullable()();
+  BoolColumn get hasFourOptions => boolean().nullable()();
+  TextColumn get questionType => text().nullable()();
+  TextColumn get questionImageUrl => text().nullable()();
+  TextColumn get questionAudioUrl => text().nullable()();
+  TextColumn get questionVideoUrl => text().nullable()();
+  TextColumn get explaination => text().nullable()();
+  TextColumn get optionsType => text().nullable()();
+  // Store timestamp as milliseconds
+  IntColumn get createdAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

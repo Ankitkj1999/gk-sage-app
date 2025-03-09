@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/database/database.dart';
@@ -5,6 +8,7 @@ import 'package:quiz_app/models/quiz.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 
 import '../models/category.dart';
+import '../models/question.dart';
 
 class DriftService {
   static final DriftService _instance = DriftService._internal();
@@ -189,13 +193,158 @@ class DriftService {
     }
   }
 
+  // QUESTION METHODS
+  // Convert from Firebase Question to Drift QuestionsTableCompanion
+  QuestionsTableCompanion _convertQuestionToCompanion(Question question) {
+    // Convert the options list to a JSON string
+    String? optionsJson;
+    if (question.options != null) {
+      optionsJson = jsonEncode(question.options);
+    }
+
+    // Convert Timestamp to milliseconds since epoch
+    int? createdAtMillis;
+    if (question.createdAt != null) {
+      createdAtMillis = question.createdAt!.millisecondsSinceEpoch;
+    }
+
+    return QuestionsTableCompanion(
+      id: Value(question.id ?? ''),
+      quizId: Value(question.quizId ?? ''),
+      catId: Value(question.catId),
+      questionTitle: Value(question.questionTitle),
+      options: Value(optionsJson),
+      correctAnswerIndex: Value(question.correctAnswerIndex),
+      hasFourOptions: Value(question.hasFourOptions),
+      questionType: Value(question.questionType),
+      questionImageUrl: Value(question.questionImageUrl),
+      questionAudioUrl: Value(question.questionAudioUrl),
+      questionVideoUrl: Value(question.questionVideoUrl),
+      explaination: Value(question.explaination),
+      optionsType: Value(question.optionsType),
+      createdAt: Value(createdAtMillis),
+    );
+  }
+
+  // Convert from Drift QuestionsTableData to Firebase Question
+  Question _convertQuestionToDomainModel(QuestionsTableData data) {
+    // Convert JSON string back to list
+    List? options;
+    if (data.options != null) {
+      options = jsonDecode(data.options!);
+    }
+
+    // Convert milliseconds to Timestamp
+    Timestamp? createdAt;
+    if (data.createdAt != null) {
+      createdAt = Timestamp.fromMillisecondsSinceEpoch(data.createdAt!);
+    }
+
+    return Question(
+      id: data.id,
+      quizId: data.quizId,
+      catId: data.catId,
+      questionTitle: data.questionTitle,
+      options: options,
+      correctAnswerIndex: data.correctAnswerIndex,
+      hasFourOptions: data.hasFourOptions,
+      questionType: data.questionType,
+      questionImageUrl: data.questionImageUrl,
+      questionAudioUrl: data.questionAudioUrl,
+      questionVideoUrl: data.questionVideoUrl,
+      explaination: data.explaination,
+      optionsType: data.optionsType,
+      createdAt: createdAt,
+    );
+  }
+
+  // Fetch questions for a quiz from Firebase and save to local database
+  Future<List<Question>> syncAndGetQuestionsForQuiz(String quizId) async {
+    try {
+      debugPrint('Fetching questions for quiz $quizId from Firebase...');
+      List<Question> firebaseQuestions = await _firebaseService.getQuestions(quizId);
+
+      debugPrint('Converting and saving ${firebaseQuestions.length} questions to local database...');
+      List<QuestionsTableCompanion> companions =
+      firebaseQuestions.map(_convertQuestionToCompanion).toList();
+
+      await _database.insertQuestions(companions);
+
+      // Fetch questions from local database to verify
+      List<QuestionsTableData> localQuestionsData = await _database.getQuestionsForQuiz(quizId);
+      List<Question> localQuestions = localQuestionsData.map(_convertQuestionToDomainModel).toList();
+
+      debugPrint('Synced ${firebaseQuestions.length} questions for quiz $quizId');
+
+      return localQuestions;
+    } catch (e) {
+      debugPrint('Error syncing questions: $e');
+      return [];
+    }
+  }
+
+  // Get questions for a quiz from local database only
+  Future<List<Question>> getQuestionsForQuiz(String quizId) async {
+    try {
+      List<QuestionsTableData> data = await _database.getQuestionsForQuiz(quizId);
+      return data.map(_convertQuestionToDomainModel).toList();
+    } catch (e) {
+      debugPrint('Error getting questions from local database: $e');
+      return [];
+    }
+  }
+
+  // Sync questions for multiple quizzes with batch processing
+  Future<void> syncQuestionsForAllQuizzes({int batchSize = 3}) async {
+    try {
+      // Get all quizzes from local database
+      List<Quiz> quizzes = await getAllQuizzes();
+      debugPrint('Starting to sync questions for ${quizzes.length} quizzes');
+
+      // Process in batches to avoid memory issues
+      for (int i = 0; i < quizzes.length; i += batchSize) {
+        // Calculate end index for current batch
+        int end = (i + batchSize < quizzes.length) ? i + batchSize : quizzes.length;
+        List<Quiz> batch = quizzes.sublist(i, end);
+
+        // Process each quiz in the batch concurrently
+        await Future.wait(
+            batch.map((quiz) async {
+              debugPrint('Syncing questions for quiz: ${quiz.name} (${quiz.id})');
+              await syncAndGetQuestionsForQuiz(quiz.id ?? '');
+            })
+        );
+
+        // Optionally add a delay between batches to reduce network pressure
+        if (end < quizzes.length) {
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
+
+      debugPrint('Completed syncing questions for all quizzes');
+    } catch (e) {
+      debugPrint('Error syncing questions for quizzes: $e');
+    }
+  }
+
+  // Get the count of questions stored locally for a quiz
+  Future<int> getLocalQuestionCount(String quizId) async {
+    try {
+      List<QuestionsTableData> data = await _database.getQuestionsForQuiz(quizId);
+      return data.length;
+    } catch (e) {
+      debugPrint('Error getting question count: $e');
+      return 0;
+    }
+  }
 
 
   Future<void> syncAll() async {
     await syncAndGetAllCategories();
     await syncAndGetAllQuizzes();
+    // Note: We don't sync all questions at once as that could be too much data
+    // Questions are synced on-demand when needed for a specific quiz
   }
-
 
   // Close the database
   void close() {

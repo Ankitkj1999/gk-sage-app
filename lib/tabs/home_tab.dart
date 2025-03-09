@@ -11,6 +11,7 @@ import 'package:quiz_app/blocs/tab_controller.dart';
 import 'package:quiz_app/blocs/user_bloc.dart';
 import 'package:quiz_app/configs/app_config.dart';
 import 'package:quiz_app/configs/color_config.dart';
+import 'package:quiz_app/models/question.dart';
 import 'package:quiz_app/models/quiz.dart';
 import 'package:quiz_app/pages/notifications.dart';
 import 'package:quiz_app/pages/self_challenge.dart';
@@ -44,26 +45,51 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   final DriftService _driftService = DriftService();
   bool _isSyncing = false;
   List<Quiz> _localQuizzes = [];
-  List<Category> _localCatogery = [];
+  List<Category> _localCategorys = [];
+  List<Question> _localQuestions = [];
+  
 
   @override
   void initState() {
     super.initState();
-    _syncQuizzes();
+    _syncData();
   }
 
-  Future<void> _syncQuizzes() async {
+  Future<void> _syncData() async {
     setState(() {
       _isSyncing = true;
     });
 
-    _localQuizzes = await _driftService.syncAndGetAllQuizzes();
-    _localCatogery = await _driftService.syncAndGetAllCategories();
+    try {
+      // First sync categories and quizzes (this is quick)
+      _localCategorys = await _driftService.syncAndGetAllCategories();
+      _localQuizzes = await _driftService.syncAndGetAllQuizzes();
 
+      setState(() {
+        _isSyncing = false;
+      });
 
+      // Then sync questions in the background (can take longer)
+      // This runs after setting isSyncing to false so the UI is responsive
+      _startBackgroundQuestionSync();
 
-    setState(() {
-      _isSyncing = false;
+    } catch (e) {
+      setState(() {
+        _isSyncing = false;
+      });
+      debugPrint('Error syncing data: $e');
+    }
+  }
+
+  void _startBackgroundQuestionSync() {
+    // This doesn't block the UI since it's not awaited
+    _driftService.syncQuestionsForAllQuizzes().then((_) {
+      // Optionally update state if needed when sync completes
+      if (mounted) {
+        setState(() {
+          // You could set a flag to show sync is complete
+        });
+      }
     });
   }
 

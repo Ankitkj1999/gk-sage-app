@@ -7,14 +7,13 @@ import 'tables.dart';
 
 part 'database.g.dart'; // This will be generated
 
-// @DriftDatabase(tables: [QuizzesTable])
-@DriftDatabase(tables: [CategoriesTable, QuizzesTable,])
+@DriftDatabase(tables: [CategoriesTable, QuizzesTable, QuestionsTable])
 
 class QuizDatabase extends _$QuizDatabase {
   QuizDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -25,8 +24,9 @@ class QuizDatabase extends _$QuizDatabase {
     // Called when the database needs to be upgraded
     onUpgrade: (Migrator m, int from, int to) async {
       if (from == 1) {
-        // Add the new categories table
+        // If upgrading from version 1, create both new tables
         await m.createTable(categoriesTable);
+        await m.createTable(questionsTable);
       }
     },
     // Called after migrations have run
@@ -35,8 +35,6 @@ class QuizDatabase extends _$QuizDatabase {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
-
-
 
   // Methods for Categories
   Future<int> insertOrUpdateCategory(CategoriesTableCompanion category) async {
@@ -94,7 +92,32 @@ class QuizDatabase extends _$QuizDatabase {
   Future<int> clearAllQuizzes() async {
     return await delete(quizzesTable).go();
   }
+
+// Method for Questions
+
+  Future<int> insertOrUpdateQuestion(QuestionsTableCompanion question) async {
+    return await into(questionsTable).insertOnConflictUpdate(question);
+  }
+
+  Future<void> insertQuestions(List<QuestionsTableCompanion> questions) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(questionsTable, questions);
+    });
+  }
+
+  Future<List<QuestionsTableData>> getQuestionsForQuiz(String quizId) async {
+    return await (select(questionsTable)
+      ..where((q) => q.quizId.equals(quizId)))
+        .get();
+  }
+
+  Future<List<QuestionsTableData>> getAllQuestions() async {
+    return await select(questionsTable).get();
+  }
+
 }
+
+
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
