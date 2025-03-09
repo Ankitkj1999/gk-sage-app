@@ -12,6 +12,10 @@ import 'package:quiz_app/utils/next_screen.dart';
 import 'package:quiz_app/utils/image_preview.dart';
 
 import '../blocs/endlessQuiz_bloc.dart';
+import '../blocs/settings_bloc.dart';
+import '../blocs/user_bloc.dart';
+import '../models/user.dart';
+import '../services/firebase_service.dart';
 
 class RunTab extends StatefulWidget {
   const RunTab({super.key});
@@ -24,6 +28,11 @@ class _RunTabState extends State<RunTab> {
   late EndlessQuizBloc _endlessQuizBloc;
   int? _selectedOptionIndex;
 
+  int _points = 0;
+  int _correctAnswers = 0;
+  int _incorrectAnswers = 0;
+  bool _pointsAdded = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,14 +41,23 @@ class _RunTabState extends State<RunTab> {
 
   @override
   void dispose() {
+     if (_pointsAdded) {
+      _savePointsToFirebase();
+    }
     _endlessQuizBloc.dispose();
     super.dispose();
   }
 
   void _onOptionSelected(int index) {
+    if (_selectedOptionIndex != null) return; // Prevent multiple selections
+
     setState(() {
       _selectedOptionIndex = index;
+      _pointsAdded = false; // Reset for new selection
     });
+
+    // Update points based on correct/incorrect answer
+    _updatePoints(index);
 
     // Play sound if enabled
     if (context.read<SoundControllerBloc>().audioEnabled) {
@@ -49,12 +67,77 @@ class _RunTabState extends State<RunTab> {
     }
   }
 
-  void _onNextQuestion() {
+  void _updatePoints(int selectedIndex) {
+    // Get settings for point rewards/penalties
+    final SettingsBloc sb = context.read<SettingsBloc>();
+    final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
+
+    if (currentQuestion == null) return;
+
+    if (selectedIndex == currentQuestion.correctAnswerIndex) {
+      // Correct answer
+      setState(() {
+        _points += sb.correctAnsReward;
+        _correctAnswers++;
+        _pointsAdded = true;
+      });
+    } else {
+      // Incorrect answer
+      setState(() {
+        _points -= sb.incorrectAnsPenalty;
+        _incorrectAnswers++;
+        _pointsAdded = true;
+      });
+    }
+  }
+
+
+  void _onNextQuestion() async {
+    // If points were calculated and not yet saved, save them
+    if (_pointsAdded) {
+      await _savePointsToFirebase();
+      _pointsAdded = false;
+    }
+
     _endlessQuizBloc.nextQuestion();
     setState(() {
       _selectedOptionIndex = null;
     });
   }
+
+  Future<void> _savePointsToFirebase() async {
+    try {
+      final UserModel? user = context.read<UserBloc>().userData;
+      if (user != null && user.uid != null) {
+        // Update points in Firebase
+        await FirebaseService().updateUserPoints(user.uid!, _points);
+
+        // Update points in UserBloc
+        await context.read<UserBloc>().updateUserPointsToBloc(_points);
+
+        // Update points history
+        String newHistory = '';
+        if (_points.isNegative) {
+          newHistory = 'Run Quiz Session $_points at ${DateTime.now()}';
+        } else {
+          newHistory = 'Run Quiz Session +$_points at ${DateTime.now()}';
+        }
+        await FirebaseService().updateUserPointHistory(user.uid!, newHistory);
+
+        // Update user stats
+        await FirebaseService().updateUserStatToDatabase(
+            user.uid!,
+            user.totalQuizPlayed! + 1,
+            user.totalQuestionAnswered! + 1,
+            user.totalCorrectAns! + (_selectedOptionIndex == _endlessQuizBloc.currentQuestion?.correctAnswerIndex ? 1 : 0),
+            user.totalIncorrectAns! + (_selectedOptionIndex != _endlessQuizBloc.currentQuestion?.correctAnswerIndex ? 1 : 0)
+        );
+      }
+    } catch (e) {
+      debugPrint('Error saving points: $e');
+    }
+  }
+
 
   // Progress indicator
   Widget _buildProgressIndicator() {
