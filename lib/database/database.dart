@@ -115,6 +115,87 @@ class QuizDatabase extends _$QuizDatabase {
     return await select(questionsTable).get();
   }
 
+  // Get random questions from the database
+  // Future<List<QuestionsTableData>> getRandomQuestions({
+  //   int count = 10,
+  //   List<String>? excludeIds,
+  //   String? categoryId
+  // }) async {
+  //   // Start building the query
+  //   var query = select(questionsTable)
+  //     ..orderBy([(t) => OrderingTerm.random()])
+  //     ..limit(count);
+  //
+  //   // Add exclusion filter if needed
+  //   if (excludeIds != null && excludeIds.isNotEmpty) {
+  //     query.where((tbl) => tbl.id.isNotIn(excludeIds));
+  //   }
+  //
+  //   // Add category filter if needed
+  //   if (categoryId != null) {
+  //     query.where((tbl) => tbl.catId.equals(categoryId));
+  //   }
+  //
+  //   // Execute the query
+  //   return query.get();
+  // }
+
+// the random questions method
+  Future<List<QuestionsTableData>> getRandomQuestionsFromDb({
+    int count = 10,
+    List<String>? excludeIds,
+    String? categoryId
+  }) async {
+    // Build the query conditions
+    String query = 'SELECT * FROM questions_table';
+    final List<Variable> variables = [];
+
+    // Add WHERE clause for excluded IDs
+    if (excludeIds != null && excludeIds.isNotEmpty) {
+      query += ' WHERE id NOT IN (${excludeIds.map((_) => '?').join(', ')})';
+      variables.addAll(excludeIds.map((id) => Variable.withString(id)));
+    }
+
+    // Add category filter
+    if (categoryId != null && categoryId.isNotEmpty) {
+      if (excludeIds != null && excludeIds.isNotEmpty) {
+        query += ' AND cat_id = ?';
+      } else {
+        query += ' WHERE cat_id = ?';
+      }
+      variables.add(Variable.withString(categoryId));
+    }
+
+    // Add ordering and limit
+    query += ' ORDER BY RANDOM() LIMIT ?';
+    variables.add(Variable.withInt(count));
+
+    // Execute the query
+    final rows = await customSelect(
+      query,
+      variables: variables,
+      readsFrom: {questionsTable},
+    ).get();
+
+    // Convert the rows to QuestionsTableData objects - manually mapping
+    return rows.map((row) => QuestionsTableData(
+      id: row.read<String>('id'),
+      quizId: row.read<String>('quiz_id'),
+      catId: row.read<String>('cat_id'),
+      questionTitle: row.read<String>('question_title'),
+      options: row.read<String?>('options'),
+      correctAnswerIndex: row.read<int?>('correct_answer_index'),
+      hasFourOptions: row.read<bool?>('has_four_options'),
+      questionType: row.read<String?>('question_type'),
+      questionImageUrl: row.read<String?>('question_image_url'),
+      questionAudioUrl: row.read<String?>('question_audio_url'),
+      questionVideoUrl: row.read<String?>('question_video_url'),
+      explaination: row.read<String?>('explaination'),
+      optionsType: row.read<String?>('options_type'),
+      createdAt: row.read<int?>('created_at'),
+    )).toList();
+  }
+
 }
 
 

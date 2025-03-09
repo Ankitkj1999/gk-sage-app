@@ -338,6 +338,40 @@ class DriftService {
     }
   }
 
+  // Fetch a batch of random questions from local database
+// Add this method to your DriftService class (not inside QuizDatabase)
+
+// Inside your DriftService class:
+// In your DriftService class
+  Future<List<Question>> getRandomQuestions({
+    int count = 10,
+    List<String>? excludeIds,
+    String? categoryId
+  }) async {
+    try {
+      debugPrint('Fetching $count random questions...');
+      if (excludeIds != null) {
+        debugPrint('Excluding ${excludeIds.length} questions that were already shown');
+      }
+
+      // Get the questions from database with appropriate filters
+      final List<QuestionsTableData> data = await _database.getRandomQuestionsFromDb(
+          count: count,
+          excludeIds: excludeIds,
+          categoryId: categoryId
+      );
+
+      debugPrint('Found ${data.length} random questions');
+
+      // Convert database models to domain models using your existing conversion method
+      final List<Question> questions = data.map(_convertQuestionToDomainModel).toList();
+
+      return questions;
+    } catch (e) {
+      debugPrint('Error getting random questions: $e');
+      return <Question>[];
+    }
+  }
 
   Future<void> syncAll() async {
     await syncAndGetAllCategories();

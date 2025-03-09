@@ -17,6 +17,7 @@ import 'package:quiz_app/utils/next_screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import '../services/notification_service.dart';
 import '../tabs/leaderboard_tab.dart';
+import '../tabs/run.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -52,10 +53,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   final Map<int, List> tabs = {
-    1: ['home', IconUtils.home],
-    2: ['categories', IconUtils.categories],
-    3: ['profile', IconUtils.profile],
-    4: ['leaderboard', IconUtils.leaderboard]
+    1: ['run', Icons.play_circle_filled], // Capitalized "Run"
+    2: ['home', IconUtils.home],
+    3: ['categories', IconUtils.categories],
+    4: ['profile', IconUtils.profile],
+    5: ['leaderboard', IconUtils.leaderboard],
   };
 
   _onBackPressed() async {
@@ -84,6 +86,7 @@ class _HomePageState extends State<HomePage> {
             controller: context.read<TabControllerBloc>().pageController,
             physics: const NeverScrollableScrollPhysics(),
             children: const [
+              RunTab(),
               HomeTab(),
               CategoriesTab(),
               ProfileTab(),
@@ -100,35 +103,41 @@ class _HomePageState extends State<HomePage> {
         curve: Curves.easeIn,
         currentIndex: context.watch<TabControllerBloc>().currentIndex,
         onTap: (int index) {
-          if (index == 3) {
+          if (index == 4) { // Updated to index 4 for Leaderboard
             NextScreen.nextScreenNormal(context, const LeaderboardTab());
           } else {
             context.read<TabControllerBloc>().controlTab(index);
           }
         },
         items: [
-          /// Home
+          /// Run (Endless Quiz)
           SalomonBottomBarItem(
             icon: Icon(tabs[1]![1]),
             title: Text(tabs[1]![0]).tr(),
           ),
 
-          /// Categories
+          /// Home
           SalomonBottomBarItem(
             icon: Icon(tabs[2]![1]),
             title: Text(tabs[2]![0]).tr(),
           ),
 
-          /// Profile
+          /// Categories
           SalomonBottomBarItem(
             icon: Icon(tabs[3]![1]),
             title: Text(tabs[3]![0]).tr(),
           ),
 
-          /// Leaderboard
+          /// Profile
           SalomonBottomBarItem(
             icon: Icon(tabs[4]![1]),
             title: Text(tabs[4]![0]).tr(),
+          ),
+
+          /// Leaderboard
+          SalomonBottomBarItem(
+            icon: Icon(tabs[5]![1]),
+            title: Text(tabs[5]![0]).tr(),
           ),
         ],
       ),
