@@ -42,62 +42,15 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
-  final DriftService _driftService = DriftService();
-  bool _isSyncing = false;
-  List<Quiz> _localQuizzes = [];
-  List<Category> _localCategorys = [];
-  List<Question> _localQuestions = [];
-  
+
 
   @override
   void initState() {
     super.initState();
-    _syncData();
+
   }
 
-  Future<void> _syncData() async {
-    setState(() {
-      _isSyncing = true;
-    });
 
-    try {
-      // First sync categories and quizzes (this is quick)
-      _localCategorys = await _driftService.syncAndGetAllCategories();
-      _localQuizzes = await _driftService.syncAndGetAllQuizzes();
-
-      setState(() {
-        _isSyncing = false;
-      });
-
-      // Then sync questions in the background (can take longer)
-      // This runs after setting isSyncing to false so the UI is responsive
-      _startBackgroundQuestionSync();
-
-    } catch (e) {
-      setState(() {
-        _isSyncing = false;
-      });
-      debugPrint('Error syncing data: $e');
-    }
-  }
-
-  void _startBackgroundQuestionSync() {
-    // This doesn't block the UI since it's not awaited
-    _driftService.syncQuestionsForAllQuizzes().then((_) {
-      // Optionally update state if needed when sync completes
-      if (mounted) {
-        setState(() {
-          // You could set a flag to show sync is complete
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _driftService.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,13 +94,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
             ),
           ),
           // Show loading indicator when syncing
-          if (_isSyncing)
-            Container(
-              color: Colors.black.withOpacity(0.3),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+
         ],
       ),
     );

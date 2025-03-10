@@ -24,8 +24,11 @@ import 'package:quiz_app/utils/icon_utils.dart';
 import '../blocs/endlessQuiz_bloc.dart';
 import '../blocs/tab_controller.dart';
 import '../configs/color_config.dart';
+import '../models/category.dart';
+import '../models/quiz.dart';
 import '../pages/notifications.dart';
 import '../pages/settings.dart';
+import '../services/drift_service.dart';
 import '../widgets/custom_chip.dart';
 import 'leaderboard_tab.dart';
 
@@ -45,14 +48,64 @@ class _RunTabState extends State<RunTab> {
   int _incorrectAnswers = 0;
   bool _pointsAdded = false;
 
+
+  final DriftService _driftService = DriftService();
+  bool _isSyncing = false;
+  List<Quiz> _localQuizzes = [];
+  List<Category> _localCategorys = [];
+  List<Question> _localQuestions = [];
+
+
   @override
   void initState() {
     super.initState();
     _endlessQuizBloc = EndlessQuizBloc();
+    _syncData();
+  }
+
+
+
+  Future<void> _syncData() async {
+    setState(() {
+      _isSyncing = true;
+    });
+
+    try {
+      // First sync categories and quizzes (this is quick)
+      _localCategorys = await _driftService.syncAndGetAllCategories();
+      _localQuizzes = await _driftService.syncAndGetAllQuizzes();
+
+      setState(() {
+        _isSyncing = false;
+      });
+
+      // Then sync questions in the background (can take longer)
+      // This runs after setting isSyncing to false so the UI is responsive
+      _startBackgroundQuestionSync();
+
+    } catch (e) {
+      setState(() {
+        _isSyncing = false;
+      });
+      debugPrint('Error syncing data: $e');
+    }
+  }
+
+  void _startBackgroundQuestionSync() {
+    // This doesn't block the UI since it's not awaited
+    _driftService.syncQuestionsForAllQuizzes().then((_) {
+      // Optionally update state if needed when sync completes
+      if (mounted) {
+        setState(() {
+          // You could set a flag to show sync is complete
+        });
+      }
+    });
   }
 
   @override
-  void dispose() {
+  void dispose() {  _driftService.close();
+
     // Save any unsaved points before disposing
     if (_pointsAdded) {
       _savePointsToFirebase();
@@ -320,30 +373,31 @@ class _RunTabState extends State<RunTab> {
                       context, const LeaderboardTab()),
                 ),
                 const SizedBox(width: 10),
-                // Notifications
-                InkWell(
-                  onTap: () => NextScreen.nextScreenNormal(
-                      context, const Notifications()),
-                  child: CircleAvatar(
-                    radius: 16,
-                    backgroundColor: ColorConfig.iconBg,
-                    child: const Icon(
-                      IconUtils.bell,
-                      size: 18,
-                      color: Colors.white,
+                // Bookmark button (replaced notification button)
+                Visibility(
+                  visible: FeatureConfig.bookmarkQuestionEnabled,
+                  child: InkWell(
+                    onTap: () => _handleAddToBookmark(),
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: ColorConfig.iconBg,
+                      child: const Icon(
+                        IconUtils.addBookmark,
+                        size: 18,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
-                // Settings
+                // Settings toggle (replaced settings button)
                 InkWell(
-                  onTap: () => NextScreen.nextScreenNormal(
-                      context, const SettingsPage()),
+                  onTap: () => openControlDialog(context),
                   child: CircleAvatar(
                     radius: 16,
                     backgroundColor: ColorConfig.iconBg,
                     child: const Icon(
-                      IconUtils.settings,
+                      Ionicons.options,
                       size: 18,
                       color: Colors.white,
                     ),
@@ -356,6 +410,113 @@ class _RunTabState extends State<RunTab> {
       ),
     );
   }
+
+  // PreferredSizeWidget _buildRunAppBar() {
+  //   // Get user data
+  //   final user = context.watch<UserBloc>().userData;
+  //   final int rank = context.watch<UserBloc>().userRank;
+  //
+  //   return AppBar(
+  //     backgroundColor: Theme.of(context).primaryColor,
+  //     elevation: 0,
+  //     automaticallyImplyLeading: false,
+  //     titleSpacing: 0,
+  //     // Keep progress indicator but as a bottom line
+  //     bottom: PreferredSize(
+  //       preferredSize: const Size.fromHeight(4),
+  //       child: LinearPercentIndicator(
+  //         animation: true,
+  //         lineHeight: 4.0,
+  //         padding: EdgeInsets.zero,
+  //         percent: _endlessQuizBloc.questionQueue.isNotEmpty
+  //             ? (_endlessQuizBloc.currentQuestionIndex + 1) / _endlessQuizBloc.questionQueue.length
+  //             : 0.0,
+  //         progressColor: Colors.amber,
+  //         backgroundColor: Colors.white.withOpacity(0.2),
+  //         barRadius: const Radius.circular(2),
+  //         animateFromLastPercent: true,
+  //       ),
+  //     ),
+  //     title: Padding(
+  //       padding: const EdgeInsets.symmetric(horizontal: 16),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           // Session points indicator (for this run)
+  //           Container(
+  //             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  //             decoration: BoxDecoration(
+  //               color: Colors.white.withOpacity(0.2),
+  //               borderRadius: BorderRadius.circular(15),
+  //             ),
+  //             child: Text(
+  //               '${_sessionPoints >= 0 ? "+" : ""}$_sessionPoints',
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ),
+  //           // Row of action items
+  //           Row(
+  //             children: [
+  //               // Total user points
+  //               InkWell(
+  //                 child: CustomChip1(
+  //                   label: user?.points.toString() ?? "0",
+  //                   icon: IconUtils.coins,
+  //                   bgColor: ColorConfig.chip1,
+  //                 ),
+  //                 onTap: () => context.read<TabControllerBloc>().controlTab(2),
+  //               ),
+  //               const SizedBox(width: 10),
+  //               // User rank
+  //               InkWell(
+  //                 child: CustomChip1(
+  //                   label: '#$rank',
+  //                   icon: IconUtils.leaderboard1,
+  //                   bgColor: ColorConfig.chip2,
+  //                 ),
+  //                 onTap: () => NextScreen.nextScreenNormal(
+  //                     context, const LeaderboardTab()),
+  //               ),
+  //               const SizedBox(width: 10),
+  //               // Notifications
+  //               InkWell(
+  //                 onTap: () => NextScreen.nextScreenNormal(
+  //                     context, const Notifications()),
+  //                 child: CircleAvatar(
+  //                   radius: 16,
+  //                   backgroundColor: ColorConfig.iconBg,
+  //                   child: const Icon(
+  //                     IconUtils.bell,
+  //                     size: 18,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //               const SizedBox(width: 10),
+  //               // Settings
+  //               InkWell(
+  //                 onTap: () => NextScreen.nextScreenNormal(
+  //                     context, const SettingsPage()),
+  //                 child: CircleAvatar(
+  //                   radius: 16,
+  //                   backgroundColor: ColorConfig.iconBg,
+  //                   child: const Icon(
+  //                     IconUtils.settings,
+  //                     size: 18,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Question title widget
   Widget _buildQuestionTitle(Question question) {
@@ -591,7 +752,16 @@ class _RunTabState extends State<RunTab> {
                     ],
                   ),
                 ),
+
+
               ),
+              if (_isSyncing)
+                Container(
+                  color: Colors.black.withOpacity(0.3),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               _buildNextButton(),
             ],
           );
