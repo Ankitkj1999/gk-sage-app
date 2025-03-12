@@ -29,6 +29,7 @@ import '../models/quiz.dart';
 import '../pages/notifications.dart';
 import '../pages/settings.dart';
 import '../services/drift_service.dart';
+import '../services/sp_service.dart';
 import '../widgets/custom_chip.dart';
 import 'leaderboard_tab.dart';
 
@@ -54,6 +55,8 @@ class _RunTabState extends State<RunTab> {
   List<Quiz> _localQuizzes = [];
   List<Category> _localCategorys = [];
   List<Question> _localQuestions = [];
+  UserModel? _localUser;
+
 
 
   @override
@@ -71,9 +74,24 @@ class _RunTabState extends State<RunTab> {
     });
 
     try {
+
+
+      // First sync user data (this is important and relatively quick)
+      final String? uid = await SPService().getUidFromLocal();
+      if (uid != null) {
+        _localUser = await _driftService.syncAndGetUserData(uid);
+        // Immediately update UserBloc if we have user data
+        if (_localUser != null) {
+          context.read<UserBloc>().setUserData(_localUser!);
+        }
+      }
+
+
+
       // First sync categories and quizzes (this is quick)
       _localCategorys = await _driftService.syncAndGetAllCategories();
       _localQuizzes = await _driftService.syncAndGetAllQuizzes();
+
 
       setState(() {
         _isSyncing = false;

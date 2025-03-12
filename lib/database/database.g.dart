@@ -1646,6 +1646,882 @@ class QuestionsTableCompanion extends UpdateCompanion<QuestionsTableData> {
   }
 }
 
+class $UsersTableTable extends UsersTable
+    with TableInfo<$UsersTableTable, UsersTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _uidMeta = const VerificationMeta('uid');
+  @override
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+      'email', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _avatarStringMeta =
+      const VerificationMeta('avatarString');
+  @override
+  late final GeneratedColumn<String> avatarString = GeneratedColumn<String>(
+      'avatar_string', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+      'created_at', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+      'updated_at', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _pointsMeta = const VerificationMeta('points');
+  @override
+  late final GeneratedColumn<int> points = GeneratedColumn<int>(
+      'points', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _disabledMeta =
+      const VerificationMeta('disabled');
+  @override
+  late final GeneratedColumn<bool> disabled = GeneratedColumn<bool>(
+      'disabled', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("disabled" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _savedItemsMeta =
+      const VerificationMeta('savedItems');
+  @override
+  late final GeneratedColumn<String> savedItems = GeneratedColumn<String>(
+      'saved_items', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _totalQuizPlayedMeta =
+      const VerificationMeta('totalQuizPlayed');
+  @override
+  late final GeneratedColumn<int> totalQuizPlayed = GeneratedColumn<int>(
+      'total_quiz_played', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _totalQuestionAnsweredMeta =
+      const VerificationMeta('totalQuestionAnswered');
+  @override
+  late final GeneratedColumn<int> totalQuestionAnswered = GeneratedColumn<int>(
+      'total_question_answered', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _totalCorrectAnsMeta =
+      const VerificationMeta('totalCorrectAns');
+  @override
+  late final GeneratedColumn<int> totalCorrectAns = GeneratedColumn<int>(
+      'total_correct_ans', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _totalIncorrectAnsMeta =
+      const VerificationMeta('totalIncorrectAns');
+  @override
+  late final GeneratedColumn<int> totalIncorrectAns = GeneratedColumn<int>(
+      'total_incorrect_ans', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _strengthMeta =
+      const VerificationMeta('strength');
+  @override
+  late final GeneratedColumn<double> strength = GeneratedColumn<double>(
+      'strength', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _imageUrlMeta =
+      const VerificationMeta('imageUrl');
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+      'image_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _pointsHistoryMeta =
+      const VerificationMeta('pointsHistory');
+  @override
+  late final GeneratedColumn<String> pointsHistory = GeneratedColumn<String>(
+      'points_history', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _bookmarkedQuestionsMeta =
+      const VerificationMeta('bookmarkedQuestions');
+  @override
+  late final GeneratedColumn<String> bookmarkedQuestions =
+      GeneratedColumn<String>('bookmarked_questions', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _completedQuizzesMeta =
+      const VerificationMeta('completedQuizzes');
+  @override
+  late final GeneratedColumn<String> completedQuizzes = GeneratedColumn<String>(
+      'completed_quizzes', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        uid,
+        name,
+        email,
+        avatarString,
+        createdAt,
+        updatedAt,
+        points,
+        disabled,
+        savedItems,
+        totalQuizPlayed,
+        totalQuestionAnswered,
+        totalCorrectAns,
+        totalIncorrectAns,
+        strength,
+        imageUrl,
+        pointsHistory,
+        bookmarkedQuestions,
+        completedQuizzes
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<UsersTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
+    }
+    if (data.containsKey('avatar_string')) {
+      context.handle(
+          _avatarStringMeta,
+          avatarString.isAcceptableOrUnknown(
+              data['avatar_string']!, _avatarStringMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    if (data.containsKey('points')) {
+      context.handle(_pointsMeta,
+          points.isAcceptableOrUnknown(data['points']!, _pointsMeta));
+    }
+    if (data.containsKey('disabled')) {
+      context.handle(_disabledMeta,
+          disabled.isAcceptableOrUnknown(data['disabled']!, _disabledMeta));
+    }
+    if (data.containsKey('saved_items')) {
+      context.handle(
+          _savedItemsMeta,
+          savedItems.isAcceptableOrUnknown(
+              data['saved_items']!, _savedItemsMeta));
+    }
+    if (data.containsKey('total_quiz_played')) {
+      context.handle(
+          _totalQuizPlayedMeta,
+          totalQuizPlayed.isAcceptableOrUnknown(
+              data['total_quiz_played']!, _totalQuizPlayedMeta));
+    }
+    if (data.containsKey('total_question_answered')) {
+      context.handle(
+          _totalQuestionAnsweredMeta,
+          totalQuestionAnswered.isAcceptableOrUnknown(
+              data['total_question_answered']!, _totalQuestionAnsweredMeta));
+    }
+    if (data.containsKey('total_correct_ans')) {
+      context.handle(
+          _totalCorrectAnsMeta,
+          totalCorrectAns.isAcceptableOrUnknown(
+              data['total_correct_ans']!, _totalCorrectAnsMeta));
+    }
+    if (data.containsKey('total_incorrect_ans')) {
+      context.handle(
+          _totalIncorrectAnsMeta,
+          totalIncorrectAns.isAcceptableOrUnknown(
+              data['total_incorrect_ans']!, _totalIncorrectAnsMeta));
+    }
+    if (data.containsKey('strength')) {
+      context.handle(_strengthMeta,
+          strength.isAcceptableOrUnknown(data['strength']!, _strengthMeta));
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(_imageUrlMeta,
+          imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta));
+    }
+    if (data.containsKey('points_history')) {
+      context.handle(
+          _pointsHistoryMeta,
+          pointsHistory.isAcceptableOrUnknown(
+              data['points_history']!, _pointsHistoryMeta));
+    }
+    if (data.containsKey('bookmarked_questions')) {
+      context.handle(
+          _bookmarkedQuestionsMeta,
+          bookmarkedQuestions.isAcceptableOrUnknown(
+              data['bookmarked_questions']!, _bookmarkedQuestionsMeta));
+    }
+    if (data.containsKey('completed_quizzes')) {
+      context.handle(
+          _completedQuizzesMeta,
+          completedQuizzes.isAcceptableOrUnknown(
+              data['completed_quizzes']!, _completedQuizzesMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid};
+  @override
+  UsersTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UsersTableData(
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      email: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}email']),
+      avatarString: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}avatar_string']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}created_at']),
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_at']),
+      points: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}points'])!,
+      disabled: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}disabled'])!,
+      savedItems: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}saved_items']),
+      totalQuizPlayed: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_quiz_played'])!,
+      totalQuestionAnswered: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}total_question_answered'])!,
+      totalCorrectAns: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_correct_ans'])!,
+      totalIncorrectAns: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}total_incorrect_ans'])!,
+      strength: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}strength']),
+      imageUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_url']),
+      pointsHistory: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}points_history']),
+      bookmarkedQuestions: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}bookmarked_questions']),
+      completedQuizzes: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}completed_quizzes']),
+    );
+  }
+
+  @override
+  $UsersTableTable createAlias(String alias) {
+    return $UsersTableTable(attachedDatabase, alias);
+  }
+}
+
+class UsersTableData extends DataClass implements Insertable<UsersTableData> {
+  final String uid;
+  final String? name;
+  final String? email;
+  final String? avatarString;
+  final int? createdAt;
+  final int? updatedAt;
+  final int points;
+  final bool disabled;
+  final String? savedItems;
+  final int totalQuizPlayed;
+  final int totalQuestionAnswered;
+  final int totalCorrectAns;
+  final int totalIncorrectAns;
+  final double? strength;
+  final String? imageUrl;
+  final String? pointsHistory;
+  final String? bookmarkedQuestions;
+  final String? completedQuizzes;
+  const UsersTableData(
+      {required this.uid,
+      this.name,
+      this.email,
+      this.avatarString,
+      this.createdAt,
+      this.updatedAt,
+      required this.points,
+      required this.disabled,
+      this.savedItems,
+      required this.totalQuizPlayed,
+      required this.totalQuestionAnswered,
+      required this.totalCorrectAns,
+      required this.totalIncorrectAns,
+      this.strength,
+      this.imageUrl,
+      this.pointsHistory,
+      this.bookmarkedQuestions,
+      this.completedQuizzes});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['uid'] = Variable<String>(uid);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || avatarString != null) {
+      map['avatar_string'] = Variable<String>(avatarString);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<int>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<int>(updatedAt);
+    }
+    map['points'] = Variable<int>(points);
+    map['disabled'] = Variable<bool>(disabled);
+    if (!nullToAbsent || savedItems != null) {
+      map['saved_items'] = Variable<String>(savedItems);
+    }
+    map['total_quiz_played'] = Variable<int>(totalQuizPlayed);
+    map['total_question_answered'] = Variable<int>(totalQuestionAnswered);
+    map['total_correct_ans'] = Variable<int>(totalCorrectAns);
+    map['total_incorrect_ans'] = Variable<int>(totalIncorrectAns);
+    if (!nullToAbsent || strength != null) {
+      map['strength'] = Variable<double>(strength);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || pointsHistory != null) {
+      map['points_history'] = Variable<String>(pointsHistory);
+    }
+    if (!nullToAbsent || bookmarkedQuestions != null) {
+      map['bookmarked_questions'] = Variable<String>(bookmarkedQuestions);
+    }
+    if (!nullToAbsent || completedQuizzes != null) {
+      map['completed_quizzes'] = Variable<String>(completedQuizzes);
+    }
+    return map;
+  }
+
+  UsersTableCompanion toCompanion(bool nullToAbsent) {
+    return UsersTableCompanion(
+      uid: Value(uid),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      avatarString: avatarString == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarString),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      points: Value(points),
+      disabled: Value(disabled),
+      savedItems: savedItems == null && nullToAbsent
+          ? const Value.absent()
+          : Value(savedItems),
+      totalQuizPlayed: Value(totalQuizPlayed),
+      totalQuestionAnswered: Value(totalQuestionAnswered),
+      totalCorrectAns: Value(totalCorrectAns),
+      totalIncorrectAns: Value(totalIncorrectAns),
+      strength: strength == null && nullToAbsent
+          ? const Value.absent()
+          : Value(strength),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      pointsHistory: pointsHistory == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pointsHistory),
+      bookmarkedQuestions: bookmarkedQuestions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bookmarkedQuestions),
+      completedQuizzes: completedQuizzes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedQuizzes),
+    );
+  }
+
+  factory UsersTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UsersTableData(
+      uid: serializer.fromJson<String>(json['uid']),
+      name: serializer.fromJson<String?>(json['name']),
+      email: serializer.fromJson<String?>(json['email']),
+      avatarString: serializer.fromJson<String?>(json['avatarString']),
+      createdAt: serializer.fromJson<int?>(json['createdAt']),
+      updatedAt: serializer.fromJson<int?>(json['updatedAt']),
+      points: serializer.fromJson<int>(json['points']),
+      disabled: serializer.fromJson<bool>(json['disabled']),
+      savedItems: serializer.fromJson<String?>(json['savedItems']),
+      totalQuizPlayed: serializer.fromJson<int>(json['totalQuizPlayed']),
+      totalQuestionAnswered:
+          serializer.fromJson<int>(json['totalQuestionAnswered']),
+      totalCorrectAns: serializer.fromJson<int>(json['totalCorrectAns']),
+      totalIncorrectAns: serializer.fromJson<int>(json['totalIncorrectAns']),
+      strength: serializer.fromJson<double?>(json['strength']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      pointsHistory: serializer.fromJson<String?>(json['pointsHistory']),
+      bookmarkedQuestions:
+          serializer.fromJson<String?>(json['bookmarkedQuestions']),
+      completedQuizzes: serializer.fromJson<String?>(json['completedQuizzes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'uid': serializer.toJson<String>(uid),
+      'name': serializer.toJson<String?>(name),
+      'email': serializer.toJson<String?>(email),
+      'avatarString': serializer.toJson<String?>(avatarString),
+      'createdAt': serializer.toJson<int?>(createdAt),
+      'updatedAt': serializer.toJson<int?>(updatedAt),
+      'points': serializer.toJson<int>(points),
+      'disabled': serializer.toJson<bool>(disabled),
+      'savedItems': serializer.toJson<String?>(savedItems),
+      'totalQuizPlayed': serializer.toJson<int>(totalQuizPlayed),
+      'totalQuestionAnswered': serializer.toJson<int>(totalQuestionAnswered),
+      'totalCorrectAns': serializer.toJson<int>(totalCorrectAns),
+      'totalIncorrectAns': serializer.toJson<int>(totalIncorrectAns),
+      'strength': serializer.toJson<double?>(strength),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'pointsHistory': serializer.toJson<String?>(pointsHistory),
+      'bookmarkedQuestions': serializer.toJson<String?>(bookmarkedQuestions),
+      'completedQuizzes': serializer.toJson<String?>(completedQuizzes),
+    };
+  }
+
+  UsersTableData copyWith(
+          {String? uid,
+          Value<String?> name = const Value.absent(),
+          Value<String?> email = const Value.absent(),
+          Value<String?> avatarString = const Value.absent(),
+          Value<int?> createdAt = const Value.absent(),
+          Value<int?> updatedAt = const Value.absent(),
+          int? points,
+          bool? disabled,
+          Value<String?> savedItems = const Value.absent(),
+          int? totalQuizPlayed,
+          int? totalQuestionAnswered,
+          int? totalCorrectAns,
+          int? totalIncorrectAns,
+          Value<double?> strength = const Value.absent(),
+          Value<String?> imageUrl = const Value.absent(),
+          Value<String?> pointsHistory = const Value.absent(),
+          Value<String?> bookmarkedQuestions = const Value.absent(),
+          Value<String?> completedQuizzes = const Value.absent()}) =>
+      UsersTableData(
+        uid: uid ?? this.uid,
+        name: name.present ? name.value : this.name,
+        email: email.present ? email.value : this.email,
+        avatarString:
+            avatarString.present ? avatarString.value : this.avatarString,
+        createdAt: createdAt.present ? createdAt.value : this.createdAt,
+        updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+        points: points ?? this.points,
+        disabled: disabled ?? this.disabled,
+        savedItems: savedItems.present ? savedItems.value : this.savedItems,
+        totalQuizPlayed: totalQuizPlayed ?? this.totalQuizPlayed,
+        totalQuestionAnswered:
+            totalQuestionAnswered ?? this.totalQuestionAnswered,
+        totalCorrectAns: totalCorrectAns ?? this.totalCorrectAns,
+        totalIncorrectAns: totalIncorrectAns ?? this.totalIncorrectAns,
+        strength: strength.present ? strength.value : this.strength,
+        imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+        pointsHistory:
+            pointsHistory.present ? pointsHistory.value : this.pointsHistory,
+        bookmarkedQuestions: bookmarkedQuestions.present
+            ? bookmarkedQuestions.value
+            : this.bookmarkedQuestions,
+        completedQuizzes: completedQuizzes.present
+            ? completedQuizzes.value
+            : this.completedQuizzes,
+      );
+  UsersTableData copyWithCompanion(UsersTableCompanion data) {
+    return UsersTableData(
+      uid: data.uid.present ? data.uid.value : this.uid,
+      name: data.name.present ? data.name.value : this.name,
+      email: data.email.present ? data.email.value : this.email,
+      avatarString: data.avatarString.present
+          ? data.avatarString.value
+          : this.avatarString,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      points: data.points.present ? data.points.value : this.points,
+      disabled: data.disabled.present ? data.disabled.value : this.disabled,
+      savedItems:
+          data.savedItems.present ? data.savedItems.value : this.savedItems,
+      totalQuizPlayed: data.totalQuizPlayed.present
+          ? data.totalQuizPlayed.value
+          : this.totalQuizPlayed,
+      totalQuestionAnswered: data.totalQuestionAnswered.present
+          ? data.totalQuestionAnswered.value
+          : this.totalQuestionAnswered,
+      totalCorrectAns: data.totalCorrectAns.present
+          ? data.totalCorrectAns.value
+          : this.totalCorrectAns,
+      totalIncorrectAns: data.totalIncorrectAns.present
+          ? data.totalIncorrectAns.value
+          : this.totalIncorrectAns,
+      strength: data.strength.present ? data.strength.value : this.strength,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      pointsHistory: data.pointsHistory.present
+          ? data.pointsHistory.value
+          : this.pointsHistory,
+      bookmarkedQuestions: data.bookmarkedQuestions.present
+          ? data.bookmarkedQuestions.value
+          : this.bookmarkedQuestions,
+      completedQuizzes: data.completedQuizzes.present
+          ? data.completedQuizzes.value
+          : this.completedQuizzes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersTableData(')
+          ..write('uid: $uid, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('avatarString: $avatarString, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('points: $points, ')
+          ..write('disabled: $disabled, ')
+          ..write('savedItems: $savedItems, ')
+          ..write('totalQuizPlayed: $totalQuizPlayed, ')
+          ..write('totalQuestionAnswered: $totalQuestionAnswered, ')
+          ..write('totalCorrectAns: $totalCorrectAns, ')
+          ..write('totalIncorrectAns: $totalIncorrectAns, ')
+          ..write('strength: $strength, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('pointsHistory: $pointsHistory, ')
+          ..write('bookmarkedQuestions: $bookmarkedQuestions, ')
+          ..write('completedQuizzes: $completedQuizzes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      uid,
+      name,
+      email,
+      avatarString,
+      createdAt,
+      updatedAt,
+      points,
+      disabled,
+      savedItems,
+      totalQuizPlayed,
+      totalQuestionAnswered,
+      totalCorrectAns,
+      totalIncorrectAns,
+      strength,
+      imageUrl,
+      pointsHistory,
+      bookmarkedQuestions,
+      completedQuizzes);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UsersTableData &&
+          other.uid == this.uid &&
+          other.name == this.name &&
+          other.email == this.email &&
+          other.avatarString == this.avatarString &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.points == this.points &&
+          other.disabled == this.disabled &&
+          other.savedItems == this.savedItems &&
+          other.totalQuizPlayed == this.totalQuizPlayed &&
+          other.totalQuestionAnswered == this.totalQuestionAnswered &&
+          other.totalCorrectAns == this.totalCorrectAns &&
+          other.totalIncorrectAns == this.totalIncorrectAns &&
+          other.strength == this.strength &&
+          other.imageUrl == this.imageUrl &&
+          other.pointsHistory == this.pointsHistory &&
+          other.bookmarkedQuestions == this.bookmarkedQuestions &&
+          other.completedQuizzes == this.completedQuizzes);
+}
+
+class UsersTableCompanion extends UpdateCompanion<UsersTableData> {
+  final Value<String> uid;
+  final Value<String?> name;
+  final Value<String?> email;
+  final Value<String?> avatarString;
+  final Value<int?> createdAt;
+  final Value<int?> updatedAt;
+  final Value<int> points;
+  final Value<bool> disabled;
+  final Value<String?> savedItems;
+  final Value<int> totalQuizPlayed;
+  final Value<int> totalQuestionAnswered;
+  final Value<int> totalCorrectAns;
+  final Value<int> totalIncorrectAns;
+  final Value<double?> strength;
+  final Value<String?> imageUrl;
+  final Value<String?> pointsHistory;
+  final Value<String?> bookmarkedQuestions;
+  final Value<String?> completedQuizzes;
+  final Value<int> rowid;
+  const UsersTableCompanion({
+    this.uid = const Value.absent(),
+    this.name = const Value.absent(),
+    this.email = const Value.absent(),
+    this.avatarString = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.points = const Value.absent(),
+    this.disabled = const Value.absent(),
+    this.savedItems = const Value.absent(),
+    this.totalQuizPlayed = const Value.absent(),
+    this.totalQuestionAnswered = const Value.absent(),
+    this.totalCorrectAns = const Value.absent(),
+    this.totalIncorrectAns = const Value.absent(),
+    this.strength = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.pointsHistory = const Value.absent(),
+    this.bookmarkedQuestions = const Value.absent(),
+    this.completedQuizzes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UsersTableCompanion.insert({
+    required String uid,
+    this.name = const Value.absent(),
+    this.email = const Value.absent(),
+    this.avatarString = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.points = const Value.absent(),
+    this.disabled = const Value.absent(),
+    this.savedItems = const Value.absent(),
+    this.totalQuizPlayed = const Value.absent(),
+    this.totalQuestionAnswered = const Value.absent(),
+    this.totalCorrectAns = const Value.absent(),
+    this.totalIncorrectAns = const Value.absent(),
+    this.strength = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.pointsHistory = const Value.absent(),
+    this.bookmarkedQuestions = const Value.absent(),
+    this.completedQuizzes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : uid = Value(uid);
+  static Insertable<UsersTableData> custom({
+    Expression<String>? uid,
+    Expression<String>? name,
+    Expression<String>? email,
+    Expression<String>? avatarString,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? points,
+    Expression<bool>? disabled,
+    Expression<String>? savedItems,
+    Expression<int>? totalQuizPlayed,
+    Expression<int>? totalQuestionAnswered,
+    Expression<int>? totalCorrectAns,
+    Expression<int>? totalIncorrectAns,
+    Expression<double>? strength,
+    Expression<String>? imageUrl,
+    Expression<String>? pointsHistory,
+    Expression<String>? bookmarkedQuestions,
+    Expression<String>? completedQuizzes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (uid != null) 'uid': uid,
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (avatarString != null) 'avatar_string': avatarString,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (points != null) 'points': points,
+      if (disabled != null) 'disabled': disabled,
+      if (savedItems != null) 'saved_items': savedItems,
+      if (totalQuizPlayed != null) 'total_quiz_played': totalQuizPlayed,
+      if (totalQuestionAnswered != null)
+        'total_question_answered': totalQuestionAnswered,
+      if (totalCorrectAns != null) 'total_correct_ans': totalCorrectAns,
+      if (totalIncorrectAns != null) 'total_incorrect_ans': totalIncorrectAns,
+      if (strength != null) 'strength': strength,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (pointsHistory != null) 'points_history': pointsHistory,
+      if (bookmarkedQuestions != null)
+        'bookmarked_questions': bookmarkedQuestions,
+      if (completedQuizzes != null) 'completed_quizzes': completedQuizzes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UsersTableCompanion copyWith(
+      {Value<String>? uid,
+      Value<String?>? name,
+      Value<String?>? email,
+      Value<String?>? avatarString,
+      Value<int?>? createdAt,
+      Value<int?>? updatedAt,
+      Value<int>? points,
+      Value<bool>? disabled,
+      Value<String?>? savedItems,
+      Value<int>? totalQuizPlayed,
+      Value<int>? totalQuestionAnswered,
+      Value<int>? totalCorrectAns,
+      Value<int>? totalIncorrectAns,
+      Value<double?>? strength,
+      Value<String?>? imageUrl,
+      Value<String?>? pointsHistory,
+      Value<String?>? bookmarkedQuestions,
+      Value<String?>? completedQuizzes,
+      Value<int>? rowid}) {
+    return UsersTableCompanion(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatarString: avatarString ?? this.avatarString,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      points: points ?? this.points,
+      disabled: disabled ?? this.disabled,
+      savedItems: savedItems ?? this.savedItems,
+      totalQuizPlayed: totalQuizPlayed ?? this.totalQuizPlayed,
+      totalQuestionAnswered:
+          totalQuestionAnswered ?? this.totalQuestionAnswered,
+      totalCorrectAns: totalCorrectAns ?? this.totalCorrectAns,
+      totalIncorrectAns: totalIncorrectAns ?? this.totalIncorrectAns,
+      strength: strength ?? this.strength,
+      imageUrl: imageUrl ?? this.imageUrl,
+      pointsHistory: pointsHistory ?? this.pointsHistory,
+      bookmarkedQuestions: bookmarkedQuestions ?? this.bookmarkedQuestions,
+      completedQuizzes: completedQuizzes ?? this.completedQuizzes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (avatarString.present) {
+      map['avatar_string'] = Variable<String>(avatarString.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (points.present) {
+      map['points'] = Variable<int>(points.value);
+    }
+    if (disabled.present) {
+      map['disabled'] = Variable<bool>(disabled.value);
+    }
+    if (savedItems.present) {
+      map['saved_items'] = Variable<String>(savedItems.value);
+    }
+    if (totalQuizPlayed.present) {
+      map['total_quiz_played'] = Variable<int>(totalQuizPlayed.value);
+    }
+    if (totalQuestionAnswered.present) {
+      map['total_question_answered'] =
+          Variable<int>(totalQuestionAnswered.value);
+    }
+    if (totalCorrectAns.present) {
+      map['total_correct_ans'] = Variable<int>(totalCorrectAns.value);
+    }
+    if (totalIncorrectAns.present) {
+      map['total_incorrect_ans'] = Variable<int>(totalIncorrectAns.value);
+    }
+    if (strength.present) {
+      map['strength'] = Variable<double>(strength.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (pointsHistory.present) {
+      map['points_history'] = Variable<String>(pointsHistory.value);
+    }
+    if (bookmarkedQuestions.present) {
+      map['bookmarked_questions'] = Variable<String>(bookmarkedQuestions.value);
+    }
+    if (completedQuizzes.present) {
+      map['completed_quizzes'] = Variable<String>(completedQuizzes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersTableCompanion(')
+          ..write('uid: $uid, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('avatarString: $avatarString, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('points: $points, ')
+          ..write('disabled: $disabled, ')
+          ..write('savedItems: $savedItems, ')
+          ..write('totalQuizPlayed: $totalQuizPlayed, ')
+          ..write('totalQuestionAnswered: $totalQuestionAnswered, ')
+          ..write('totalCorrectAns: $totalCorrectAns, ')
+          ..write('totalIncorrectAns: $totalIncorrectAns, ')
+          ..write('strength: $strength, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('pointsHistory: $pointsHistory, ')
+          ..write('bookmarkedQuestions: $bookmarkedQuestions, ')
+          ..write('completedQuizzes: $completedQuizzes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$QuizDatabase extends GeneratedDatabase {
   _$QuizDatabase(QueryExecutor e) : super(e);
   $QuizDatabaseManager get managers => $QuizDatabaseManager(this);
@@ -1653,12 +2529,13 @@ abstract class _$QuizDatabase extends GeneratedDatabase {
       $CategoriesTableTable(this);
   late final $QuizzesTableTable quizzesTable = $QuizzesTableTable(this);
   late final $QuestionsTableTable questionsTable = $QuestionsTableTable(this);
+  late final $UsersTableTable usersTable = $UsersTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [categoriesTable, quizzesTable, questionsTable];
+      [categoriesTable, quizzesTable, questionsTable, usersTable];
 }
 
 typedef $$CategoriesTableTableCreateCompanionBuilder = CategoriesTableCompanion
@@ -2343,6 +3220,340 @@ class $$QuestionsTableTableOrderingComposer
   }
 }
 
+typedef $$UsersTableTableCreateCompanionBuilder = UsersTableCompanion Function({
+  required String uid,
+  Value<String?> name,
+  Value<String?> email,
+  Value<String?> avatarString,
+  Value<int?> createdAt,
+  Value<int?> updatedAt,
+  Value<int> points,
+  Value<bool> disabled,
+  Value<String?> savedItems,
+  Value<int> totalQuizPlayed,
+  Value<int> totalQuestionAnswered,
+  Value<int> totalCorrectAns,
+  Value<int> totalIncorrectAns,
+  Value<double?> strength,
+  Value<String?> imageUrl,
+  Value<String?> pointsHistory,
+  Value<String?> bookmarkedQuestions,
+  Value<String?> completedQuizzes,
+  Value<int> rowid,
+});
+typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
+  Value<String> uid,
+  Value<String?> name,
+  Value<String?> email,
+  Value<String?> avatarString,
+  Value<int?> createdAt,
+  Value<int?> updatedAt,
+  Value<int> points,
+  Value<bool> disabled,
+  Value<String?> savedItems,
+  Value<int> totalQuizPlayed,
+  Value<int> totalQuestionAnswered,
+  Value<int> totalCorrectAns,
+  Value<int> totalIncorrectAns,
+  Value<double?> strength,
+  Value<String?> imageUrl,
+  Value<String?> pointsHistory,
+  Value<String?> bookmarkedQuestions,
+  Value<String?> completedQuizzes,
+  Value<int> rowid,
+});
+
+class $$UsersTableTableTableManager extends RootTableManager<
+    _$QuizDatabase,
+    $UsersTableTable,
+    UsersTableData,
+    $$UsersTableTableFilterComposer,
+    $$UsersTableTableOrderingComposer,
+    $$UsersTableTableCreateCompanionBuilder,
+    $$UsersTableTableUpdateCompanionBuilder> {
+  $$UsersTableTableTableManager(_$QuizDatabase db, $UsersTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UsersTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UsersTableTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> uid = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> avatarString = const Value.absent(),
+            Value<int?> createdAt = const Value.absent(),
+            Value<int?> updatedAt = const Value.absent(),
+            Value<int> points = const Value.absent(),
+            Value<bool> disabled = const Value.absent(),
+            Value<String?> savedItems = const Value.absent(),
+            Value<int> totalQuizPlayed = const Value.absent(),
+            Value<int> totalQuestionAnswered = const Value.absent(),
+            Value<int> totalCorrectAns = const Value.absent(),
+            Value<int> totalIncorrectAns = const Value.absent(),
+            Value<double?> strength = const Value.absent(),
+            Value<String?> imageUrl = const Value.absent(),
+            Value<String?> pointsHistory = const Value.absent(),
+            Value<String?> bookmarkedQuestions = const Value.absent(),
+            Value<String?> completedQuizzes = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UsersTableCompanion(
+            uid: uid,
+            name: name,
+            email: email,
+            avatarString: avatarString,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            points: points,
+            disabled: disabled,
+            savedItems: savedItems,
+            totalQuizPlayed: totalQuizPlayed,
+            totalQuestionAnswered: totalQuestionAnswered,
+            totalCorrectAns: totalCorrectAns,
+            totalIncorrectAns: totalIncorrectAns,
+            strength: strength,
+            imageUrl: imageUrl,
+            pointsHistory: pointsHistory,
+            bookmarkedQuestions: bookmarkedQuestions,
+            completedQuizzes: completedQuizzes,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String uid,
+            Value<String?> name = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> avatarString = const Value.absent(),
+            Value<int?> createdAt = const Value.absent(),
+            Value<int?> updatedAt = const Value.absent(),
+            Value<int> points = const Value.absent(),
+            Value<bool> disabled = const Value.absent(),
+            Value<String?> savedItems = const Value.absent(),
+            Value<int> totalQuizPlayed = const Value.absent(),
+            Value<int> totalQuestionAnswered = const Value.absent(),
+            Value<int> totalCorrectAns = const Value.absent(),
+            Value<int> totalIncorrectAns = const Value.absent(),
+            Value<double?> strength = const Value.absent(),
+            Value<String?> imageUrl = const Value.absent(),
+            Value<String?> pointsHistory = const Value.absent(),
+            Value<String?> bookmarkedQuestions = const Value.absent(),
+            Value<String?> completedQuizzes = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UsersTableCompanion.insert(
+            uid: uid,
+            name: name,
+            email: email,
+            avatarString: avatarString,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            points: points,
+            disabled: disabled,
+            savedItems: savedItems,
+            totalQuizPlayed: totalQuizPlayed,
+            totalQuestionAnswered: totalQuestionAnswered,
+            totalCorrectAns: totalCorrectAns,
+            totalIncorrectAns: totalIncorrectAns,
+            strength: strength,
+            imageUrl: imageUrl,
+            pointsHistory: pointsHistory,
+            bookmarkedQuestions: bookmarkedQuestions,
+            completedQuizzes: completedQuizzes,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UsersTableTableFilterComposer
+    extends FilterComposer<_$QuizDatabase, $UsersTableTable> {
+  $$UsersTableTableFilterComposer(super.$state);
+  ColumnFilters<String> get uid => $state.composableBuilder(
+      column: $state.table.uid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get email => $state.composableBuilder(
+      column: $state.table.email,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get avatarString => $state.composableBuilder(
+      column: $state.table.avatarString,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get updatedAt => $state.composableBuilder(
+      column: $state.table.updatedAt,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get points => $state.composableBuilder(
+      column: $state.table.points,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get disabled => $state.composableBuilder(
+      column: $state.table.disabled,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get savedItems => $state.composableBuilder(
+      column: $state.table.savedItems,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalQuizPlayed => $state.composableBuilder(
+      column: $state.table.totalQuizPlayed,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalQuestionAnswered => $state.composableBuilder(
+      column: $state.table.totalQuestionAnswered,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalCorrectAns => $state.composableBuilder(
+      column: $state.table.totalCorrectAns,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalIncorrectAns => $state.composableBuilder(
+      column: $state.table.totalIncorrectAns,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get strength => $state.composableBuilder(
+      column: $state.table.strength,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get imageUrl => $state.composableBuilder(
+      column: $state.table.imageUrl,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get pointsHistory => $state.composableBuilder(
+      column: $state.table.pointsHistory,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get bookmarkedQuestions => $state.composableBuilder(
+      column: $state.table.bookmarkedQuestions,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get completedQuizzes => $state.composableBuilder(
+      column: $state.table.completedQuizzes,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UsersTableTableOrderingComposer
+    extends OrderingComposer<_$QuizDatabase, $UsersTableTable> {
+  $$UsersTableTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get uid => $state.composableBuilder(
+      column: $state.table.uid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get email => $state.composableBuilder(
+      column: $state.table.email,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get avatarString => $state.composableBuilder(
+      column: $state.table.avatarString,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get updatedAt => $state.composableBuilder(
+      column: $state.table.updatedAt,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get points => $state.composableBuilder(
+      column: $state.table.points,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get disabled => $state.composableBuilder(
+      column: $state.table.disabled,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get savedItems => $state.composableBuilder(
+      column: $state.table.savedItems,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalQuizPlayed => $state.composableBuilder(
+      column: $state.table.totalQuizPlayed,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalQuestionAnswered => $state.composableBuilder(
+      column: $state.table.totalQuestionAnswered,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalCorrectAns => $state.composableBuilder(
+      column: $state.table.totalCorrectAns,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalIncorrectAns => $state.composableBuilder(
+      column: $state.table.totalIncorrectAns,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get strength => $state.composableBuilder(
+      column: $state.table.strength,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get imageUrl => $state.composableBuilder(
+      column: $state.table.imageUrl,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get pointsHistory => $state.composableBuilder(
+      column: $state.table.pointsHistory,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get bookmarkedQuestions => $state.composableBuilder(
+      column: $state.table.bookmarkedQuestions,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get completedQuizzes => $state.composableBuilder(
+      column: $state.table.completedQuizzes,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class $QuizDatabaseManager {
   final _$QuizDatabase _db;
   $QuizDatabaseManager(this._db);
@@ -2352,4 +3563,6 @@ class $QuizDatabaseManager {
       $$QuizzesTableTableTableManager(_db, _db.quizzesTable);
   $$QuestionsTableTableTableManager get questionsTable =>
       $$QuestionsTableTableTableManager(_db, _db.questionsTable);
+  $$UsersTableTableTableManager get usersTable =>
+      $$UsersTableTableTableManager(_db, _db.usersTable);
 }

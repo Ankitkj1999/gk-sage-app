@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiz_app/configs/language_config.dart';
+import 'package:quiz_app/services/point_service.dart';
 import 'app.dart';
 import 'constants/constant.dart';
 import 'firebase_options.dart';
@@ -20,6 +21,9 @@ void main() async {
     persistenceEnabled: true,
     cacheSizeBytes: 100 * 1024 * 1024, // 100 MB cache size
   );
+
+  PointsService().initialize();
+
   Directory directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   await Hive.openBox(Constants.notificationTag);

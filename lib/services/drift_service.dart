@@ -9,6 +9,7 @@ import 'package:quiz_app/services/firebase_service.dart';
 
 import '../models/category.dart';
 import '../models/question.dart';
+import '../models/user.dart';
 
 class DriftService {
   static final DriftService _instance = DriftService._internal();
@@ -36,6 +37,54 @@ class DriftService {
     );
   }
 
+
+  // Convert from Firebase UserModel to Drift UsersTableCompanion
+  UsersTableCompanion _convertUserToCompanion(UserModel user) {
+    return UsersTableCompanion(
+      uid: Value(user.uid ?? ''),
+      name: Value(user.name),
+      email: Value(user.email),
+      avatarString: Value(user.avatarString),
+      createdAt: Value(user.createdAt?.millisecondsSinceEpoch),
+      updatedAt: Value(user.updatedAt?.millisecondsSinceEpoch),
+      points: Value(user.points ?? 0),
+      disabled: Value(user.disabled ?? false),
+      savedItems: Value(user.savedItems != null ? jsonEncode(user.savedItems) : null),
+      totalQuizPlayed: Value(user.totalQuizPlayed ?? 0),
+      totalQuestionAnswered: Value(user.totalQuestionAnswered ?? 0),
+      totalCorrectAns: Value(user.totalCorrectAns ?? 0),
+      totalIncorrectAns: Value(user.totalIncorrectAns ?? 0),
+      strength: Value(user.strength),
+      imageUrl: Value(user.imageUrl),
+      pointsHistory: Value(user.pointsHistory != null ? jsonEncode(user.pointsHistory) : null),
+      bookmarkedQuestions: Value(user.bookmarkedQuestions != null ? jsonEncode(user.bookmarkedQuestions) : null),
+      completedQuizzes: Value(user.completedQuizzes != null ? jsonEncode(user.completedQuizzes) : null),
+    );
+  }
+
+// Convert from Drift UsersTableData to Firebase UserModel
+  UserModel _convertUserToDomainModel(UsersTableData data) {
+    return UserModel(
+      uid: data.uid,
+      name: data.name,
+      email: data.email,
+      avatarString: data.avatarString,
+      createdAt: data.createdAt != null ? Timestamp.fromMillisecondsSinceEpoch(data.createdAt!) : null,
+      updatedAt: data.updatedAt != null ? Timestamp.fromMillisecondsSinceEpoch(data.updatedAt!) : null,
+      points: data.points,
+      disabled: data.disabled,
+      savedItems: data.savedItems != null ? jsonDecode(data.savedItems!) : [],
+      totalQuizPlayed: data.totalQuizPlayed,
+      totalQuestionAnswered: data.totalQuestionAnswered,
+      totalCorrectAns: data.totalCorrectAns,
+      totalIncorrectAns: data.totalIncorrectAns,
+      strength: data.strength,
+      imageUrl: data.imageUrl,
+      pointsHistory: data.pointsHistory != null ? jsonDecode(data.pointsHistory!) : [],
+      bookmarkedQuestions: data.bookmarkedQuestions != null ? jsonDecode(data.bookmarkedQuestions!) : [],
+      completedQuizzes: data.completedQuizzes != null ? jsonDecode(data.completedQuizzes!) : [],
+    );
+  }
 
 
   // Convert from Drift QuizzesTableData to Firebase Quiz
@@ -99,10 +148,6 @@ class DriftService {
       return [];
     }
   }
-
-
-
-
 
   // CATEGORY METHODS
   // Convert from Firebase Category to Drift CategoriesTableCompanion
@@ -370,6 +415,125 @@ class DriftService {
     } catch (e) {
       debugPrint('Error getting random questions: $e');
       return <Question>[];
+    }
+  }
+
+
+  // Sync user data from Firebase to local database
+  Future<UserModel?> syncAndGetUserData(String uid) async {
+    try {
+      debugPrint('❗ STARTING user data sync for UID: $uid');
+
+      // Step 1: Fetch from Firebase
+      debugPrint('❗ Attempting to fetch user data from Firebase...');
+      UserModel? firebaseUser = await _firebaseService.getUserData();
+
+      if (firebaseUser == null) {
+        debugPrint('❗ ERROR: Firebase returned null user data');
+        return null;
+      }
+
+      debugPrint('❗ SUCCESS: Firebase user data received: ${firebaseUser.uid}, ${firebaseUser.name}');
+
+      if (firebaseUser.uid == null) {
+        debugPrint('❗ ERROR: Firebase user has null UID');
+        return null;
+      }
+
+      // Step 2: Convert to Drift model
+      debugPrint('❗ Converting Firebase user to Drift companion');
+      UsersTableCompanion companion;
+      try {
+        companion = _convertUserToCompanion(firebaseUser);
+        debugPrint('❗ SUCCESS: Conversion completed');
+      } catch (e) {
+        debugPrint('❗ ERROR during model conversion: $e');
+        return null;
+      }
+
+      // Step 3: Save to Drift
+      debugPrint('❗ Attempting to save user data to Drift database');
+      try {
+        final result = await _database.insertOrUpdateUser(companion);
+        debugPrint('❗ Drift insert result: $result');
+      } catch (e) {
+        debugPrint('❗ ERROR inserting into Drift: $e');
+        return null;
+      }
+
+      // Step 4: Verify by retrieving from Drift
+      debugPrint('❗ Verifying by retrieving user from Drift');
+      UsersTableData? localUserData;
+      try {
+        localUserData = await _database.getUserByUid(uid);
+        if (localUserData == null) {
+          debugPrint('❗ ERROR: Retrieved null user from Drift after insertion');
+          return null;
+        }
+        debugPrint('❗ SUCCESS: Retrieved user from Drift: ${localUserData.uid}, ${localUserData.name}');
+      } catch (e) {
+        debugPrint('❗ ERROR retrieving from Drift: $e');
+        return null;
+      }
+
+      // Step 5: Convert back to domain model
+      debugPrint('❗ Converting Drift data back to domain model');
+      UserModel localUser;
+      try {
+        localUser = _convertUserToDomainModel(localUserData);
+        debugPrint('❗ SUCCESS: Conversion back to domain model complete');
+      } catch (e) {
+        debugPrint('❗ ERROR converting back to domain model: $e');
+        return null;
+      }
+
+      debugPrint('❗ User data sync COMPLETE for UID: $uid');
+      return localUser;
+
+    } catch (e) {
+      debugPrint('❗ CRITICAL ERROR in syncAndGetUserData: $e');
+      return null;
+    }
+  }
+
+// Get user data from local database
+  Future<UserModel?> getUserData(String uid) async {
+    try {
+      UsersTableData? data = await _database.getUserByUid(uid);
+      return data != null ? _convertUserToDomainModel(data) : null;
+    } catch (e) {
+      debugPrint('Error getting user data from local database: $e');
+      return null;
+    }
+  }
+
+// Update user points locally
+  Future<bool> updateUserPoints(String uid, int newPoints) async {
+    try {
+      return await _database.updateUserPoints(uid, newPoints);
+    } catch (e) {
+      debugPrint('Error updating user points in local database: $e');
+      return false;
+    }
+  }
+
+// Add point history entry locally
+  Future<bool> addPointHistoryEntry(String uid, String entry) async {
+    try {
+      return await _database.appendToPointHistory(uid, entry);
+    } catch (e) {
+      debugPrint('Error adding point history in local database: $e');
+      return false;
+    }
+  }
+
+// Add bookmark locally
+  Future<bool> addBookmark(String uid, String questionId) async {
+    try {
+      return await _database.addBookmark(uid, questionId);
+    } catch (e) {
+      debugPrint('Error adding bookmark in local database: $e');
+      return false;
     }
   }
 

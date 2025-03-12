@@ -49,4 +49,16 @@ class SPService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('vibrate', value);
   }
+
+  // Store the user UID locally
+  Future<void> saveUidToLocal(String uid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('uid', uid);
+  }
+
+// Get the stored UID
+  Future<String?> getUidFromLocal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('uid');
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -7,13 +9,13 @@ import 'tables.dart';
 
 part 'database.g.dart'; // This will be generated
 
-@DriftDatabase(tables: [CategoriesTable, QuizzesTable, QuestionsTable])
+@DriftDatabase(tables: [CategoriesTable, QuizzesTable, QuestionsTable, UsersTable])
 
 class QuizDatabase extends _$QuizDatabase {
   QuizDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -170,6 +172,77 @@ class QuizDatabase extends _$QuizDatabase {
       optionsType: row.read<String?>('options_type'),
       createdAt: row.read<int?>('created_at'),
     )).toList();
+  }
+
+
+  // Inside QuizDatabase class
+// Insert or update a user
+  Future<int> insertOrUpdateUser(UsersTableCompanion user) async {
+    return await into(usersTable).insertOnConflictUpdate(user);
+  }
+
+// Get a user by UID
+  Future<UsersTableData?> getUserByUid(String uid) async {
+    final query = select(usersTable)..where((u) => u.uid.equals(uid));
+    return await query.getSingleOrNull();
+  }
+
+// Update user points
+  Future<bool> updateUserPoints(String uid, int newPoints) async {
+    final rowsAffected = await (update(usersTable)..where((u) => u.uid.equals(uid)))
+        .write(UsersTableCompanion(points: Value(newPoints)));
+    return rowsAffected > 0; // Convert to bool - true if at least one row updated
+  }
+
+// Update user point history
+  Future<bool> appendToPointHistory(String uid, String historyEntry) async {
+    // First get current history
+    final user = await getUserByUid(uid);
+    if (user == null) return false;
+
+    // Parse existing history
+    List<dynamic> history = [];
+    if (user.pointsHistory != null) {
+      history = jsonDecode(user.pointsHistory!);
+    }
+
+    // Append new entry and update
+    history.add(historyEntry);
+
+    // Convert int row count to boolean success indicator
+    final rowsAffected = await (update(usersTable)..where((u) => u.uid.equals(uid)))
+        .write(UsersTableCompanion(
+        pointsHistory: Value(jsonEncode(history)),
+        updatedAt: Value(DateTime.now().millisecondsSinceEpoch)
+    ));
+
+    return rowsAffected > 0; // Return true if at least one row was updated
+  }
+// Add bookmark
+  Future<bool> addBookmark(String uid, String questionId) async {
+    // First get current bookmarks
+    final user = await getUserByUid(uid);
+    if (user == null) return false;
+
+    // Parse existing bookmarks
+    List<dynamic> bookmarks = [];
+    if (user.bookmarkedQuestions != null) {
+      bookmarks = jsonDecode(user.bookmarkedQuestions!);
+    }
+
+    // Add bookmark if not already present
+    if (!bookmarks.contains(questionId)) {
+      bookmarks.add(questionId);
+      // Convert row count to boolean success status
+      final rowsAffected = await (update(usersTable)..where((u) => u.uid.equals(uid)))
+          .write(UsersTableCompanion(
+          bookmarkedQuestions: Value(jsonEncode(bookmarks)),
+          updatedAt: Value(DateTime.now().millisecondsSinceEpoch)
+      ));
+      return rowsAffected > 0;
+    }
+
+    return true;
   }
 
 }
