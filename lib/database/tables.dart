@@ -51,3 +51,28 @@ class QuestionsTable extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+
+class UsersTable extends Table {
+  TextColumn get uid => text()();
+  TextColumn get name => text().nullable()();
+  TextColumn get email => text().nullable()();
+  TextColumn get avatarString => text().nullable()();
+  IntColumn get createdAt => integer().nullable()(); // Store Timestamp as epoch milliseconds
+  IntColumn get updatedAt => integer().nullable()(); // Store Timestamp as epoch milliseconds
+  IntColumn get points => integer().withDefault(const Constant(0))();
+  BoolColumn get disabled => boolean().withDefault(const Constant(false))();
+  TextColumn get savedItems => text().nullable()(); // Store serialized JSON
+  IntColumn get totalQuizPlayed => integer().withDefault(const Constant(0))();
+  IntColumn get totalQuestionAnswered => integer().withDefault(const Constant(0))();
+  IntColumn get totalCorrectAns => integer().withDefault(const Constant(0))();
+  IntColumn get totalIncorrectAns => integer().withDefault(const Constant(0))();
+  RealColumn get strength => real().withDefault(const Constant(0.0))();
+  TextColumn get imageUrl => text().nullable()();
+  TextColumn get pointsHistory => text().nullable()(); // Store serialized JSON
+  TextColumn get bookmarkedQuestions => text().nullable()(); // Store serialized JSON
+  TextColumn get completedQuizzes => text().nullable()(); // Store serialized JSON
+
+  @override
+  Set<Column> get primaryKey => {uid};
+}

@@ -115,30 +115,6 @@ class QuizDatabase extends _$QuizDatabase {
     return await select(questionsTable).get();
   }
 
-  // Get random questions from the database
-  // Future<List<QuestionsTableData>> getRandomQuestions({
-  //   int count = 10,
-  //   List<String>? excludeIds,
-  //   String? categoryId
-  // }) async {
-  //   // Start building the query
-  //   var query = select(questionsTable)
-  //     ..orderBy([(t) => OrderingTerm.random()])
-  //     ..limit(count);
-  //
-  //   // Add exclusion filter if needed
-  //   if (excludeIds != null && excludeIds.isNotEmpty) {
-  //     query.where((tbl) => tbl.id.isNotIn(excludeIds));
-  //   }
-  //
-  //   // Add category filter if needed
-  //   if (categoryId != null) {
-  //     query.where((tbl) => tbl.catId.equals(categoryId));
-  //   }
-  //
-  //   // Execute the query
-  //   return query.get();
-  // }
 
 // the random questions method
   Future<List<QuestionsTableData>> getRandomQuestionsFromDb({
