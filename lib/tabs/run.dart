@@ -29,6 +29,7 @@ import '../models/quiz.dart';
 import '../pages/notifications.dart';
 import '../pages/settings.dart';
 import '../services/drift_service.dart';
+import '../services/point_service.dart';
 import '../services/sp_service.dart';
 import '../widgets/custom_chip.dart';
 import 'leaderboard_tab.dart';
@@ -49,7 +50,6 @@ class _RunTabState extends State<RunTab> {
   int _incorrectAnswers = 0;
   bool _pointsAdded = false;
 
-
   final DriftService _driftService = DriftService();
   bool _isSyncing = false;
   List<Quiz> _localQuizzes = [];
@@ -57,16 +57,24 @@ class _RunTabState extends State<RunTab> {
   List<Question> _localQuestions = [];
   UserModel? _localUser;
 
-
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _endlessQuizBloc = EndlessQuizBloc();
+  //   _syncData();
+  // }
 
   @override
   void initState() {
     super.initState();
     _endlessQuizBloc = EndlessQuizBloc();
+
+    // Initialize PointsService for background syncing
+    final pointsService = PointsService();
+    pointsService.initialize();
+
     _syncData();
   }
-
-
 
   Future<void> _syncData() async {
     setState(() {
@@ -74,8 +82,6 @@ class _RunTabState extends State<RunTab> {
     });
 
     try {
-
-
       // First sync user data (this is important and relatively quick)
       final String? uid = await SPService().getUidFromLocal();
       if (uid != null) {
@@ -86,12 +92,9 @@ class _RunTabState extends State<RunTab> {
         }
       }
 
-
-
       // First sync categories and quizzes (this is quick)
       _localCategorys = await _driftService.syncAndGetAllCategories();
       _localQuizzes = await _driftService.syncAndGetAllQuizzes();
-
 
       setState(() {
         _isSyncing = false;
@@ -100,7 +103,6 @@ class _RunTabState extends State<RunTab> {
       // Then sync questions in the background (can take longer)
       // This runs after setting isSyncing to false so the UI is responsive
       _startBackgroundQuestionSync();
-
     } catch (e) {
       setState(() {
         _isSyncing = false;
@@ -121,13 +123,25 @@ class _RunTabState extends State<RunTab> {
     });
   }
 
-  @override
-  void dispose() {  _driftService.close();
+  // @override
+  // void dispose() {  _driftService.close();
+  //
+  //   // Save any unsaved points before disposing
+  //   if (_pointsAdded) {
+  //     _savePointsToFirebase();
+  //   }
+  //   _endlessQuizBloc.dispose();
+  //   super.dispose();
+  // }
 
-    // Save any unsaved points before disposing
-    if (_pointsAdded) {
-      _savePointsToFirebase();
-    }
+  @override
+  void dispose() {
+    _driftService.close();
+
+    // Force sync any remaining updates before disposing
+    PointsService().forceSyncNow();
+    PointsService().dispose();
+
     _endlessQuizBloc.dispose();
     super.dispose();
   }
@@ -145,42 +159,98 @@ class _RunTabState extends State<RunTab> {
 
     // Play sound if enabled
     if (context.read<SoundControllerBloc>().audioEnabled) {
-      context.read<SoundControllerBloc>().playSound(
-          context.read<SoundControllerBloc>().clickSoundId
-      );
+      context
+          .read<SoundControllerBloc>()
+          .playSound(context.read<SoundControllerBloc>().clickSoundId);
     }
   }
+
+  // void _updatePoints(int selectedIndex) {
+  //   // Get settings for point rewards/penalties
+  //   final SettingsBloc sb = context.read<SettingsBloc>();
+  //   final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
+  //
+  //   if (currentQuestion == null) return;
+  //
+  //   if (selectedIndex == currentQuestion.correctAnswerIndex) {
+  //     // Correct answer
+  //     setState(() {
+  //       _sessionPoints += sb.correctAnsReward;
+  //       _correctAnswers++;
+  //       _pointsAdded = true;
+  //     });
+  //   } else {
+  //     // Incorrect answers
+  //     setState(() {
+  //       _sessionPoints -= sb.incorrectAnsPenalty;
+  //       _incorrectAnswers++;
+  //       _pointsAdded = true;
+  //     });
+  //   }
+  // }
 
   void _updatePoints(int selectedIndex) {
     // Get settings for point rewards/penalties
     final SettingsBloc sb = context.read<SettingsBloc>();
     final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
+    final UserModel? user = context.read<UserBloc>().userData;
 
-    if (currentQuestion == null) return;
+    if (currentQuestion == null || user?.uid == null) return;
+
+    int pointsToAdd = 0;
+    String reason = "";
+    bool isCorrect = false;
 
     if (selectedIndex == currentQuestion.correctAnswerIndex) {
       // Correct answer
+      pointsToAdd = sb.correctAnsReward;
+      reason = "Correct answer";
+      isCorrect = true;
       setState(() {
-        _sessionPoints += sb.correctAnsReward;
+        _sessionPoints += pointsToAdd;
         _correctAnswers++;
         _pointsAdded = true;
       });
     } else {
       // Incorrect answer
+      pointsToAdd = -sb.incorrectAnsPenalty; // Negative for penalty
+      reason = "Incorrect answer";
+      isCorrect = false;
       setState(() {
-        _sessionPoints -= sb.incorrectAnsPenalty;
+        _sessionPoints += pointsToAdd; // Adding negative points
         _incorrectAnswers++;
         _pointsAdded = true;
       });
     }
+
+    // Update points locally in user bloc first for immediate UI feedback
+    int currentPoints = user?.points ?? 0;
+    int newTotalPoints = currentPoints + pointsToAdd;
+    context.read<UserBloc>().updateUserPointsToBloc(newTotalPoints);
+
+    // Use the PointsService to handle background sync of points
+    final pointsService = PointsService();
+    pointsService.addPoints(user!.uid!, pointsToAdd, reason);
+
+    // Also update the quiz stats in the background
+    _driftService.updateUserQuizStats(user.uid!, isCorrect: isCorrect);
   }
 
-  void _onNextQuestion() async {
-    // If points were calculated and not yet saved, save them
-    if (_pointsAdded) {
-      await _savePointsToFirebase();
-    }
+  // void _onNextQuestion() async {
+  //   // If points were calculated and not yet saved, save them
+  //   if (_pointsAdded) {
+  //     await _savePointsToFirebase();
+  //   }
+  //
+  //   _endlessQuizBloc.nextQuestion();
+  //   setState(() {
+  //     _selectedOptionIndex = null;
+  //   });
+  // }
 
+  void _onNextQuestion() {
+    // No need to wait for Firebase updates!
+    // Just move to the next question immediately
     _endlessQuizBloc.nextQuestion();
     setState(() {
       _selectedOptionIndex = null;
@@ -339,7 +409,8 @@ class _RunTabState extends State<RunTab> {
           lineHeight: 4.0,
           padding: EdgeInsets.zero,
           percent: _endlessQuizBloc.questionQueue.isNotEmpty
-              ? (_endlessQuizBloc.currentQuestionIndex + 1) / _endlessQuizBloc.questionQueue.length
+              ? (_endlessQuizBloc.currentQuestionIndex + 1) /
+                  _endlessQuizBloc.questionQueue.length
               : 0.0,
           progressColor: Colors.amber,
           backgroundColor: Colors.white.withOpacity(0.2),
@@ -567,9 +638,9 @@ class _RunTabState extends State<RunTab> {
                     Text(
                       question.questionTitle ?? 'No question text',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.blueGrey.shade900,
-                      ),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blueGrey.shade900,
+                          ),
                     ),
                   ],
                 ),
@@ -579,7 +650,8 @@ class _RunTabState extends State<RunTab> {
         ),
         const SizedBox(height: 20),
         Visibility(
-          visible: question.questionImageUrl != null && question.questionImageUrl!.isNotEmpty,
+          visible: question.questionImageUrl != null &&
+              question.questionImageUrl!.isNotEmpty,
           child: InkWell(
             onTap: () => NextScreen().nextScreenPopup(
                 context,
@@ -638,7 +710,8 @@ class _RunTabState extends State<RunTab> {
               shrinkWrap: true,
               itemCount: question.options?.length ?? 0,
               itemBuilder: (context, optionIndex, animation) {
-                final String option = question.options?[optionIndex] ?? 'No option';
+                final String option =
+                    question.options?[optionIndex] ?? 'No option';
                 bool isSelected = _selectedOptionIndex != null &&
                     _selectedOptionIndex == optionIndex;
 
@@ -646,7 +719,7 @@ class _RunTabState extends State<RunTab> {
                   opacity: Tween<double>(begin: 0, end: 1).animate(animation),
                   child: SlideTransition(
                     position: Tween<Offset>(
-                        begin: const Offset(0, -0.1), end: Offset.zero)
+                            begin: const Offset(0, -0.1), end: Offset.zero)
                         .animate(animation),
                     child: InkWell(
                       onTap: _selectedOptionIndex == null
@@ -655,8 +728,12 @@ class _RunTabState extends State<RunTab> {
                       child: OptionCard(
                         optionTitle: option,
                         isSelected: isSelected,
-                        isCorrect: hasSelectedOption ? optionIndex == correctAnswerIndex : null,
-                        isIncorrect: hasSelectedOption && isSelected && optionIndex != correctAnswerIndex,
+                        isCorrect: hasSelectedOption
+                            ? optionIndex == correctAnswerIndex
+                            : null,
+                        isIncorrect: hasSelectedOption &&
+                            isSelected &&
+                            optionIndex != correctAnswerIndex,
                       ),
                     ),
                   ),
@@ -734,7 +811,8 @@ class _RunTabState extends State<RunTab> {
       body: AnimatedBuilder(
         animation: _endlessQuizBloc,
         builder: (context, _) {
-          if (_endlessQuizBloc.isLoading && _endlessQuizBloc.questionQueue.isEmpty) {
+          if (_endlessQuizBloc.isLoading &&
+              _endlessQuizBloc.questionQueue.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -747,7 +825,8 @@ class _RunTabState extends State<RunTab> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('No questions available', style: TextStyle(fontSize: 18)),
+                  Text('No questions available',
+                      style: TextStyle(fontSize: 18)),
                   ElevatedButton(
                     onPressed: () => _endlessQuizBloc.initialize(),
                     child: Text('Retry'),
@@ -770,8 +849,6 @@ class _RunTabState extends State<RunTab> {
                     ],
                   ),
                 ),
-
-
               ),
               if (_isSyncing)
                 Container(
@@ -834,7 +911,9 @@ class OptionCard extends StatelessWidget {
             height: 28,
             width: 28,
             decoration: BoxDecoration(
-              color: isSelected ? Theme.of(context).primaryColor : Colors.grey[200],
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[200],
               shape: BoxShape.circle,
             ),
             child: isSelected
@@ -854,8 +933,7 @@ class OptionCard extends StatelessWidget {
           ),
           if (isCorrect == true)
             const Icon(Icons.check_circle, color: Colors.green),
-          if (isIncorrect == true)
-            const Icon(Icons.cancel, color: Colors.red),
+          if (isIncorrect == true) const Icon(Icons.cancel, color: Colors.red),
         ],
       ),
     );
@@ -882,7 +960,9 @@ class ExplanationWidget extends StatelessWidget {
       margin: const EdgeInsets.only(top: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: isCorrect ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+        color: isCorrect
+            ? Colors.green.withOpacity(0.1)
+            : Colors.red.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: isCorrect ? Colors.green : Colors.red,

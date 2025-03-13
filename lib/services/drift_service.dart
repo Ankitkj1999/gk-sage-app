@@ -537,6 +537,41 @@ class DriftService {
     }
   }
 
+
+  // Add to DriftService class
+  Future<bool> updateUserQuizStats(String uid, {required bool isCorrect}) async {
+    try {
+      final user = await _database.getUserByUid(uid);
+      if (user == null) return false;
+
+      // Update stats based on whether answer was correct
+      final rowsAffected = await (_database.update(_database.usersTable)..where((u) => u.uid.equals(uid)))
+          .write(UsersTableCompanion(
+          totalQuestionAnswered: Value(user.totalQuestionAnswered + 1),
+          totalCorrectAns: isCorrect ? Value(user.totalCorrectAns + 1) : Value(user.totalCorrectAns),
+          totalIncorrectAns: !isCorrect ? Value(user.totalIncorrectAns + 1) : Value(user.totalIncorrectAns),
+          // Recalculate strength
+          strength: Value(_calculateStrength(
+              user.totalQuestionAnswered + 1,
+              isCorrect ? user.totalCorrectAns + 1 : user.totalCorrectAns
+          )),
+          updatedAt: Value(DateTime.now().millisecondsSinceEpoch)
+      ));
+      return rowsAffected > 0;
+    } catch (e) {
+      debugPrint('Error updating user quiz stats: $e');
+      return false;
+    }
+  }
+
+// Helper for calculating strength
+  double _calculateStrength(int questionCount, int correctCount) {
+    if (questionCount == 0) return 0.0;
+    double s = correctCount / questionCount * 100;
+    return s.isNaN ? 0.0 : s;
+  }
+
+
   Future<void> syncAll() async {
     await syncAndGetAllCategories();
     await syncAndGetAllQuizzes();
