@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/blocs/audio_controller.dart';
 import 'package:quiz_app/pages/splash.dart';
+import 'package:quiz_app/services/navigation_service.dart';
 import 'blocs/ads_bloc.dart';
 import 'blocs/notification_bloc.dart';
 import 'blocs/question_bloc.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
+            navigatorKey: NavigationService.navigatorKey,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,

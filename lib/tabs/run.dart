@@ -7,13 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/blocs/audio_controller.dart';
 import 'package:quiz_app/blocs/settings_bloc.dart';
 import 'package:quiz_app/blocs/user_bloc.dart';
-import 'package:quiz_app/cards/option_card.dart';
-import 'package:quiz_app/cards/image_option_card.dart';
 import 'package:quiz_app/models/question.dart';
 import 'package:quiz_app/models/user.dart';
-import 'package:quiz_app/pages/quiz_screen/close_dialog.dart';
 import 'package:quiz_app/pages/quiz_screen/control_dialog.dart';
-import 'package:quiz_app/pages/quiz_screen/quiz_explanation.dart';
 import 'package:quiz_app/services/firebase_service.dart';
 import 'package:quiz_app/utils/cached_image.dart';
 import 'package:quiz_app/utils/next_screen.dart';
@@ -26,11 +22,11 @@ import '../blocs/tab_controller.dart';
 import '../configs/color_config.dart';
 import '../models/category.dart';
 import '../models/quiz.dart';
-import '../pages/notifications.dart';
-import '../pages/settings.dart';
+
 import '../services/drift_service.dart';
 import '../services/point_service.dart';
 import '../services/sp_service.dart';
+import '../utils/prefetched_image.dart';
 import '../widgets/custom_chip.dart';
 import 'leaderboard_tab.dart';
 
@@ -57,12 +53,7 @@ class _RunTabState extends State<RunTab> {
   List<Question> _localQuestions = [];
   UserModel? _localUser;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _endlessQuizBloc = EndlessQuizBloc();
-  //   _syncData();
-  // }
+
 
   @override
   void initState() {
@@ -123,16 +114,7 @@ class _RunTabState extends State<RunTab> {
     });
   }
 
-  // @override
-  // void dispose() {  _driftService.close();
-  //
-  //   // Save any unsaved points before disposing
-  //   if (_pointsAdded) {
-  //     _savePointsToFirebase();
-  //   }
-  //   _endlessQuizBloc.dispose();
-  //   super.dispose();
-  // }
+
 
   @override
   void dispose() {
@@ -165,29 +147,7 @@ class _RunTabState extends State<RunTab> {
     }
   }
 
-  // void _updatePoints(int selectedIndex) {
-  //   // Get settings for point rewards/penalties
-  //   final SettingsBloc sb = context.read<SettingsBloc>();
-  //   final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
-  //
-  //   if (currentQuestion == null) return;
-  //
-  //   if (selectedIndex == currentQuestion.correctAnswerIndex) {
-  //     // Correct answer
-  //     setState(() {
-  //       _sessionPoints += sb.correctAnsReward;
-  //       _correctAnswers++;
-  //       _pointsAdded = true;
-  //     });
-  //   } else {
-  //     // Incorrect answers
-  //     setState(() {
-  //       _sessionPoints -= sb.incorrectAnsPenalty;
-  //       _incorrectAnswers++;
-  //       _pointsAdded = true;
-  //     });
-  //   }
-  // }
+
 
   void _updatePoints(int selectedIndex) {
     // Get settings for point rewards/penalties
@@ -236,17 +196,7 @@ class _RunTabState extends State<RunTab> {
     _driftService.updateUserQuizStats(user.uid!, isCorrect: isCorrect);
   }
 
-  // void _onNextQuestion() async {
-  //   // If points were calculated and not yet saved, save them
-  //   if (_pointsAdded) {
-  //     await _savePointsToFirebase();
-  //   }
-  //
-  //   _endlessQuizBloc.nextQuestion();
-  //   setState(() {
-  //     _selectedOptionIndex = null;
-  //   });
-  // }
+
 
   void _onNextQuestion() {
     // No need to wait for Firebase updates!
@@ -308,89 +258,7 @@ class _RunTabState extends State<RunTab> {
     }
   }
 
-  // Custom progress AppBar for Run Tab
-  // PreferredSizeWidget _buildRunAppBar() {
-  //   // Calculate percentage for the progress indicator
-  //   double progress = 0.0;
-  //   if (_endlessQuizBloc.questionQueue.isNotEmpty) {
-  //     progress = (_endlessQuizBloc.currentQuestionIndex + 1) /
-  //         (_endlessQuizBloc.questionQueue.length);
-  //     // Cap at 1.0 to prevent overflow
-  //     progress = progress > 1.0 ? 1.0 : progress;
-  //   }
-  //
-  //   return AppBar(
-  //     backgroundColor: Colors.white,
-  //     elevation: 0,
-  //     automaticallyImplyLeading: false,
-  //     titleSpacing: 0,
-  //     title: LinearPercentIndicator(
-  //       animation: true,
-  //       animationDuration: 400,
-  //       lineHeight: 20.0,
-  //       leading: IconButton(
-  //           padding: const EdgeInsets.only(left: 10),
-  //           onPressed: () => openQuizCloseDialog(context: context),
-  //           icon: const Icon(
-  //             Icons.close,
-  //             color: Colors.black,
-  //           )),
-  //       trailing: Row(
-  //         children: [
-  //           // Points indicator
-  //           Container(
-  //             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-  //             decoration: BoxDecoration(
-  //               color: Colors.amber.shade100,
-  //               borderRadius: BorderRadius.circular(15),
-  //               border: Border.all(color: Colors.amber.shade800, width: 1),
-  //             ),
-  //             child: Text(
-  //               '${_sessionPoints >= 0 ? "+" : ""}$_sessionPoints pts',
-  //               style: TextStyle(
-  //                 color: Colors.amber.shade900,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //           Visibility(
-  //             visible: FeatureConfig.bookmarkQuestionEnabled,
-  //             child: InkWell(
-  //               onTap: () => _handleAddToBookmark(),
-  //               child: Container(
-  //                   width: 40,
-  //                   height: 30,
-  //                   margin: const EdgeInsets.only(right: 0, left: 10),
-  //                   decoration: BoxDecoration(
-  //                       color: Theme.of(context).primaryColor,
-  //                       borderRadius: BorderRadius.circular(20)),
-  //                   child: const Icon(IconUtils.addBookmark)),
-  //             ),
-  //           ),
-  //           InkWell(
-  //             onTap: () => openControlDialog(context),
-  //             child: Container(
-  //               width: 40,
-  //               height: 30,
-  //               margin: const EdgeInsets.only(right: 10, left: 10),
-  //               decoration: BoxDecoration(
-  //                   color: Theme.of(context).primaryColor,
-  //                   borderRadius: BorderRadius.circular(20)),
-  //               child: const Icon(
-  //                 Ionicons.options,
-  //                 size: 20,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       percent: progress,
-  //       progressColor: Theme.of(context).primaryColor,
-  //       barRadius: const Radius.circular(30),
-  //       animateFromLastPercent: true,
-  //     ),
-  //   );
-  // }
+
   PreferredSizeWidget _buildRunAppBar() {
     // Get user data
     final user = context.watch<UserBloc>().userData;
@@ -500,114 +368,7 @@ class _RunTabState extends State<RunTab> {
     );
   }
 
-  // PreferredSizeWidget _buildRunAppBar() {
-  //   // Get user data
-  //   final user = context.watch<UserBloc>().userData;
-  //   final int rank = context.watch<UserBloc>().userRank;
-  //
-  //   return AppBar(
-  //     backgroundColor: Theme.of(context).primaryColor,
-  //     elevation: 0,
-  //     automaticallyImplyLeading: false,
-  //     titleSpacing: 0,
-  //     // Keep progress indicator but as a bottom line
-  //     bottom: PreferredSize(
-  //       preferredSize: const Size.fromHeight(4),
-  //       child: LinearPercentIndicator(
-  //         animation: true,
-  //         lineHeight: 4.0,
-  //         padding: EdgeInsets.zero,
-  //         percent: _endlessQuizBloc.questionQueue.isNotEmpty
-  //             ? (_endlessQuizBloc.currentQuestionIndex + 1) / _endlessQuizBloc.questionQueue.length
-  //             : 0.0,
-  //         progressColor: Colors.amber,
-  //         backgroundColor: Colors.white.withOpacity(0.2),
-  //         barRadius: const Radius.circular(2),
-  //         animateFromLastPercent: true,
-  //       ),
-  //     ),
-  //     title: Padding(
-  //       padding: const EdgeInsets.symmetric(horizontal: 16),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           // Session points indicator (for this run)
-  //           Container(
-  //             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-  //             decoration: BoxDecoration(
-  //               color: Colors.white.withOpacity(0.2),
-  //               borderRadius: BorderRadius.circular(15),
-  //             ),
-  //             child: Text(
-  //               '${_sessionPoints >= 0 ? "+" : ""}$_sessionPoints',
-  //               style: const TextStyle(
-  //                 color: Colors.white,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //           // Row of action items
-  //           Row(
-  //             children: [
-  //               // Total user points
-  //               InkWell(
-  //                 child: CustomChip1(
-  //                   label: user?.points.toString() ?? "0",
-  //                   icon: IconUtils.coins,
-  //                   bgColor: ColorConfig.chip1,
-  //                 ),
-  //                 onTap: () => context.read<TabControllerBloc>().controlTab(2),
-  //               ),
-  //               const SizedBox(width: 10),
-  //               // User rank
-  //               InkWell(
-  //                 child: CustomChip1(
-  //                   label: '#$rank',
-  //                   icon: IconUtils.leaderboard1,
-  //                   bgColor: ColorConfig.chip2,
-  //                 ),
-  //                 onTap: () => NextScreen.nextScreenNormal(
-  //                     context, const LeaderboardTab()),
-  //               ),
-  //               const SizedBox(width: 10),
-  //               // Notifications
-  //               InkWell(
-  //                 onTap: () => NextScreen.nextScreenNormal(
-  //                     context, const Notifications()),
-  //                 child: CircleAvatar(
-  //                   radius: 16,
-  //                   backgroundColor: ColorConfig.iconBg,
-  //                   child: const Icon(
-  //                     IconUtils.bell,
-  //                     size: 18,
-  //                     color: Colors.white,
-  //                   ),
-  //                 ),
-  //               ),
-  //               const SizedBox(width: 10),
-  //               // Settings
-  //               InkWell(
-  //                 onTap: () => NextScreen.nextScreenNormal(
-  //                     context, const SettingsPage()),
-  //                 child: CircleAvatar(
-  //                   radius: 16,
-  //                   backgroundColor: ColorConfig.iconBg,
-  //                   child: const Icon(
-  //                     IconUtils.settings,
-  //                     size: 18,
-  //                     color: Colors.white,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
-  // Question title widget
   Widget _buildQuestionTitle(Question question) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -660,7 +421,7 @@ class _RunTabState extends State<RunTab> {
             child: SizedBox(
               height: 150,
               width: double.infinity,
-              child: CustomCacheImage(
+              child: PrefetchedImages(
                 imageUrl: question.questionImageUrl,
                 radius: 5,
               ),
