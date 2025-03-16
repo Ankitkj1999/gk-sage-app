@@ -19,6 +19,7 @@ import 'package:quiz_app/services/firebase_service.dart';
 import 'package:quiz_app/utils/banner_ad.dart';
 import 'package:quiz_app/utils/snackbars.dart';
 import '../../blocs/settings_bloc.dart';
+import '../../constants/constant.dart';
 import '../../utils/next_screen.dart';
 import '../quiz_complete.dart';
 import 'question_title.dart';
@@ -52,6 +53,18 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  // @override
+  // void initState() {
+  //   Future.microtask(() {
+  //     context.read<QuestionBloc>().intPageIndex();
+  //     context.read<QuestionBloc>().updateQuestion(widget.qList[0]);
+  //     context.read<TempBloc>().setParcentage(0, widget.qList.length);
+  //     context.read<QuestionBloc>().updateDragTargetText(null);
+  //     _initInterstitalAds();
+  //   });
+  //   super.initState();
+  // }
+
   @override
   void initState() {
     Future.microtask(() {
@@ -60,9 +73,56 @@ class _QuizScreenState extends State<QuizScreen> {
       context.read<TempBloc>().setParcentage(0, widget.qList.length);
       context.read<QuestionBloc>().updateDragTargetText(null);
       _initInterstitalAds();
+
+      // Add a short delay before prefetching to avoid UI jank during initialization
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _prefetchQuestionImages(widget.qList);
+      });
     });
     super.initState();
   }
+
+
+  void _prefetchQuestionImages(List<Question> questions, [int startIndex = 0, int count = 3]) {
+    debugPrint('🔍 PREFETCH: Starting image prefetch for quiz images');
+
+    int imagesToPrefetch = 0;
+    for (int i = startIndex; i < questions.length && i < startIndex + count; i++) {
+      Question question = questions[i];
+      if (question.questionType == Constants.questionTypes.keys.elementAt(1) &&
+          question.questionImageUrl != null &&
+          question.questionImageUrl!.isNotEmpty) {
+        imagesToPrefetch++;
+      }
+    }
+
+    if (imagesToPrefetch == 0) {
+      debugPrint('🔍 PREFETCH: No question images to prefetch in this range');
+      return;
+    }
+
+    debugPrint('🔍 PREFETCH: Found $imagesToPrefetch images to prefetch');
+
+    for (int i = startIndex; i < questions.length && i < startIndex + count; i++) {
+      Question question = questions[i];
+      if (question.questionType == Constants.questionTypes.keys.elementAt(1) &&
+          question.questionImageUrl != null &&
+          question.questionImageUrl!.isNotEmpty) {
+
+        debugPrint('🔍 PREFETCH: Prefetching image for question ${i}: ${question.questionImageUrl}');
+
+        precacheImage(
+            NetworkImage(question.questionImageUrl!),
+            context
+        ).then((_) {
+          debugPrint('✅ PREFETCH: Successfully prefetched image for question ${i}');
+        }).catchError((e) {
+          debugPrint('❌ PREFETCH: Error prefetching image: $e');
+        });
+      }
+    }
+  }
+
 
   _updatePointsHistory() async {
     final String userId = context.read<UserBloc>().userData!.uid!;
@@ -77,34 +137,67 @@ class _QuizScreenState extends State<QuizScreen> {
     await FirebaseService().updateUserPointHistory(userId, newHistory);
   }
 
+  // Future _onNextButtonPressed(int questionIndex) async {
+  //   final UserModel user = context.read<UserBloc>().userData!;
+  //   if (_selectedOptionIndex != null) {
+  //     _updateTempData(questionIndex);
+  //
+  //     if (widget.qList.length == (questionIndex + 1)) {
+  //       setState(() => _isLoading = true);
+  //       if (widget.selfChallengeMode == false) {
+  //         //not for self challenge mode
+  //         await FirebaseService()
+  //             .updateUserPoints(user.uid!, context.read<TempBloc>().points);
+  //         // ignore: use_build_context_synchronously
+  //         await context
+  //             .read<UserBloc>()
+  //             .updateUserPointsToBloc(context.read<TempBloc>().points);
+  //         await _updateUserStat();
+  //         await _updatePointsHistory();
+  //         await FirebaseService().updateCompletedQuizzes(
+  //             widget.qList[questionIndex].quizId!, user);
+  //         // ignore: use_build_context_synchronously
+  //         await context.read<UserBloc>().getUserData();
+  //       }
+  //       setState(() => _isLoading = false);
+  //       _showAd();
+  //       // ignore: use_build_context_synchronously
+  //       NextScreen().nextScreenReplace(
+  //           context, QuizComplete(qList: widget.qList, isTimeOver: false));
+  //     } else {
+  //       context
+  //           .read<QuestionBloc>()
+  //           .updateQuestion(widget.qList[questionIndex + 1]);
+  //       context
+  //           .read<TempBloc>()
+  //           .setParcentage(questionIndex + 1, widget.qList.length);
+  //       if (context.read<SoundControllerBloc>().audioEnabled) {
+  //         context
+  //             .read<SoundControllerBloc>()
+  //             .playSound(context.read<SoundControllerBloc>().optionSoundId);
+  //       }
+  //     }
+  //
+  //     setState(() => _selectedOptionIndex = null);
+  //     // ignore: use_build_context_synchronously
+  //     context.read<QuestionBloc>().updateDragTargetText(null);
+  //
+  //     // ignore: use_build_context_synchronously
+  //     context.read<QuestionBloc>().controlPage(questionIndex + 1);
+  //   } else {
+  //     openSnackbar(context, "Select an option to continue");
+  //   }
+  // }
+
   Future _onNextButtonPressed(int questionIndex) async {
     final UserModel user = context.read<UserBloc>().userData!;
     if (_selectedOptionIndex != null) {
       _updateTempData(questionIndex);
 
-      if (widget.qList.length == (questionIndex + 1)) {
-        setState(() => _isLoading = true);
-        if (widget.selfChallengeMode == false) {
-          //not for self challenge mode
-          await FirebaseService()
-              .updateUserPoints(user.uid!, context.read<TempBloc>().points);
-          // ignore: use_build_context_synchronously
-          await context
-              .read<UserBloc>()
-              .updateUserPointsToBloc(context.read<TempBloc>().points);
-          await _updateUserStat();
-          await _updatePointsHistory();
-          await FirebaseService().updateCompletedQuizzes(
-              widget.qList[questionIndex].quizId!, user);
-          // ignore: use_build_context_synchronously
-          await context.read<UserBloc>().getUserData();
-        }
-        setState(() => _isLoading = false);
-        _showAd();
-        // ignore: use_build_context_synchronously
-        NextScreen().nextScreenReplace(
-            context, QuizComplete(qList: widget.qList, isTimeOver: false));
-      } else {
+      // If not on the last question, prefetch next images
+      if (widget.qList.length != (questionIndex + 1)) {
+        _prefetchQuestionImages(widget.qList, questionIndex + 1, 3);
+
         context
             .read<QuestionBloc>()
             .updateQuestion(widget.qList[questionIndex + 1]);
@@ -116,13 +209,15 @@ class _QuizScreenState extends State<QuizScreen> {
               .read<SoundControllerBloc>()
               .playSound(context.read<SoundControllerBloc>().optionSoundId);
         }
+      } else {
+        // Rest of your existing code for last question
+        setState(() => _isLoading = true);
+        // ...
       }
 
+      // Rest of your existing code
       setState(() => _selectedOptionIndex = null);
-      // ignore: use_build_context_synchronously
       context.read<QuestionBloc>().updateDragTargetText(null);
-
-      // ignore: use_build_context_synchronously
       context.read<QuestionBloc>().controlPage(questionIndex + 1);
     } else {
       openSnackbar(context, "Select an option to continue");

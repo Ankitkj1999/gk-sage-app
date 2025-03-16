@@ -546,18 +546,18 @@ class _RunTabState extends State<RunTab> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            if (_endlessQuizBloc.isLoading)
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-              ),
+            // if (_endlessQuizBloc.isLoading)
+            //   const Padding(
+            //     padding: EdgeInsets.only(left: 10),
+            //     child: SizedBox(
+            //       width: 20,
+            //       height: 20,
+            //       child: CircularProgressIndicator(
+            //         color: Colors.white,
+            //         strokeWidth: 2,
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),
@@ -611,13 +611,13 @@ class _RunTabState extends State<RunTab> {
                   ),
                 ),
               ),
-              if (_isSyncing)
-                Container(
-                  color: Colors.black.withOpacity(0.3),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+              // if (_isSyncing)
+              //   Container(
+              //     color: Colors.black.withOpacity(0.3),
+              //     child: const Center(
+              //       child: CircularProgressIndicator(),
+              //     ),
+              //   ),
               _buildNextButton(),
             ],
           );

@@ -9,6 +9,7 @@ import '../../models/question.dart';
 import '../../services/app_service.dart';
 import '../../utils/cached_image.dart';
 import '../../utils/image_preview.dart';
+import '../../utils/prefetched_image.dart';
 import '../../widgets/audio_widget.dart';
 import '../../widgets/video_player_widget.dart';
 
@@ -71,6 +72,24 @@ class QuestionTitle extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
+        // Visibility(
+        //   visible: question.questionType ==
+        //       Constants.questionTypes.keys.elementAt(1),
+        //   child: InkWell(
+        //     onTap: () => NextScreen().nextScreenPopup(
+        //         context,
+        //         FullImagePreview(
+        //             imageUrl: question.questionImageUrl.toString())),
+        //     child: SizedBox(
+        //       height: 150,
+        //       width: double.infinity,
+        //       child: CustomCacheImage(
+        //         imageUrl: question.questionImageUrl,
+        //         radius: 5,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Visibility(
           visible: question.questionType ==
               Constants.questionTypes.keys.elementAt(1),
@@ -82,7 +101,7 @@ class QuestionTitle extends StatelessWidget {
             child: SizedBox(
               height: 150,
               width: double.infinity,
-              child: CustomCacheImage(
+              child: PrefetchedImages(
                 imageUrl: question.questionImageUrl,
                 radius: 5,
               ),

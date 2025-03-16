@@ -170,43 +170,6 @@ class EndlessQuizBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Add to EndlessQuizBloc
-  // void _prefetchImages(List<Question> questions, [int startIndex = 0, int count = 10]) {
-  //   for (int i = startIndex; i < startIndex + count && i < questions.length; i++) {
-  //     final question = questions[i];
-  //     if (question.questionImageUrl != null && question.questionImageUrl!.isNotEmpty) {
-  //       precacheImage(
-  //         NetworkImage(question.questionImageUrl!),
-  //         NavigationService.navigatorKey.currentContext!,
-  //       ).catchError((e) => debugPrint('Error prefetching image: $e'));
-  //     }
-  //   }
-  //}
-
-// Modify _prefetchImages to be more conservative
-//   void _prefetchImages(List<Question> questions, [int startIndex = 0, int count = 3]) {
-//     // Only prefetch 3 images at a time, not 10
-//     for (int i = startIndex; i < startIndex + count && i < questions.length; i++) {
-//       final question = questions[i];
-//       if (question.questionImageUrl != null && question.questionImageUrl!.isNotEmpty) {
-//         // Check if context exists before attempting to prefetch
-//         if (NavigationService.navigatorKey.currentContext != null) {
-//           precacheImage(
-//             NetworkImage(question.questionImageUrl!),
-//             NavigationService.navigatorKey.currentContext!,
-//           ).catchError((e) {
-//             debugPrint('Error prefetching image: $e');
-//             // Maybe set a flag to retry later
-//           });
-//         } else {
-//           // Queue this for later when context is available
-//           debugPrint('Context not available for prefetching');
-//         }
-//       }
-//     }
-//   }
-
-
 // Enhance _prefetchImages with better logging
   void _prefetchImages(List<Question> questions, [int startIndex = 0, int count = 3]) {
     debugPrint('🔍 PREFETCH: Starting image prefetch for ${count} images from index ${startIndex}');
