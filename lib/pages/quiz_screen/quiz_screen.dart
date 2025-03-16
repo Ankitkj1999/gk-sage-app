@@ -194,8 +194,31 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_selectedOptionIndex != null) {
       _updateTempData(questionIndex);
 
-      // If not on the last question, prefetch next images
-      if (widget.qList.length != (questionIndex + 1)) {
+      if (widget.qList.length == (questionIndex + 1)) {
+        // Handle last question
+        setState(() => _isLoading = true);
+        if (widget.selfChallengeMode == false) {
+          // Not for self challenge mode
+          await FirebaseService()
+              .updateUserPoints(user.uid!, context.read<TempBloc>().points);
+          // ignore: use_build_context_synchronously
+          await context
+              .read<UserBloc>()
+              .updateUserPointsToBloc(context.read<TempBloc>().points);
+          await _updateUserStat();
+          await _updatePointsHistory();
+          await FirebaseService().updateCompletedQuizzes(
+              widget.qList[questionIndex].quizId!, user);
+          // ignore: use_build_context_synchronously
+          await context.read<UserBloc>().getUserData();
+        }
+        setState(() => _isLoading = false);
+        _showAd();
+        // ignore: use_build_context_synchronously
+        NextScreen().nextScreenReplace(
+            context, QuizComplete(qList: widget.qList, isTimeOver: false));
+      } else {
+        // If not on the last question, prefetch next images and continue
         _prefetchQuestionImages(widget.qList, questionIndex + 1, 3);
 
         context
@@ -209,20 +232,53 @@ class _QuizScreenState extends State<QuizScreen> {
               .read<SoundControllerBloc>()
               .playSound(context.read<SoundControllerBloc>().optionSoundId);
         }
-      } else {
-        // Rest of your existing code for last question
-        setState(() => _isLoading = true);
-        // ...
       }
 
-      // Rest of your existing code
       setState(() => _selectedOptionIndex = null);
+      // ignore: use_build_context_synchronously
       context.read<QuestionBloc>().updateDragTargetText(null);
+
+      // ignore: use_build_context_synchronously
       context.read<QuestionBloc>().controlPage(questionIndex + 1);
     } else {
       openSnackbar(context, "Select an option to continue");
     }
   }
+
+  // Future _onNextButtonPressed(int questionIndex) async {
+  //   final UserModel user = context.read<UserBloc>().userData!;
+  //   if (_selectedOptionIndex != null) {
+  //     _updateTempData(questionIndex);
+  //
+  //     // If not on the last question, prefetch next images
+  //     if (widget.qList.length != (questionIndex + 1)) {
+  //       _prefetchQuestionImages(widget.qList, questionIndex + 1, 3);
+  //
+  //       context
+  //           .read<QuestionBloc>()
+  //           .updateQuestion(widget.qList[questionIndex + 1]);
+  //       context
+  //           .read<TempBloc>()
+  //           .setParcentage(questionIndex + 1, widget.qList.length);
+  //       if (context.read<SoundControllerBloc>().audioEnabled) {
+  //         context
+  //             .read<SoundControllerBloc>()
+  //             .playSound(context.read<SoundControllerBloc>().optionSoundId);
+  //       }
+  //     } else {
+  //       // Rest of your existing code for last question
+  //       setState(() => _isLoading = true);
+  //       // ...
+  //     }
+  //
+  //     // Rest of your existing code
+  //     setState(() => _selectedOptionIndex = null);
+  //     context.read<QuestionBloc>().updateDragTargetText(null);
+  //     context.read<QuestionBloc>().controlPage(questionIndex + 1);
+  //   } else {
+  //     openSnackbar(context, "Select an option to continue");
+  //   }
+  // }
 
   _showAd() {
     if (context.read<AdsBloc>().isInterstitialEnabled &&
