@@ -8,10 +8,12 @@ class IconUtils {
   static const IconData points = LineIcons.star;
 
   //tabs
-  static IconData home = CupertinoIcons.home;
-  static IconData categories = CupertinoIcons.grid;
-  static IconData leaderboard = CupertinoIcons.chart_bar_square;
-  static IconData profile = LineIcons.user;
+  static const IconData home = CupertinoIcons.home;
+  static const IconData categories = CupertinoIcons.grid;
+  static const IconData leaderboard = CupertinoIcons.chart_bar_square;
+  static const IconData profile = LineIcons.user;
+  static const IconData warning = CupertinoIcons.exclamationmark_triangle;
+  static const IconData sync = CupertinoIcons.arrow_clockwise;
   static const IconData coins = FontAwesome.coins_solid;
   static const IconData starFill = LineIcons.starAlt;
   static const IconData star = LineIcons.star;

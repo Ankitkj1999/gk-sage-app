@@ -29,6 +29,11 @@ class EndlessQuizBloc extends ChangeNotifier {
     return _questionQueue[_currentQuestionIndex];
   }
 
+  void setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
   // Initialize with first batch
   // Future<void> initialize() async {
   //   _isLoading = true;
@@ -59,23 +64,69 @@ class EndlessQuizBloc extends ChangeNotifier {
 //       _prefetchImages(_questionQueue, 0, 3); // Only prefetch first 3 images
 //     });
 //   }
+
   Future<void> initialize() async {
     _isLoading = true;
     notifyListeners();
 
-    _questionQueue = await _driftService.getRandomQuestions(count: batchSize);
-    _shownQuestionIds = _questionQueue.map((q) => q.id ?? '').where((id) => id.isNotEmpty).toList();
-    _currentQuestionIndex = 0;
+    try {
+      // First check how many questions we already have in the database
+      final int questionCount = await _driftService.getTotalQuestionCount();
 
-    _isLoading = false;
-    notifyListeners();
+      if (questionCount == 0) {
+        // Log that we're doing initial sync - this is important for first-time users
+        debugPrint('No questions found in local database. Initial sync required.');
+      }
 
-    // Increase delay to ensure UI is fully rendered and context is available
-    Future.delayed(const Duration(milliseconds: 500), () {
-      debugPrint('🔍 PREFETCH: Attempting initial prefetch after delay');
-      _prefetchImages(_questionQueue, 0, 3); // Only prefetch first 3 images
-    });
+      // Get random questions
+      _questionQueue = await _driftService.getRandomQuestions(count: batchSize);
+      _shownQuestionIds = _questionQueue.map((q) => q.id ?? '').where((id) => id.isNotEmpty).toList();
+      _currentQuestionIndex = 0;
+
+      // Additional check for first-time users when no questions are available yet
+      if (_questionQueue.isEmpty) {
+        debugPrint('No questions available. Triggering background sync...');
+        // Trigger a limited sync to get at least some questions
+        await _driftService.syncInitialQuestions();
+
+        // Try one more time
+        _questionQueue = await _driftService.getRandomQuestions(count: batchSize);
+        _shownQuestionIds = _questionQueue.map((q) => q.id ?? '').where((id) => id.isNotEmpty).toList();
+      }
+    } catch (e) {
+      debugPrint('Error initializing quiz: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    // Delay prefetching to happen after UI is rendered
+    if (_questionQueue.isNotEmpty) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        debugPrint('🔍 PREFETCH: Attempting initial prefetch after delay');
+        _prefetchImages(_questionQueue, 0, 3); // Only prefetch first 3 images
+      });
+    }
   }
+
+  // Future<void> initialize() async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //
+  //   _questionQueue = await _driftService.getRandomQuestions(count: batchSize);
+  //   _shownQuestionIds = _questionQueue.map((q) => q.id ?? '').where((id) => id.isNotEmpty).toList();
+  //   _currentQuestionIndex = 0;
+  //
+  //   _isLoading = false;
+  //   notifyListeners();
+  //
+  //   // Increase delay to ensure UI is fully rendered and context is available
+  //   Future.delayed(const Duration(milliseconds: 500), () {
+  //     debugPrint('🔍 PREFETCH: Attempting initial prefetch after delay');
+  //     _prefetchImages(_questionQueue, 0, 3); // Only prefetch first 3 images
+  //   });
+  // }
+
 
 
   // Move to next question

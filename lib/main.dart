@@ -22,7 +22,6 @@ void main() async {
     cacheSizeBytes: 100 * 1024 * 1024, // 100 MB cache size
   );
 
-  PointsService().initialize();
 
   Directory directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);

@@ -59,7 +59,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConfig.secondaryBgColor,
+        backgroundColor: Color(0xFF876CFF),
+        // backgroundColor: ColorConfig.secondaryBgColor,
         body: MirrorAnimationBuilder<double>(
           curve: Curves.easeInOut,
           tween: Tween(begin: 100.0, end: 180),

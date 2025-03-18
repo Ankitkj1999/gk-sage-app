@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/blocs/audio_controller.dart';
 import 'package:quiz_app/pages/splash.dart';
 import 'package:quiz_app/services/navigation_service.dart';
+import 'package:quiz_app/services/point_service.dart'; // Add this import
 import 'blocs/ads_bloc.dart';
 import 'blocs/notification_bloc.dart';
 import 'blocs/question_bloc.dart';
@@ -17,13 +18,15 @@ import 'configs/color_config.dart';
 
 final FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
 final FirebaseAnalyticsObserver firebaseObserver =
-    FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
+FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    PointsService().initialize(); // Add this line here
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<QuestionBloc>(

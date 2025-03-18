@@ -383,6 +383,38 @@ class DriftService {
     }
   }
 
+
+  // Add this method to the DriftService class to get total question count
+  Future<int> getTotalQuestionCount() async {
+    try {
+      return await _database.countQuestions();
+    } catch (e) {
+      debugPrint('Error getting question count: $e');
+      return 0;
+    }
+  }
+
+// Add this method to sync just enough initial questions for first-time users
+  Future<void> syncInitialQuestions() async {
+    try {
+      // Get a limited set of quizzes (first 2-3)
+      List<Quiz> quizzes = await getAllQuizzes();
+      debugPrint('Starting initial sync for ${quizzes.length} quizzes');
+
+      // Just sync the first 2 quizzes for faster initial load
+      int initialQuizCount = quizzes.length < 2 ? quizzes.length : 2;
+
+      for (int i = 0; i < initialQuizCount; i++) {
+        debugPrint('Initial sync: Getting questions for quiz: ${quizzes[i].name} (${quizzes[i].id})');
+        await syncAndGetQuestionsForQuiz(quizzes[i].id ?? '');
+      }
+
+      debugPrint('Initial question sync completed');
+    } catch (e) {
+      debugPrint('Error during initial question sync: $e');
+    }
+  }
+
   // Fetch a batch of random questions from local database
 // Add this method to your DriftService class (not inside QuizDatabase)
 

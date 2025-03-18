@@ -118,6 +118,15 @@ class QuizDatabase extends _$QuizDatabase {
   }
 
 
+  Future<int> countQuestions() async {
+    final result = await customSelect(
+      'SELECT COUNT(*) as count FROM questions_table',
+      readsFrom: {questionsTable},
+    ).getSingle();
+
+    return result.read<int>('count');
+  }
+
 // the random questions method
   Future<List<QuestionsTableData>> getRandomQuestionsFromDb({
     int count = 10,

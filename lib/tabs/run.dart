@@ -565,6 +565,68 @@ class _RunTabState extends State<RunTab> {
   }
 
   @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     backgroundColor: Colors.grey[100],
+  //     appBar: _buildRunAppBar(),
+  //     body: AnimatedBuilder(
+  //       animation: _endlessQuizBloc,
+  //       builder: (context, _) {
+  //         if (_endlessQuizBloc.isLoading &&
+  //             _endlessQuizBloc.questionQueue.isEmpty) {
+  //           return const Center(
+  //             child: CircularProgressIndicator(),
+  //           );
+  //         }
+  //
+  //         final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
+  //
+  //         if (currentQuestion == null) {
+  //           return Center(
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Text('No questions available',
+  //                     style: TextStyle(fontSize: 18)),
+  //                 ElevatedButton(
+  //                   onPressed: () => _endlessQuizBloc.initialize(),
+  //                   child: Text('Retry'),
+  //                 )
+  //               ],
+  //             ),
+  //           );
+  //         }
+  //
+  //         return Column(
+  //           children: [
+  //             Expanded(
+  //               child: SingleChildScrollView(
+  //                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+  //                   children: [
+  //                     _buildQuestionTitle(currentQuestion),
+  //                     _buildOptions(currentQuestion),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             // if (_isSyncing)
+  //             //   Container(
+  //             //     color: Colors.black.withOpacity(0.3),
+  //             //     child: const Center(
+  //             //       child: CircularProgressIndicator(),
+  //             //     ),
+  //             //   ),
+  //             _buildNextButton(),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -572,25 +634,57 @@ class _RunTabState extends State<RunTab> {
       body: AnimatedBuilder(
         animation: _endlessQuizBloc,
         builder: (context, _) {
-          if (_endlessQuizBloc.isLoading &&
-              _endlessQuizBloc.questionQueue.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
+          // Handle different states
+          if (_endlessQuizBloc.isLoading && _endlessQuizBloc.questionQueue.isEmpty) {
+            // Show a loading indicator with message when initializing
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Loading questions...',
+                    style: TextStyle(fontSize: 18, color: Colors.blueGrey[700]),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'This may take a moment',
+                    style: TextStyle(fontSize: 14, color: Colors.blueGrey[500]),
+                  ),
+                ],
+              ),
             );
           }
 
           final Question? currentQuestion = _endlessQuizBloc.currentQuestion;
 
           if (currentQuestion == null) {
+            // This case is when initialization is done but no questions are available
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('No questions available',
-                      style: TextStyle(fontSize: 18)),
+                  Icon(Icons.error_outline, size: 48, color: Colors.blueGrey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No questions available',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _endlessQuizBloc.initialize(),
-                    child: Text('Retry'),
+                    onPressed: () {
+                      // Show loading state again
+                      setState(() {
+                        _endlessQuizBloc.setLoading(true);
+                      });
+                      // Try to initialize again
+                      _endlessQuizBloc.initialize();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: const Text('Try Again'),
                   )
                 ],
               ),
@@ -611,13 +705,6 @@ class _RunTabState extends State<RunTab> {
                   ),
                 ),
               ),
-              // if (_isSyncing)
-              //   Container(
-              //     color: Colors.black.withOpacity(0.3),
-              //     child: const Center(
-              //       child: CircularProgressIndicator(),
-              //     ),
-              //   ),
               _buildNextButton(),
             ],
           );

@@ -4,7 +4,7 @@ description: A new Flutter project.
 publish_to: 'none'
 
 
-version: 2.1.4+168
+version: 2.1.4+170
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -70,6 +70,7 @@ dependencies:
   drift: ^2.19.1+1
   sqlite3_flutter_libs: ^0.5.31
   path: ^1.9.0
+  flutter_native_splash: ^2.4.4
   
   
 
@@ -88,8 +89,29 @@ dev_dependencies:
 flutter_launcher_icons:
   image_path: "assets/images/icon.png"
   android: "launcher_icon"
+  adaptive_icon_background: "#876CFF"
+  adaptive_icon_foreground: "assets/images/adaptive-icon.png"
+
   ios: true
   min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#876CFF"
+  image: "assets/images/adaptive-icon.png"
+
+  # For Android 12+
+  android_12:
+#    image: "assets/images/adaptive-icon.png"
+    color: "#876CFF"
+    icon_background_color: "#876CFF"
+#    branding: "assets/images/adaptive-icon.png"  # Optional branding image
+#    branding_mode: "bottom"ß
+
+  # General settings
+  android: true
+  ios: true
+  web: false
+  fullscreen: true
   
 flutter:
 

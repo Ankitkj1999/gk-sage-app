@@ -20,7 +20,8 @@ class Config {
   //App Icons & Logo
   static const String icon = 'assets/images/icon.png';
   static const String logo = 'assets/images/logo.png';
-  static const String splashIcon = 'assets/images/splash.png';
+  static const String splashIcon = 'assets/images/adaptive-icon.png';
+  // static const String splashIcon = 'assets/images/splash.png';
 
   //Introduction/On-Borading Screen Assets
   static final Map<int, List> intros = {
