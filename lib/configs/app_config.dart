@@ -12,10 +12,10 @@ class Config {
   static const String privacyPolicyUrl =
       "https://www.mrb-lab.com/privacy-policy";
   static const String termsAndServiceUrl =
-      "https://www.mrb-lab.com/privacy-policy/";
-  static const String yourWebsiteUrl = "https://mrb-lab.com";
-  static const String fbPageUrl = 'https://www.facebook.com/mrblab24';
-  static const String youtubeChannelUrl = 'https://www.youtube.com/c/MRBLab';
+      "https://docs.flutter.dev/tos?_gl=1*8f0mmy*_ga*MTMzNDQ5NTQ4OC4xNzM4MDUxMjYw*_ga_04YGWK0175*MTc0MjMxODQwNy4yNS4wLjE3NDIzMTg0MTkuMC4wLjA.";
+  static const String yourWebsiteUrl = "https://policies.google.com/privacy?hl=en";
+  static const String fbPageUrl = 'https://www.facebook.com/FlutterCommunity/';
+  static const String youtubeChannelUrl = 'https://www.youtube.com/@flutterdev';
 
   //App Icons & Logo
   static const String icon = 'assets/images/icon.png';
