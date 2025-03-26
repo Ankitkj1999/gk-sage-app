@@ -1,4 +1,4 @@
-# Quiz Hour: Flutter Complete Quiz App for Android & iOS with Web Admin panel
+# GK Sage: Flutter Complete Quiz App for Android & iOS with Web Admin panel
  
 flutter pub run build_runner build
 
